@@ -1,0 +1,115 @@
+<div class="grid">
+    <div class="col-12 md:col-6 lg:col-6">
+        <div class="content-graphic">
+            <app-pie-graphic [data]="data_graphic"></app-pie-graphic>
+        </div>
+    </div>
+    <div class="col-12 md:col-6 lg:col-6">
+        <div class="content-data p-5">
+            <h1>Pregunta</h1>
+            <p>
+                {{ data.pregunta }}
+            </p>
+            <h1>Respuestas</h1>
+            <ul>
+                <ng-container *ngIf="verifyDataValue else elseBlock">
+                    <li *ngFor="let respuesta of data.respuestas">
+                        [{{respuesta.porcentaje.toFixed(0)}}%]
+                        {{ respuesta.respuestas}}
+                    </li>
+                </ng-container>
+                <ng-template #elseBlock>
+                    <ng-container *ngIf="data.respuestas.length === 0">
+                        <p>No hay datos que evaluar</p>
+                    </ng-container>
+                    <ng-container *ngIf="data.respuestas.length !==0">
+                        <li *ngFor="let respuesta of data.respuestas">
+                            [{{respuesta.porcentaje.toFixed(0)}}%]
+                            {{ respuesta.name}}
+                        </li>
+                    </ng-container>
+                </ng-template>
+            </ul>
+
+        </div>
+        <div class="content-actions p-5">
+            <button pButton pRipple type="button" icon="pi pi-align-center" label="Análisis" title="Análisis"
+                class="p-button-secondary" (click)="showDetalles()"></button>
+            <button pButton pRipple type="button" icon="pi pi-download" label="Grafica" title="Solo grafica"
+                class="p-button-success" (click)="descargar()">
+            </button>
+        </div>
+    </div>
+</div>
+
+<p-dialog [(visible)]="displayDetails" [style]="{width: width, 'text-aling': 'center'}" [showHeader]="false"
+    [modal]="true" [dismissableMask]="true">
+
+    <app-card-dialog titulo="Análisis">
+        <div card-body>
+            <ng-container *ngFor="let respuesta of data.respuestas">
+                <ng-container *ngIf="verificarData(respuesta)">
+                    <p-table class="m-2" [value]="respuesta.data" responsiveLayout="scroll">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th class="text-center" rowspan="4">Nombre</th>
+                                <th colspan="3">Pregunta: <span class="info-table">{{data.pregunta}}</span></th>
+                            </tr>
+                            <tr>
+                                <th colspan="3">Respuesta: <span class="info-table">{{respuesta.respuestas}}</span></th>
+                            </tr>
+                            <tr>
+                                <th>Cantidad</th>
+                                <th>Cantidad %</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-res>
+                            <tr *ngIf="res.name !== null">
+                                <td>{{res.name}}</td>
+                                <td>{{res.cantidad_usuarios}}</td>
+                                <td>{{res.porcentaje.toFixed(1)}}%</td>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="footer">
+                            <tr>
+                                <td colspan="1" class="text-right">Total</td>
+                                <td>{{respuesta.num_usuarios}}</td>
+                                <td>{{respuesta.porcentaje.toFixed(1)}}%</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </ng-container>
+            </ng-container>
+            <ng-container *ngIf="!verifyDataValue">
+                <p-table class="m-2" responsiveLayout="scroll" [value]="data.respuestas">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th class="text-center" rowspan="4">Nombre</th>
+                            <th colspan="3">Pregunta: <span class="info-table">{{data.pregunta}}</span></th>
+                        </tr>
+                        <tr>
+                            <th>Cantidad</th>
+                            <th>Cantidad %</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-res>
+                        <tr *ngIf="res.name !== null">
+                            <td>{{res.name}}</td>
+                            <td>{{res.total}}</td>
+                            <td>{{res.porcentaje}}%</td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="footer">
+                        <tr>
+                            <td colspan="1" class="text-right">Total</td>
+                            <td>{{data.total}}</td>
+                            <td>100%</td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </ng-container>
+
+        </div>
+    </app-card-dialog>
+
+</p-dialog>

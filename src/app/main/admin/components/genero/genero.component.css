@@ -1,0 +1,4 @@
+.content{
+    min-height: calc(100vh - 200px);
+    background-image:  url('src/assets/images/fondo.png');
+}

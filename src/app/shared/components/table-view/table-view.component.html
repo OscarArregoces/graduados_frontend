@@ -1,0 +1,85 @@
+<p-table #dt [value]="solicitudes" [(selection)]="selectedCustomers" dataKey="id" styleClass="p-datatable-customers"
+    [rowHover]="true" [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50]" [loading]="loading"
+    responsiveLayout="scroll" [paginator]="true"
+    currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} elementos" [filterDelay]="0"
+    [globalFilterFields]="['tipopqrs.tipo','persona','status.valor']"
+    responsiveLayout="scroll"
+    >
+    <ng-template pTemplate="caption">
+        <div class="table-header" >
+            <div class="grid" [style]="{'display': 'flex', 'justify-content': 'space-between'}">
+                <div class="col-12 md:col-6 lg:col-6">
+                    Lista de solicitudes
+                </div>
+                <div class="col-12 md:col-6 lg:col-3">
+                    <span [style]="{'width':'100%'}" class="p-input-icon-left">
+                        <i class="pi pi-search"></i>
+                        <input [style]="{'width':'100%'}" pInputText type="text"
+                            (input)="dt.filterGlobal(getEventValue($event), 'contains')"
+                            placeholder="Busqueda global" />
+                    </span>
+                </div>
+            </div>
+
+        </div>
+    </ng-template>
+    <ng-template pTemplate="header">
+        <tr >
+            <th style="width: 3rem">
+                <!-- <p-tableHeaderCheckbox></p-tableHeaderCheckbox> -->
+                <p>Indice</p>
+            </th>
+            <th pSortableColumn="tipopqrs.tipo">
+                <div class="flex justify-content-between align-items-center">
+                    Tipo
+                    <p-sortIcon field="tipopqrs.tipo"></p-sortIcon>
+                    <p-columnFilter type="text" field="tipopqrs.tipo" display="menu" class="ml-auto"></p-columnFilter>
+                </div>
+            </th>
+            <th pSortableColumn="persona">
+                <div class="flex justify-content-between align-items-center">
+                    Persona
+                    <p-sortIcon field="persona"></p-sortIcon>
+                    <p-columnFilter type="text" field="persona" display="menu" class="ml-auto"></p-columnFilter>
+                </div>
+            </th>
+
+            <th pSortableColumn="status.valor">
+                <div class="flex justify-content-between align-items-center">
+                    Estado
+                    <p-sortIcon field="status.valor"></p-sortIcon>
+                    <p-columnFilter type="text" field="status.valor" display="menu" class="ml-auto"></p-columnFilter>
+                </div>
+            </th>
+            <th style="width: 8rem"></th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-solicitud let-rowIndex="rowIndex">
+        <tr class="p-selectable-row">
+            <td>
+                <!-- <p-tableCheckbox [value]="solicitudes"></p-tableCheckbox> -->
+                {{rowIndex + 1 }}
+            </td>
+            <td>
+                <span class="p-column-title">Tipo</span>
+                {{solicitud.tipopqrs.tipo}}
+            </td>
+            <td>
+                <span class="p-column-title">Persona</span>
+                {{ solicitud.persona}}
+            </td>
+            <td>
+                <span class="p-column-title">Estadi</span>
+                <span>{{solicitud.status.valor}}</span>
+            </td>
+            <td style="text-align: center">
+                <button pButton type="button" class="p-button-secondary" icon="pi pi-cog"></button>
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+        <tr>
+            <td colspan="8">No customers found.</td>
+        </tr>
+    </ng-template>
+</p-table>

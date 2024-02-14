@@ -1,0 +1,16 @@
+#header {
+    height: 4rem;
+    background-color: #f16357;
+    background-image: url("https://www.transparenttextures.com/patterns/shattered-dark.png");
+    /* background-image: url("https://www.transparenttextures.com/patterns/gplay.png"); */
+    /* background-image: url("https://www.transparenttextures.com/patterns/inspiration-geometry.png"); */
+    /* background-image: url("https://www.transparenttextures.com/patterns/old-map.png"); */
+}
+
+:host ::ng-deep .p-card-body{
+    padding: 0;
+}
+
+#card-body{
+    padding: 1rem;
+}

@@ -1,0 +1,90 @@
+<app-card titulo="Crear solicitud">
+    <form card-body [formGroup]="form" (submit)="onSubmit()">
+        <div class="grid">
+
+            <div class="col-12 md:col-6 lg:col-5 ">
+                <div class="flex flex-column gap-2">
+                    <label class="mb-2" htmlFor="Asunto" [style]="{'font-weight': 'bold'}">Tipo de solicitud: </label>
+                    <div [style]="{'width': '100%'}" class="grid flex flex-row justify-content-space">
+                        <div class="col-11 md:col-11 lg:col-11">
+                            <div class="p-inputgroup">
+                                <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                        style="color:#f16357;"></i></span>
+                                <p-dropdown [options]="tipoSolicitudes" formControlName="tipopqrs"
+                                    placeholder="Seleccione una opcion" optionLabel="tipo" [showClear]="true"
+                                    [style]="{ width: '100%'}"></p-dropdown>
+                            </div>
+                        </div>
+                        <div class="col-1 md:col-1 lg:col-1">
+                            <p-button icon="pi pi-plus" class="p-button-secundary"
+                                (onClick)="changeDisplayTipoSolicitudForm()"
+                                *appRole="[permisoAddTipoSolicitud]"></p-button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-12 md:col-6 lg:col-7">
+                <div class="flex flex-column gap-2">
+                    <label class="mb-2" htmlFor="Asunto" [style]="{'font-weight': 'bold'}">Asunto: </label>
+                    <div class="p-inputgroup my-1">
+                        <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                style="color:#f16357;"></i></span>
+                        <input pInputText id="Asunto" aria-describedby="asunto" formControlName="titulo"
+                            [maxlength]="256" placeholder="Escriba aqui" [maxlength]="100" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 my-3">
+                <div class="flex flex-column gap-2">
+                    <label class="mb-2" htmlFor="Asunto" [style]="{'font-weight': 'bold'}">Nos gustaria saber el motivo
+                        de su solicitud: </label>
+                    <textarea rows="5" cols="10" placeholder="Escriba aqui una breve descripción "
+                        formControlName="description" pInputTextarea [style]="{ width: '100%'}" [maxlength]="600"
+                        [maxlength]="600"></textarea>
+                </div>
+            </div>
+            <div class="col-12 my-3">
+                <label class="mb-2" htmlFor="Asunto" [style]="{'font-weight': 'bold'}">Puedes adjuntar un archivo:
+                    (Opcional)</label>
+                <p-fileUpload #fileUpload [maxFileSize]="5242880" name="anexo" (onSelect)="adjuntarArchivo($event)"
+                    [showUploadButton]="false" [showCancelButton]="false" chooseLabel="Subir"></p-fileUpload>
+            </div>
+        </div>
+        <div class="col-12 md:col-12 lg:col-12 flex justify-content-center">
+            <button pButton pRipple type="submit" label="Enviar" class="p-button-success" [disabled]="!form.valid"
+                [style]="{ width: '40%'}"></button>
+        </div>
+    </form>
+</app-card>
+
+
+<p-dialog [(visible)]="displayTipoSolicitudForm" [style]="{width: width, 'text-aling': 'center'}" [showHeader]="false"
+    [modal]="true" [dismissableMask]="true">
+
+    <app-card-dialog titulo="Crear tipo de solicitud">
+        <form [formGroup]="formTipoSolicitud">
+            <div class="grid">
+                <div class="col-12 md:col-12 lg:col-12">
+                    <div class="flex flex-column gap-2">
+                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Nombre </label>
+                        <div class="p-inputgroup my-1">
+                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                    style="color:#f16357;"></i></span>
+                            <input type="text" placeholder="Escribe aqui.." formControlName="tipo" pInputText />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 md:col-12 lg:col-12 flex justify-content-center">
+                    <button pButton pRipple type="button" label="Guardar" class="p-button-success m-3"
+                        [style]="{ width: '40%'}" (click)="handleCreateTipoSolicitud()" [disabled]="!formTipoSolicitud.valid"></button>
+                    <button pButton pRipple type="button" label="Volver" class="p-button-raised p-button-secondary  m-3"
+                        [style]="{ width: '40%'}" (click)="changeDisplayTipoSolicitudForm()"></button>
+                </div>
+            </div>
+        </form>
+    </app-card-dialog>
+
+</p-dialog>
+<p-toast></p-toast>

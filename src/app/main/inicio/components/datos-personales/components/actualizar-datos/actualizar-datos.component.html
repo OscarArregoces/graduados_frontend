@@ -1,0 +1,132 @@
+<app-card *ngIf="infoUsuario; else elseBlock" titulo="Actualizar datos">
+    <form card-body [formGroup]="form">
+        <div class="grid">
+            <div class="col-12 md:col-12 lg:col-12">
+                <div class="grid flex align-items-center">
+                    <div class="col-12 md:col-6 lg:col-6 flex justify-content-center">
+                        <p-avatar appImgError image="assets/images/avatar/avatar_1.png" shape="circle"
+                            [style]="{'width':'300px','height':'300px', 'border':'1px solid #f16357'}"></p-avatar>
+                    </div>
+                    <div class="col-12 md:col-6 lg:col-6">
+                        <div class="flex flex-column gap-2">
+                            <label class="mb-2" [style]="{'font-weight': 'bold'}">Nombres </label>
+                            <div class="p-inputgroup my-1">
+                                <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                        style="color:#f16357;"></i></span>
+                                <input [style]="{'width': '100%'}" type="text" pInputText formControlName="name"
+                                    [maxlength]="150">
+                            </div>
+                        </div>
+                        <div class="flex flex-column gap-2">
+                            <label class="mb-2" [style]="{'font-weight': 'bold'}">Apellidos </label>
+                            <div class="p-inputgroup my-1">
+                                <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                        style="color:#f16357;"></i></span>
+                                <input [style]="{'width': '100%'}" type="text" pInputText formControlName="surname"
+                                    [maxlength]="150">
+                            </div>
+                        </div>
+                        <div class="flex flex-column gap-2">
+                            <label class="mb-2" [style]="{'font-weight': 'bold'}">Fecha de nacimiento </label>
+                            <div class="p-inputgroup my-1">
+                                <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                        style="color:#f16357;"></i></span>
+                                <p-calendar placeholder="Seleccione la fecha" [style]="{'width': '100%'}"
+                                    formControlName="date_of_birth" dateFormat="mm-dd-yy"></p-calendar>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 md:col-12 lg:col-12">
+                <div class="grid">
+                    <div class=" col-12 md:col-6 lg:col-6">
+                        <div class="flex flex-column gap-2">
+                            <label class="mb-2" [style]="{'font-weight': 'bold'}">Nacionalidad </label>
+                            <div class="p-inputgroup my-1">
+                                <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"></i></span>
+                                <p-dropdown formControlName="nationality" [style]="{'width': '100%'}" [options]="paises"
+                                    optionLabel="name" [filter]="true" filterBy="name" [showClear]="true"
+                                    placeholder="Selecciona un pais" [maxlength]="100">
+                                    <ng-template pTemplate="selectedCountry">
+                                        <div class="country-item country-item-value" *ngIf="selectedCountry">
+                                            <div>{{selectedCountry.name}}</div>
+                                        </div>
+                                    </ng-template>
+                                    <ng-template let-country pTemplate="item">
+                                        <div class="country-item">
+                                            <div>{{country.name}}</div>
+                                        </div>
+                                    </ng-template>
+                                </p-dropdown>
+                            </div>
+                        </div>
+                        <div class="flex flex-column gap-2">
+                            <label class="mb-2" [style]="{'font-weight': 'bold'}">Sexo </label>
+                            <div class="p-inputgroup my-1">
+                                <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"></i></span>
+                                <p-dropdown [style]="{'width': '100%'}" placeholder="Selecciona una opcion"
+                                    [options]="generos" optionLabel="name" formControlName="gender_type"></p-dropdown>
+                            </div>
+                        </div>
+                        <div class="flex flex-column gap-2">
+                            <label class="mb-2" [style]="{'font-weight': 'bold'}">Telefono </label>
+                            <div class="p-inputgroup my-1">
+                                <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"></i></span>
+                                <p-inputMask mask="999 999 9999" placeholder="300 200 1000" formControlName="phone"
+                                    [maxlength]="13"></p-inputMask>
+                            </div>
+                        </div>
+                        <!-- <div class="flex flex-column gap-2">
+                            <label class="mb-2" [style]="{'font-weight': 'bold'}">Correo electronico </label>
+                            <div class="p-inputgroup my-1">
+                                <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                        style="color:#f16357;"></i></span>
+                                <input type="text" pInputText  />
+                            </div>
+                        </div> -->
+                    </div>
+                    <div class=" col-12 md:col-6 lg:col-6">
+                        <div class="flex flex-column gap-2">
+                            <label class="mb-2" [style]="{'font-weight': 'bold'}">Dirección </label>
+                            <div class="p-inputgroup my-1">
+                                <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"></i></span>
+                                <input type="text" pInputText formControlName="address" [maxlength]="50" />
+                            </div>
+                        </div>
+                        <div class="flex flex-column gap-2">
+                            <label class="mb-2" [style]="{'font-weight': 'bold'}">Tipo de documento </label>
+                            <div class="p-inputgroup my-1">
+                                <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                        style="color:#f16357;"></i></span>
+                                <p-dropdown [style]="{'width': '100%'}" placeholder="Selecciona una opcion"
+                                    [options]="tiposDocumento" optionLabel="name"
+                                    formControlName="document_type"></p-dropdown>
+                            </div>
+
+                        </div>
+                        <div class="flex flex-column gap-2">
+                            <label class="mb-2" [style]="{'font-weight': 'bold'}">No. Documento </label>
+                            <div class="p-inputgroup my-1">
+                                <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                        style="color:#f16357;"></i></span>
+                                <input type="text" pInputText formControlName="identification" [maxlength]="40" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class=" col-12 md:col-12 lg:col-12 flex justify-content-center">
+                <button pButton pRipple type="button" label="Guardar cambios" class="p-button-success"
+                    icon="pi pi-check" (click)="onSubmit()" [disabled]="!form.valid"></button>
+            </div>
+
+        </div>
+    </form>
+</app-card>
+
+<ng-template #elseBlock>
+    <app-spinner></app-spinner>
+</ng-template>
+
+<p-toast></p-toast>

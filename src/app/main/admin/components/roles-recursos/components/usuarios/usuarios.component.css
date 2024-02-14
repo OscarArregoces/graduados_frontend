@@ -1,0 +1,30 @@
+:host ::ng-deep .p-datatable-header {
+    background-color: #f16357;
+    border: 1px solid #f16357;
+}
+
+.customText {
+    line-height: 1.625;
+    font-weight: 400;
+    font-size: 1.5rem;
+    font-family: Roboto, sans-serif;
+    color: #616161;
+}
+
+/* :host ::ng-deep .p-dialog-header {
+    background-color: white;
+    border-bottom: 1px solid lightgray;
+    color: black;
+    font-size: 30px;
+}
+
+:host ::ng-deep .p-dialog-content {
+    justify-content: center;
+}
+
+:host ::ng-deep .p-dialog .p-dialog-footer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+} */

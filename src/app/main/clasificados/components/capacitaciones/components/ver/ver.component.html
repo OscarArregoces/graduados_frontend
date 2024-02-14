@@ -1,0 +1,17 @@
+<div class="main">
+    <h1>Ver capacitaciones</h1>
+    <p-table [value]="capacitaciones" [tableStyle]="{'min-width': '50rem'}">
+        <ng-template pTemplate="header">
+            <tr>
+                <th >#</th>
+                <th >Nombre</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-capacitacion let-rowIndex="rowIndex">
+            <tr>
+                <td>{{rowIndex}}</td>
+                <td>{{capacitacion.name}}</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>

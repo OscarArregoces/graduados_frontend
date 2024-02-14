@@ -1,0 +1,192 @@
+<ng-template [ngIf]="isLoggedIn === true">
+  <div class="flex justify-content-start" [style]="{'background':'#f16357',
+  'color':'#fff','font-weight':'bold', 'padding':'10px'}">
+
+    <p-button styleClass="p-button-outlined  p-button-warning" (click)="display = true" class="mr-3">
+      <i class="pi pi-align-justify" style="font-size: 1.5rem; margin-top: 5px;color:white;"></i>
+      <span class="ml-2 font-bold" style="color:white">Egresados</span>
+    </p-button>
+
+    <div class="flex justify-content-end w-12 ">
+      <button id="btn-hora" pButton pRipple type="button" [disabled]="true"
+        class="p-button-outlined  p-button-warning ml-2" style="padding: 7px;">
+        <div class="clock" style="color:white;font-weight:bold">
+          {{dia | titlecase}} {{fecha | titlecase}} [<span class="mishoras">{{hora}}:{{minutos}}:<span
+              class="segundos">{{segundos}}</span></span><span class="ampm">{{ampm}}</span>]
+        </div>
+      </button>
+
+      <button type="button" pButton pRipple class="p-button-rounded p-button-text ml-5" icon="pi pi-plus"
+        (click)="menu.toggle($event)">
+        <p-avatar image="{{image3}}" styleClass="ml-3" size="large" shape="circle"></p-avatar>
+      </button>
+
+      <p-menu #menu [popup]="true" [model]="items" [style]="{'width':'200px','margin-top':'5px'}"></p-menu>
+      <div #menu2 class="box hidden" header="Anuncios" style="display: inline-block;margin:0px"></div>
+    </div>
+
+  </div>
+
+  <div class="container margen">
+    <p-sidebar [(visible)]="display" [style]="{'width':'345px','min-height': '88vh'}" [showCloseIcon]="false"
+      [blockScroll]="false">
+      <div class="grid">
+        <div class="col-11">
+          <a routerLink="/landing" (click)="display=false">
+            <img alt="logo" src="assets/images/banner.png" width="260px" height="92px"
+              style="margin-left: 20px ;margin-top: -5px;" styleClass="p-button-outlined" />
+          </a>
+        </div>
+        <div class="col-1">
+          <a pripple="" (click)="display=false" class="p-ripple p-element 
+          cursor-pointer inline-flex align-items-center 
+            justify-content-center text-white border-2 surface-border
+            hover:bg-gray-600 text-600 transition-colors transition-duration-150 border-circle" style="width: 40px; height: 40px;margin-left: -20px;margin-top:22px;
+            background-color: #f16357;"><i class="pi pi-sign-out text-xl"></i>
+            <span class="p-ink"></span>
+          </a>
+        </div>
+      </div>
+
+      <hr>
+      <h4 class="fondebabutton" style="text-align: center;margin-bottom:-5px;margin-top: -5px;">{{nombre}}</h4>
+      <hr>
+      <app-menu [menu]="menu1" (funcion)="ocultarMenu($event)"></app-menu>
+      <span style="margin:5px"></span>
+
+    </p-sidebar>
+
+
+    <div class="content">
+      <router-outlet></router-outlet>
+      <footer class="footer" style="padding-top: 20px;">
+        <div class="footer__copyright">
+          <p style="color:gray;font-size: 1.1rem">© 2022 Desarrollo Universidad de la Guajira</p>
+        </div>
+        <div class="footer__copyright">
+          <p style="color:gray;font-size: 1rem">Todos los derechos reservados - Semillero SETEC</p>
+        </div>
+      </footer>
+    </div>
+
+  </div>
+</ng-template>
+
+
+<div style="display:relative;">
+  <p-menu #menu [popup]="true" [model]="items" [style]="{'width':'200px','margin-top':'5px'}"></p-menu>
+</div>
+
+
+<p-dialog [(visible)]="Dialog" [style]="{'width': '40vw'}" [resizable]="false" zindex="10000" [showHeader]="false"
+  [closeOnEscape]="false" [closable]="false" [modal]="true">
+  <div class="flex flex-column " style="flex: 1">
+    <div class="text-center">
+      <i class="pi pi-exclamation-triangle" style="font-size: 3rem"></i>
+      <h4>Esta seguro de Cerrar la Sesion?</h4>
+      <p>Si para continuar</p>
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer" class="titleCard">
+    <div style="text-align: center;">
+      <button pButton pRipple label="No" icon="pi pi-times" style="color: rgb(36, 64, 31);" class="p-button-text"
+        (click)="hideDialog()"></button>
+      <button pButton pRipple label="Si" style="background: #f16357; border: 1px solid #f16357;"
+        class=" p-button-raised p-button-rounded" icon="pi pi-check" (click)="cerrarSesion()"></button>
+    </div>
+  </ng-template>
+</p-dialog>
+
+<p-dialog [(visible)]="displayAvatarForm" [style]="{'width': width}" [resizable]="false" zindex="10000"
+  [showHeader]="false" [closeOnEscape]="true" [closable]="true" [modal]="true" [dismissableMask]="true">
+  <app-card titulo="Imagen de perfil">
+    <div card-body class="grid">
+      <div class="col-12 md:col-12 lg:col-12">
+        <div class="grid flex align-items-center">
+          <div class="col-12 md:col-6 lg:col-6 flex align-items-center justify-content-center flex-column">
+            <p-avatar appImgError image="assets/images/avatar/avatar_1.png" shape="circle"
+              [style]="{'width':'300px','height':'300px', 'border':'1px solid #f16357'}"></p-avatar>
+            <button style="max-width: 150px;" pButton pRipple type="button" label="Tomar foto" icon="pi pi-camera"
+              class="p-button-secondary"></button>
+          </div>
+          <div class="col-12 md:col-6 lg:col-6 flex justify-content-center">
+            <div class="grid">
+              <div class="col-12 md:col-12 lg:col-12">
+                <div class="grid flex align-items-center">
+                  <div class="col-12 md:col-6 lg:col-6 flex justify-content-center">
+                    <p-avatar appImgError image="assets/images/avatar/avatar_1.png" shape="circle"
+                      [style]="{'width':'200px','height':'200px', 'border':'1px solid #f16357'}"></p-avatar>
+                  </div>
+                  <div class="col-12 md:col-6 lg:col-6 flex justify-content-center">
+                    <p-avatar appImgError image="assets/images/avatar/avatar_2.png" shape="circle"
+                      [style]="{'width':'200px','height':'200px', 'border':'1px solid #f16357'}"></p-avatar>
+                  </div>
+                  <div class="col-12 md:col-6 lg:col-6 flex justify-content-center">
+                    <p-avatar appImgError image="assets/images/avatar/avatar_2.png" shape="circle"
+                      [style]="{'width':'200px','height':'200px', 'border':'1px solid #f16357'}"></p-avatar>
+                  </div>
+                  <div class="col-12 md:col-6 lg:col-6 flex justify-content-center">
+                    <p-avatar appImgError image="assets/images/avatar/avatar_1.png" shape="circle"
+                      [style]="{'width':'200px','height':'200px', 'border':'1px solid #f16357'}"></p-avatar>
+                  </div>
+                  <div class="col-12 md:col-6 lg:col-6 flex justify-content-center">
+                    <p-avatar appImgError image="assets/images/avatar/avatar_1.png" shape="circle"
+                      [style]="{'width':'200px','height':'200px', 'border':'1px solid #f16357'}"></p-avatar>
+                  </div>
+                  <div class="col-12 md:col-6 lg:col-6 flex justify-content-center">
+                    <p-avatar appImgError image="assets/images/avatar/avatar_2.png" shape="circle"
+                      [style]="{'width':'200px','height':'200px', 'border':'1px solid #f16357'}"></p-avatar>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class=" col-12 md:col-12 lg:col-12 flex justify-content-center">
+        <button pButton pRipple type="button" label="Guardar cambios" class="p-button-success"
+          icon="pi pi-check"></button>
+      </div>
+
+    </div>
+  </app-card>
+</p-dialog>
+
+<p-dialog [(visible)]="displayCuentaForm" [style]="{'width': width, 'min-height':'50vh'}" [resizable]="false" zindex="10000"
+  [showHeader]="true"  [modal]="true" [dismissableMask]="false"
+  header="Actualizar Contraseña" (onHide)="closeDisplayCuentaForm()">
+  <form card-body [formGroup]="formCuenta">
+    <div class="grid">
+      <app-custom-info-card [description]="descriptionCustomInfoCard"></app-custom-info-card>
+      <div class="col-12">
+        <div class="flex justify-content-center align-items-center">
+          <div class="flex flex-column gap-2 mx-2">
+            <label class="mb-2" [style]="{'font-weight': 'bold'}">Contraseña actual </label>
+            <div class="p-inputgroup my-1">
+              <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill" style="color:#f16357;"></i></span>
+              <p-password formControlName="original_password" [style]="{'width':'100%'}"
+                promptLabel="Escribe tu contraseña" weakLabel="Muy debil" mediumLabel="Aceptable"
+                strongLabel="Segura" ></p-password>
+            </div>
+          </div>
+          <div class="flex flex-column gap-2 mx-2">
+            <label class="mb-2" [style]="{'font-weight': 'bold'}">Contraseña nueva </label>
+            <div class="p-inputgroup my-1">
+              <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill" style="color:#f16357;"></i></span>
+              <p-password formControlName="password" [style]="{'width':'100%'}" promptLabel="Escribe tu contraseña"
+                weakLabel="Muy debil" mediumLabel="Aceptable" strongLabel="Segura"></p-password>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 md:col-12 lg:col-12 flex justify-content-center">
+        <button pButton pRipple type="button" label="Guardar cambios" class="p-button-success" icon="pi pi-check"
+          (click)="handleSubmitFormCuenta()"></button>
+      </div>
+    </div>
+  </form>
+</p-dialog>
+
+<p-toast></p-toast>

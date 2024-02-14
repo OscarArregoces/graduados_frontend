@@ -1,0 +1,284 @@
+<app-card titulo="Actividades" width="80%">
+    <div card-body class="grid">
+        <app-custom-info-card [description]="inforCardDescription"></app-custom-info-card>
+        <div class="col-12">
+            <form [formGroup]="form">
+                <div class="grid">
+                    <div class="col-12 md:col-12 lg:col-4">
+                        <div class="p-inputgroup">
+                            <span class="p-inputgroup-addon"><i class="pi pi-filter-fill"
+                                    style="color:#f16357;"></i></span>
+                            <p-multiSelect [style]="{ width: '100%'}" (onChange)="onChangeSelectedFilter($event)"
+                                [options]="filterOptions" placeholder="Selecciona una opcion" display="chip"></p-multiSelect>
+                        </div>
+                    </div>
+                    <div *ngIf="optionsSelectedFilter.includes('Estado')" class="col-12 md:col-12 lg:col-4">
+                        <div class="p-inputgroup">
+                            <span class="p-inputgroup-addon"><i class="pi pi-filter-fill"
+                                    style="color:#f16357;"></i></span>
+                            <p-dropdown [style]="{ width: '100%'}" [options]="filterStatus" (onChange)="onChangeSelectedStatus($event)"
+                                formControlName="optionsSelectedStatus" optionLabel="name"
+                                placeholder="Filtrar por estado" [showClear]="true"></p-dropdown>
+                        </div>
+                    </div>
+                    <div *ngIf="optionsSelectedFilter.includes('Mas reciente/Menos reciente')"
+                    class="col-12 md:col-12 lg:col-4">
+                    <div class="p-inputgroup">
+                        <span class="p-inputgroup-addon"><i class="pi pi-filter-fill" style="color:#f16357;"></i></span>
+                        <p-dropdown [style]="{ width: '100%'}" [options]="filterOrder" (onChange)="onChangeSelectedOrder($event)"
+                            formControlName="optionsSelectedOrder" placeholder="Filtrar por orden" optionLabel="name"
+                            [showClear]="true"></p-dropdown>
+                    </div>
+                </div>
+                    <div *ngIf="optionsSelectedFilter.includes('Rango de fechas')"
+                    class="col-12 md:col-12 lg:col-4">
+                    <div class="p-inputgroup mx-1">
+                        <span class="p-inputgroup-addon"><i class="pi pi-filter-fill" style="color:#f16357;"></i></span>
+                        <p-calendar [style]="{'width':'100%'}" formControlName="initialDate" placeholder="Fecha inicial" dateFormat="mm-dd-yy"
+                            inputId="dateformat" (onSelect)="onChangeInitialDate($event)"></p-calendar>
+                    </div>
+                </div>
+                    <div *ngIf="optionsSelectedFilter.includes('Rango de fechas')"
+                    class="col-12 md:col-12 lg:col-4">
+                    <div class="p-inputgroup mx-1">
+                        <span class="p-inputgroup-addon"><i class="pi pi-filter-fill" style="color:#f16357;"></i></span>
+                        <p-calendar [style]="{'width':'100%'}" placeholder="Fecha final" dateFormat="mm-dd-yy"
+                            inputId="dateformat" formControlName="finalDate" (onSelect)="onChangeFinalDate($event)"></p-calendar>
+                    </div>
+                </div>
+                    <div class="col-12 md:col-12 lg:col-4 flex justify-content-center" *ngIf="optionsSelectedFilter.length > 0">
+                        <button pButton pRipple type="submit" label="Filtrar" (click)="filtrar()" ></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="col-12 md:col-12 lg:col-12">
+            <div class="flex flex-column gap-2">
+
+                <p-card>
+                    <p-table #dt [value]="actividades" [(selection)]="itemsBulkDelete" dataKey="id"
+                        styleClass="p-datatable-customers" [rowHover]="true" [rows]="10" [showCurrentPageReport]="true"
+                        [rowsPerPageOptions]="[10,25,50]" [loading]="loading" responsiveLayout="scroll"
+                        [paginator]="true"
+                        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} elementos"
+                        [filterDelay]="0"
+                        [globalFilterFields]="['nombre_actividad', 'tipo_actividad.name', 'responsable']"
+                        responsiveLayout="scroll">
+                        <ng-template pTemplate="caption">
+                            <div class="table-header">
+                                <div class="grid" [style]="{'display': 'flex', 'justify-content': 'space-between'}">
+                                    <div class="col-12 md:col-6 lg:col-6" [style]="{'font-size': '20px'}">
+                                        Lista de Actividades
+                                    </div>
+                                    <div class="col-12 md:col-6 lg:col-3">
+                                        <span [style]="{'width':'100%'}" class="p-input-icon-left">
+                                            <i class="pi pi-search"></i>
+                                            <input [style]="{'width':'100%'}" pInputText type="text"
+                                                (input)="dt.filterGlobal(getEventValue($event), 'contains')"
+                                                placeholder="Busqueda global" />
+                                        </span>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </ng-template>
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th style="width: 3rem">
+                                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+
+                                </th>
+                                <th style="width: 5rem">
+                                    <p>Indice</p>
+                                </th>
+                                <th pSortableColumn="nombre_actividad">
+                                    <div class="flex justify-content-between align-items-center">
+                                        Actividad
+                                        <p-sortIcon field="nombre_actividad"></p-sortIcon>
+                                        <p-columnFilter type="text" field="nombre_actividad" display="menu"
+                                            class="ml-auto"></p-columnFilter>
+                                    </div>
+                                </th>
+                                <th pSortableColumn="tipo_actividad.name">
+                                    <div class="flex justify-content-between align-items-center">
+                                        Tipo
+                                        <p-sortIcon field="tipo_actividad.name"></p-sortIcon>
+                                        <p-columnFilter type="text" field="tipo_actividad.name" display="menu"
+                                            class="ml-auto"></p-columnFilter>
+                                    </div>
+                                </th>
+                                <th pSortableColumn="fecha">
+                                    <div class="flex justify-content-between align-items-center">
+                                        Fecha
+                                        <p-sortIcon field="fecha"></p-sortIcon>
+                                        <p-columnFilter type="text" field="fecha" display="menu"
+                                            class="ml-auto"></p-columnFilter>
+                                    </div>
+                                </th>
+                                <th pSortableColumn="responsable">
+                                    <div class="flex justify-content-between align-items-center">
+                                        Responsable
+                                        <p-sortIcon field="responsable"></p-sortIcon>
+                                        <p-columnFilter type="text" field="responsable" display="menu"
+                                            class="ml-auto"></p-columnFilter>
+                                    </div>
+                                </th>
+
+                                <th pSortableColumn="cupos">
+                                    <div class="flex justify-content-between align-items-center">
+                                        Cupos
+                                        <p-sortIcon field="cupos"></p-sortIcon>
+                                        <p-columnFilter type="text" field="cupos" display="menu"
+                                            class="ml-auto"></p-columnFilter>
+                                    </div>
+                                </th>
+                                <th style="width: 8rem;text-align: center">
+                                    Detalles
+                                </th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-actividad let-rowIndex="rowIndex">
+                            <tr class="p-selectable-row">
+                                <td>
+                                    <p-tableCheckbox [value]="actividad"></p-tableCheckbox>
+                                </td>
+                                <td>
+                                    {{rowIndex + 1 }}
+                                </td>
+                                <td>
+                                    <span class="p-column-title">Nombre de la actividad</span>
+                                    {{actividad.nombre_actividad}}
+                                </td>
+                                <td>
+                                    <span class="p-column-title">Tipo de actividad</span>
+                                    {{actividad.tipo_actividad.name}}
+                                </td>
+                                <td>
+                                    <span class="p-column-title">Fecha</span>
+                                    {{actividad.fecha}}
+                                </td>
+                                <td>
+                                    <span class="p-column-title">Responsable</span>
+                                    {{actividad.responsable}}
+                                </td>
+                                <td>
+                                    <span class="p-column-title">Cupos</span>
+                                    {{actividad.cupos}}
+                                </td>
+                                <td style="text-align: center">
+                                    <button pButton type="button" icon="pi pi-eye" class="p-button-secondary"
+                                        (click)="showDetalles(actividad)"></button>
+                                </td>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="emptymessage">
+                            <tr>
+                                <td colspan="8">No hay datos que mostrar</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </p-card>
+
+            </div>
+        </div>
+
+    </div>
+</app-card>
+
+<p-dialog header="Detalles de solicitud" [(visible)]="visible" [style]="{width: '80%', 'text-aling': 'center'}"
+    [showHeader]="false" [modal]="true" [dismissableMask]="true">
+
+    <app-card-dialog titulo="Detalles del emprendimiento" *ngIf="actividad">
+
+        <div class="grid">
+            <div class="col-12 md:col-6 lg:col-6">
+                <div class="flex flex-column gap-2">
+                    <label class="mb-2" [style]="{'font-weight': 'bold'}">Nombre de la actividad: </label>
+                    <input type="text" placeholder="Escribe aqui.." pInputText [value]="actividad.nombre_actividad"
+                        [disabled]="true" />
+                </div>
+            </div>
+            <div class="col-12 md:col-6 lg:col-6">
+                <div class="flex flex-column gap-2">
+                    <label class="mb-2" [style]="{'font-weight': 'bold'}">Fecha: </label>
+                    <input type="text" placeholder="Escribe aqui.." pInputText [value]="actividad.fecha"
+                        [disabled]="true" />
+
+                </div>
+            </div>
+            <div class="col-12 md:col-6 lg:col-6">
+                <div class="flex flex-column gap-2">
+                    <label class="mb-2" [style]="{'font-weight': 'bold'}">Hora: </label>
+                    <input type="text" placeholder="Escribe aqui.." pInputText [value]="actividad.hora"
+                        [disabled]="true" />
+
+                </div>
+            </div>
+            <div class="col-12 md:col-6 lg:col-6">
+                <div class="flex flex-column gap-2">
+                    <label class="mb-2" [style]="{'font-weight': 'bold'}">Tipo de actividad: </label>
+                    <input type="text" placeholder="Escribe aqui.." pInputText [value]="actividad.tipo_actividad.name"
+                        [disabled]="true" />
+
+                </div>
+            </div>
+            <div class="col-12 md:col-6 lg:col-6">
+                <div class="flex flex-column gap-2">
+                    <label class="mb-2" [style]="{'font-weight': 'bold'}">Responsable de la actividad: </label>
+                    <input type="text" placeholder="Escribe aqui..." pInputText [value]="actividad.responsable"
+                        [disabled]="true" />
+                </div>
+            </div>
+            <div class="col-12 md:col-6 lg:col-6">
+                <div class="flex flex-column gap-2">
+                    <label class="mb-2" [style]="{'font-weight': 'bold'}">Lugar donde se llevará a cabo: </label>
+                    <input type="text" placeholder="Escribe aqui..." pInputText [value]="actividad.lugar"
+                        [disabled]="true" />
+                </div>
+            </div>
+
+            <div class="col-12 md:col-6 lg:col-6">
+                <div class="flex flex-column gap-2">
+                    <label class="mb-2" [style]="{'font-weight': 'bold'}">Descripción: </label>
+                    <textarea [value]="actividad.descripcion" placeholder="Escribe aqui..." [rows]="7" [cols]="30"
+                        pInputTextarea [autoResize]="false" [disabled]="true"></textarea>
+                </div>
+            </div>
+
+            <div class="col-12 md:col-6 lg:col-6">
+                <div class="flex flex-column gap-2">
+                    <label class="mb-2" [style]="{'font-weight': 'bold'}">Objetivo de la actividad: </label>
+                    <input type="text" placeholder="Escribe aqui..." pInputText [value]="actividad.objectivo"
+                        [disabled]="true" />
+                </div>
+                <div class="flex flex-column gap-2">
+                    <label class="mb-2" [style]="{'font-weight': 'bold'}">Area: </label>
+                    <input type="text" placeholder="Escribe aqui..." pInputText [value]="actividad.area.name"
+                        [disabled]="true" />
+
+                </div>
+                <div class="flex flex-column gap-2">
+                    <label class="mb-2" [style]="{'font-weight': 'bold'}">SubArea: </label>
+                    <input type="text" placeholder="Escribe aqui..." pInputText [value]="actividad.subArea.name"
+                        [disabled]="true" />
+
+                </div>
+            </div>
+
+            <div class="col-12 md:col-6 lg:col-6">
+                <div class="flex flex-column gap-2">
+                    <label class="mb-2" [style]="{'font-weight': 'bold'}">Cupos disponibles: </label>
+                    <input type="number" placeholder="Escribe aqui..." pInputText [value]="actividad.cupos"
+                        [disabled]="true" />
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-12 md:col-12 lg:col-12 flex justify-content-center">
+            <button pButton pRipple type="button" label="Volver" class="p-button-outlined" [style]="{ width: '30%'}"
+                (click)="closeDetalles()"></button>
+        </div>
+    </app-card-dialog>
+</p-dialog>

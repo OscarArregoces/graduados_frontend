@@ -1,0 +1,207 @@
+<app-card titulo="Solicitudes" width="80%">
+    <div card-body class="grid">
+        <app-custom-info-card [description]="inforCardDescription"></app-custom-info-card>
+        <div class="col-12 md:col-12 lg:col-12">
+            <div class="flex flex-column gap-2">
+                <p-card>
+                    <p-table #dt [value]="solicitudes" [(selection)]="solicitudesSeleccionadas" dataKey="id"
+                        styleClass="p-datatable-customers" [rowHover]="true" [rows]="10" [showCurrentPageReport]="true"
+                        [rowsPerPageOptions]="[10,25,50]" [loading]="loading" responsiveLayout="scroll"
+                        [paginator]="true"
+                        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} elementos"
+                        [filterDelay]="0" [globalFilterFields]="['titulo', 'tipopqrs.tipo','status.valor', 'persona']"
+                        responsiveLayout="scroll">
+                        <ng-template pTemplate="caption">
+                            <div class="table-header">
+                                <div class="grid" [style]="{'display': 'flex', 'justify-content': 'space-between'}">
+                                    <div class="col-12 md:col-6 lg:col-6" [style]="{'font-size': '20px'}">
+                                        Lista de Solicitudes
+                                    </div>
+                                    <div class="col-12 md:col-6 lg:col-3">
+                                        <span [style]="{'width':'100%'}" class="p-input-icon-left">
+                                            <i class="pi pi-search"></i>
+                                            <input [style]="{'width':'100%'}" pInputText type="text"
+                                                (input)="dt.filterGlobal(getEventValue($event), 'contains')"
+                                                placeholder="Busqueda global" />
+                                        </span>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </ng-template>
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th style="width: 3rem">
+                                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+
+                                </th>
+                                <th style="width: 5rem">
+                                    <p>Indice</p>
+                                </th>
+                                <th pSortableColumn="titulo">
+                                    <div class="flex justify-content-between align-items-center">
+                                        Asunto
+                                        <p-sortIcon field="titulo"></p-sortIcon>
+                                        <p-columnFilter type="text" field="titulo" display="menu"
+                                            class="ml-auto"></p-columnFilter>
+                                    </div>
+                                </th>
+                                <th pSortableColumn="tipopqrs.tipo">
+                                    <div class="flex justify-content-between align-items-center">
+                                        Tipo
+                                        <p-sortIcon field="tipopqrs.tipo"></p-sortIcon>
+                                        <p-columnFilter type="text" field="tipopqrs.tipo" display="menu"
+                                            class="ml-auto"></p-columnFilter>
+                                    </div>
+                                </th>
+                                <th pSortableColumn="persona">
+                                    <div class="flex justify-content-between align-items-center">
+                                        Usuario
+                                        <p-sortIcon field="persona"></p-sortIcon>
+                                        <p-columnFilter type="text" field="persona" display="menu"
+                                            class="ml-auto"></p-columnFilter>
+                                    </div>
+                                </th>
+                                <th pSortableColumn="status.valor">
+                                    <div class="flex justify-content-between align-items-center">
+                                        Estado
+                                        <p-sortIcon field="status.valor"></p-sortIcon>
+                                        <p-columnFilter type="text" field="status.valor" display="menu"
+                                            class="ml-auto"></p-columnFilter>
+                                    </div>
+                                </th>
+                                <th style="width: 8rem;text-align: center">
+                                    Editar
+                                </th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-solicitud let-rowIndex="rowIndex">
+                            <tr class="p-selectable-row">
+                                <td>
+                                    <p-tableCheckbox [value]="solicitud"></p-tableCheckbox>
+                                </td>
+                                <td>
+                                    {{rowIndex + 1 }}
+                                </td>
+                                <td>
+                                    <span class="p-column-title">Asunto</span>
+                                    {{solicitud.titulo}}
+                                </td>
+                                <td>
+                                    <span class="p-column-title">Tipo de solicitud</span>
+                                    {{solicitud.tipopqrs.tipo}}
+                                </td>
+                                <td>
+                                    <span class="p-column-title">Usuario</span>
+                                    {{solicitud.persona}}
+                                </td>
+                                <td>
+                                    <span class="p-column-title">Estado</span>
+
+                                    <p-button *ngIf="solicitud.status.valor === 'En espera'"
+                                        styleClass="p-button-warning"> {{solicitud.status.valor}}
+                                    </p-button>
+                                    <p-button *ngIf="solicitud.status.valor === 'Finalizada'"
+                                        styleClass="p-button-danger"> {{solicitud.status.valor}}
+                                    </p-button>
+                                    <p-button *ngIf="solicitud.status.valor === 'Activa'"> {{solicitud.status.valor}}
+                                    </p-button>
+
+                                </td>
+                                <td style="text-align: center">
+                                    <button pButton type="button" icon="pi pi-pencil" class="p-button-warning"
+                                        (click)="showEditar(solicitud.id, solicitud)"></button>
+                                </td>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="emptymessage">
+                            <tr>
+                                <td colspan="8">No hay datos que mostrar</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </p-card>
+
+            </div>
+        </div>
+
+    </div>
+</app-card>
+
+
+<p-dialog header="Detalles de Solicitud" [(visible)]="display" [style]="{width: '80%', 'text-aling': 'center'}"
+    [showHeader]="false" [modal]="true" [dismissableMask]="true">
+
+    <app-card-dialog titulo="Editar solicitud">
+        <form card-body [formGroup]="form">
+            <div class="grid">
+                <div class="col-12 md:col-6 lg:col-6 ">
+
+                    <div class="flex flex-column gap-2">
+                        <label class="mb-2" htmlFor="Asunto" [style]="{'font-weight': 'bold'}">Usuario: </label>
+                        <div class="p-inputgroup my-1">
+                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                    style="color:#f16357;"></i></span>
+                            <input pInputText formControlName="persona">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 md:col-6 lg:col-6">
+                    <div class="flex flex-column gap-2">
+                        <label class="mb-2" htmlFor="Asunto" [style]="{'font-weight': 'bold'}">Asunto: </label>
+                        <div class="p-inputgroup my-1">
+                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                    style="color:#f16357;"></i></span>
+                            <input pInputText formControlName="titulo" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 md:col-6 lg:col-6 ">
+
+                    <!-- <div class="flex flex-column gap-2">
+                        <label class="mb-2" htmlFor="Asunto" [style]="{'font-weight': 'bold'}">Tipo de solicitud: </label>
+                        <input pInputText [value]="solicitud[0].tipopqrs" />
+                    </div> -->
+                    <div class="flex flex-column gap-2">
+                        <label class="mb-2" htmlFor="Asunto" [style]="{'font-weight': 'bold'}">Tipo de solicitud:
+                        </label>
+                        <div class="p-inputgroup my-1">
+                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                    style="color:#f16357;"></i></span>
+                            <p-dropdown [options]="tipoSolicitudes" [style]="{ width: '100%'}" optionLabel="tipo"
+                                placeholder="Seleccione una opcion" formControlName="tipopqrs"></p-dropdown>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-12 md:col-6 lg:col-6">
+                    <div class="flex flex-column gap-2">
+                        <label class="mb-2" htmlFor="Asunto" [style]="{'font-weight': 'bold'}">Estado: </label>
+                        <div class="p-inputgroup my-1">
+                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                    style="color:#f16357;"></i></span>
+                            <p-dropdown [options]="estados" [style]="{ width: '100%'}" optionLabel="valor"
+                                placeholder="Seleccione una opcion" formControlName="status"></p-dropdown>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 my-3">
+                    <div class="flex flex-column gap-2">
+                        <label class="mb-2" htmlFor="Asunto" [style]="{'font-weight': 'bold'}">
+                            Nos gustaria saber el motivo de su solicitud: </label>
+                        <textarea rows="5" cols="10" pInputTextarea [style]="{ width: '100%'}"
+                            formControlName="description"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 md:col-12 lg:col-12 flex justify-content-center">
+                <button pButton pRipple type="button" label="Guardar" class="p-button-warning m-3"
+                    [style]="{ width: '40%'}" (click)="submit()"></button>
+                <button pButton pRipple type="button" label="Volver" class="p-button-raised p-button-secondary  m-3"
+                    [style]="{ width: '40%'}" (click)="closeEditar()"></button>
+            </div>
+
+        </form>
+    </app-card-dialog>
+</p-dialog>

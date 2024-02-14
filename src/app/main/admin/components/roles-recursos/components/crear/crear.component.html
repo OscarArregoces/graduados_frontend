@@ -1,0 +1,111 @@
+<p-toast></p-toast>
+
+<div class="grid p-8 " [style]="{margin: '0 auto'}">
+
+    <div class="col-6">
+        <button pButton pRipple type="button" label="Agregar recurso" class="p-button-primary mx-5"
+            (click)="changeDisplayTest()"></button>
+
+        <p-autoComplete [(ngModel)]="rolesId" [virtualScroll]="true" [suggestions]="filteredItems"
+            (completeMethod)="filterItems($event)" field="label" [dropdown]="true">
+        </p-autoComplete>
+    </div>
+
+    <div class="col-6">
+
+        <button pButton pRipple type="button" label="Agregar recurso" class="p-button-primary mx-5"
+            (click)="showDialog()"></button>
+
+        <button pButton pRipple type="button" label="Guardar recursos" class="p-button-success mx-5"
+            (click)="guardarRecursoRol()" [disabled]="!bandera"></button>
+    </div>
+
+    <div class="col-12">
+        <p-table [value]="recursos" responsiveLayout="scroll" [style]="{width: '100%'}">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Id</th>
+                    <th>Path</th>
+                    <th>Method</th>
+                    <th>Id_Padre</th>
+                    <th>Icono</th>
+                    <th>Link</th>
+                    <th>Titulo</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-recurso>
+                <tr>
+                    <td>{{recurso.id}}</td>
+                    <td>{{recurso.path}}</td>
+                    <td>{{recurso.method}}</td>
+                    <td>{{recurso.id_padre}}</td>
+                    <td>{{recurso.icono}}</td>
+                    <td>{{recurso.link}}</td>
+                    <td>{{recurso.titulo}}</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+<p-dialog class="dialog-form-crear col-12 md:col-6 lg:col-3" header="Crear test" [(visible)]="displayTest"
+    [modal]="true" [showHeader]="true" [style]="{width: '60vw', height: '50%'}" [draggable]="false" [resizable]="false">
+    <form [formGroup]="formTest">
+        <div class="flex flex-column">
+            <input type="text" pInputText formControlName="path" placeholder="path">
+            <input type="text" pInputText formControlName="id_padre" placeholder="id_padre">
+            <input type="text" pInputText formControlName="link" placeholder="link">
+            <input type="text" pInputText formControlName="titulo" placeholder="titulo">
+            <input type="text" pInputText formControlName="icono" placeholder="icono">
+        </div>
+        <button pButton pRipple type="submit" label="Agregar recurso" class="p-button-primary mx-5"
+            (click)="onSubmitTest()"></button>
+    </form>
+</p-dialog>
+
+<p-dialog class="dialog-form-crear col-12 md:col-6 lg:col-3" header="Crear recuerso" [(visible)]="display"
+    [modal]="true" [style]="{width: '60vw', height: '50%'}" [draggable]="false" [resizable]="false">
+    <form (submit)="submit()" [formGroup]="form">
+        <div class="card">
+            <div class="grid">
+                <div class="field col-12 md:col-12 lg:col-6">
+                    <label for="Path">Path :</label>
+                    <input
+                        class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                        type="text" pInputText formControlName="path" placeholder="/dashboard/admin/"
+                        [pKeyFilter]="blockSpecial" required>
+                    <label for="Method">Method :</label>
+                    <input
+                        class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                        type="text" pInputText formControlName="method" placeholder="GET" [pKeyFilter]="blockSpecial"
+                        required>
+                    <label for="Id_padre">Id_padre :</label>
+                    <input
+                        class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                        type="number" pInputText formControlName="id_padre" placeholder="Escribe aqui.."
+                        [pKeyFilter]="blockSpecial">
+                </div>
+
+                <div class="field col-12 md:col-12 lg:col-6">
+                    <label for="Icono">Icono :</label>
+                    <input
+                        class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                        type="text" pInputText formControlName="icono" placeholder="pi pi-home"
+                        [pKeyFilter]="blockSpecial" required>
+                    <label for="Link">Link :</label>
+                    <input
+                        class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                        type="text" pInputText formControlName="link" placeholder="/dashboard/admin"
+                        [pKeyFilter]="blockSpecial" required>
+                    <label for="Titulo">Titulo :</label>
+                    <input
+                        class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                        type="text" pInputText formControlName="titulo" placeholder="Admin" [pKeyFilter]="blockSpecial"
+                        required>
+                </div>
+            </div>
+            <button pButton pRipple type="submit" label="Guardar rol" class="p-button-success my-3"
+                [disabled]="!form.valid"></button>
+        </div>
+    </form>
+
+</p-dialog>

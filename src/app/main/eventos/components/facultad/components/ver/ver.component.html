@@ -1,0 +1,20 @@
+<div class="main">
+    <h1>Todas las facultades</h1>
+    <p-table [value]="facultades" [tableStyle]="{'min-width': '10rem'}">
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>Sede</th>
+    
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-area>
+            <tr>
+                <td>{{ area.id}}</td>
+                <td>{{ area.name}}</td>
+                <td>{{ area.sede}}</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>

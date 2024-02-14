@@ -1,0 +1,9 @@
+
+<form (ngSubmit)="onSubmit()" class="main m-auto p-5" [formGroup]="form"> 
+    <h1 class="m-3 text-center">Crear Facultad</h1>
+    <input type="text" pInputText placeholder="Nombre" formControlName="name"> 
+    <p-dropdown [options]="sedes" formControlName="sede" optionLabel="name" placeholder="Seleccionar una opcion"></p-dropdown>
+    <button pButton pRipple type="submit" label="Crear" class="p-button-success"></button>
+</form>
+
+<p-toast></p-toast>

@@ -1,0 +1,80 @@
+<div id="card-custom">
+    <div id="card-header">
+        <div class="p-inputgroup">
+            <span style="background-color: #f16357; border:1px solid #f16357; color: white;"
+                class="p-inputgroup-addon">
+                <i class="pi pi-book"></i>
+            </span>
+        </div>
+    </div>
+    <div id="card-body" class="grid">
+        <div class="col-12 md:col-4 lg:col-3 flex justify-content-center align-items-center">
+            <img appImgError src="assets/images/logo.png" title="Logo Uniguajira" alt="Logo Uniguajira">
+        </div>
+        <div class="col-12 md:col-8 lg:col-9">
+            <div class="grid flex justify-content-end">
+                <div class="col-12 md:col-12 lg:col-12 text-center">
+                    <h3>{{ actividad.nombre_actividad}}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 md:col-12 lg:col-12">
+            <div class="grid">
+                <div class="col-12 md:col-12 lg:col-10">
+                    <div>
+                        <strong>Tipo de actividad:</strong> {{ actividad.tipo_actividad.name}}
+                    </div>
+                    <div>
+                        <strong>Responsable:</strong> {{ actividad.responsable}}
+                    </div>
+                    <div>
+                        <strong>Lugar:</strong> {{ actividad.lugar}}
+                    </div>
+                </div>
+
+                <div class="col-12 md:col-12 lg:col-2 ">
+                    <div class="lg:mx-2">
+                        <strong>Fecha:</strong> {{ actividad.fecha}}
+                    </div>
+                    <div class="lg:mx-2">
+                        <strong>Cupos: </strong> {{ actividad.cupos}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 md:col-12 lg:col-12">
+            <!-- <h4>Objetivo:</h4> -->
+          <p>
+            {{ actividad.objectivo}}
+          </p>
+        </div>
+        <div class="col-12 md:col-12 lg:col-12">
+            <!-- <h4>Descripcion:</h4> -->
+            <p>
+                {{ actividad.descripcion}}
+            </p>
+        </div>
+
+        <div class="col-12 md:col-6 lg:col-6">
+            <p-chip [label]="actividad.subArea.area.name" icon="pi pi-th-large" styleClass="m-2"></p-chip>
+            <p-chip [label]="actividad.subArea.name" icon="pi pi-th-large" styleClass="m-2"></p-chip>
+        </div>
+        <div class="col-12 md:col-6 lg:col-6">
+            <div class="lg:flex lg:justify-content-end sm:flex sm:justify-content-end">
+                <div *ngIf="!actividad.asistire && !actividad.fecha_pasada else elseBlock">
+                    <button pButton type="button" label="Asistiré" icon="pi pi-arrow-circle-right"
+                        class="p-button m-2" (click)="handleBtnAsistire(actividad.id)"></button>
+                </div>
+                <ng-template #elseBlock class="mx-2 ">
+                    <button pButton type="button" [label]="!actividad.fecha_pasada ? 'Activa': 'Finalizada' "
+                        [class]="!actividad.fecha_pasada ? 'p-button-success m-2': 'p-button-danger m-2 '"></button>
+                    <button *ngIf="actividad.fecha_pasada" pButton type="button" [icon]=" actividad.confirm_asistencia ? 'pi pi-check-circle' : 'pi pi-times-circle'" [label]="actividad.confirm_asistencia ? 'Asistio': 'No asistió' "
+                        [class]="actividad.confirm_asistencia ? 'p-button-success m-2': 'p-button-danger m-2 '"></button>
+                   
+                </ng-template>
+
+            </div>
+        </div>
+
+    </div>
+</div>

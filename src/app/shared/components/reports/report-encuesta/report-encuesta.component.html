@@ -1,0 +1,60 @@
+<ng-container *ngIf="data.length; else elseBlock">
+
+    <!-- <a *ngIf="urlFilterFacultad" href="http://{{API_URI}}/reportes/encuestas/facultad/{{urlFilterFacultad}}/generar/" Target="_blank"> -->
+    <a *ngIf="urlFilterFacultad" href="http://{{API_URI}}/reportes/encuestas/facultad/1/generar/" Target="_blank">
+        <button pButton pRipple type="button" icon="pi pi-download" label="Reporte" title="Solo grafica"
+            class="p-button-success my-2">
+        </button>
+    </a>
+
+    <form [formGroup]="form">
+        <div class="grid">
+            <!-- FORMATO DE REPORTE -->
+            <div class="col-12 md:col-6 lg:col-4">
+                <div class="p-inputgroup">
+                    <span class="p-inputgroup-addon"><i class="pi pi-filter-fill" style="color:#f16357;"></i></span>
+                    <p-dropdown [style]="{ width: '100%'}" [options]="filterPrinciaplOptions"
+                        (onChange)="onChangeSelectedPrincipalFilter($event)" placeholder="Selecciona una opcion"
+                        [showClear]="false"></p-dropdown>
+                </div>
+            </div>
+            <!-- TIPO DE FILTRO -->
+            <div class="col-12 md:col-6 lg:col-4"
+                *ngIf="optionsSelectedPrincipalFilter.includes(filterPrinciaplOptions[0]) || optionsSelectedPrincipalFilter.includes(filterPrinciaplOptions[1]) ">
+                <div class="p-inputgroup">
+                    <span class="p-inputgroup-addon"><i class="pi pi-filter-fill" style="color:#f16357;"></i></span>
+
+                    <p-dropdown [style]="{ width: '100%'}" [options]="filterOptions"
+                        (onChange)="onChangeSelectedFilter($event)" placeholder="Selecciona una opcion"
+                        [showClear]="false"></p-dropdown>
+                </div>
+            </div>
+
+            <!-- FILTRO FACULTADES ESPECIFICA -->
+            <div *ngIf="optionsSelectedFilter.includes(filterOptions[2])" class="col-12 md:col-6 lg:col-4">
+                <div class="p-inputgroup">
+                    <span class="p-inputgroup-addon"><i class="pi pi-filter-fill" style="color:#f16357;"></i></span>
+                    <p-dropdown #filterFacultades [style]="{ width: '100%'}" optionLabel="name"
+                        [options]="filterFacultadEspecifica" (onChange)="onChangeSelectedFacultad($event)"
+                        placeholder="Selecciona una opcion" [showClear]="false"></p-dropdown>
+                </div>
+            </div>
+            <div class="col-12 md:col-6 lg:col-4 flex justify-content-center"
+                *ngIf="optionsSelectedFilter === filterOptions[0] || optionsSelectedFilter === filterOptions[1] || urlFilterFacultad ">
+                <button pButton pRipple type="submit" label="Filtrar" (click)="filtrar()"></button>
+            </div>
+        </div>
+    </form>
+
+    <ng-container *ngFor="let item of data">
+        <div class="content-encuesta">
+            <app-card-report [data]="item"></app-card-report>
+        </div>
+    </ng-container>
+
+
+</ng-container>
+
+<ng-template #elseBlock>
+    <app-spinner></app-spinner>
+</ng-template>

@@ -1,0 +1,11 @@
+:host ::ng-deep .p-datatable-header {
+    background-color: #f16357;
+    border: 1px solid #f16357;
+}
+
+:host ::ng-deep p-inputmask {
+    width: 100%;
+    .p-inputmask.p-element {
+        width: 100%;
+    }
+}

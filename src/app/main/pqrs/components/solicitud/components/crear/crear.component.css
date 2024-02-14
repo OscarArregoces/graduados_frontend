@@ -1,0 +1,11 @@
+
+:host ::ng-deep .p-component {
+    .p-fileupload-buttonbar{
+        background: #fff;
+        border: 1px solid #fff;
+    }
+    .p-fileupload-content{
+        background: #fff;
+        border: 1px solid #fff;
+    }
+}

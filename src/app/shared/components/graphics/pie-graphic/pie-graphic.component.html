@@ -1,0 +1,7 @@
+<ng-container *ngIf="verifyData; else elseBlock">
+    <p-chart #barChart type="pie" [data]="data" [options]="chartOptions" height="100%" width="100%"
+        [responsive]="true"></p-chart>
+</ng-container>
+<ng-template #elseBlock>
+    <img src="assets/images/no-grafica2.png" class="" alt="No hay datos que graficar">
+</ng-template>

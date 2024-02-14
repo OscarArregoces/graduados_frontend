@@ -1,0 +1,26 @@
+
+:host ::ng-deep .p-component {
+    .p-fileupload-buttonbar{
+        background: #fff;
+        border: 1px solid #fff;
+    }
+    .p-fileupload-content{
+        background: #fff;
+        border: 1px solid #fff;
+    }
+}
+
+:host ::ng-deep p-inputmask {
+    width: 100%;
+    .p-inputmask.p-element {
+        width: 100%;
+    }
+}
+
+.customText {
+    line-height: 1.625;
+    font-weight: 400;
+    font-size: 1.5rem;
+    font-family: Roboto, sans-serif;
+    color: #616161;
+}

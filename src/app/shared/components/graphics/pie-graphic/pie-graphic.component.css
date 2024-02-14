@@ -1,0 +1,22 @@
+
+
+/* :host ::ng-deep p-chart div  {
+    canvas {
+        height: 600px !important;
+        width: 200px !important;
+    }
+} */
+
+
+@media (width < 428px){
+    img{
+        width: 100%;
+        height: auto;
+    }
+}
+@media (width < 670px){
+    img{
+        width: 100%;
+        height: auto;
+    }
+}

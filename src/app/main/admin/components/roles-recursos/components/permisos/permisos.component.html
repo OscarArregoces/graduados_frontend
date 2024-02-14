@@ -1,0 +1,295 @@
+<app-card titulo="Roles y Permisos">
+    <div class="grid" card-body>
+        <div class="col-12">
+            <app-custom-info-card [description]="inforCardDescription" [variant]="variantColor"></app-custom-info-card>
+            <div>
+                <button pButton pRipple type="button" label="Crear rol" icon="pi pi-plus" class="p-button-success mr-2"
+                    (click)="changeDisplayFormCreate()"></button>
+                <button pButton pRipple type="button" label="Eliminar seleccionados" icon="pi pi-trash"
+                    class="p-button-danger mr-2" (click)="deleteAll()"></button>
+            </div>
+        </div>
+        <div class="col-12">
+            <p-card>
+                <p-table #dt [value]="roles" [(selection)]="itemsBulkDelete" dataKey="id"
+                    styleClass="p-datatable-customers" [rowHover]="true" [rows]="10" [showCurrentPageReport]="true"
+                    [rowsPerPageOptions]="[10,25,50]" [loading]="loading" responsiveLayout="scroll" [paginator]="true"
+                    currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} elementos" [filterDelay]="0"
+                    [globalFilterFields]="['name']" responsiveLayout="scroll">
+                    <ng-template pTemplate="caption">
+                        <div class="table-header">
+                            <div class="grid" [style]="{'display': 'flex', 'justify-content': 'space-between'}">
+                                <div class="col-12 md:col-6 lg:col-6" [style]="{'font-size': '20px'}">
+                                    Lista de Roles
+                                </div>
+                                <div class="col-12 md:col-6 lg:col-3">
+                                    <span [style]="{'width':'100%'}" class="p-input-icon-left">
+                                        <i class="pi pi-search"></i>
+                                        <input [style]="{'width':'100%'}" pInputText type="text"
+                                            (input)="dt.filterGlobal(getEventValue($event), 'contains')"
+                                            placeholder="Busqueda global" />
+                                    </span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </ng-template>
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th style="width: 3rem">
+                                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+
+                            </th>
+                            <th style="width: 5rem">
+                                <p>Indice</p>
+                            </th>
+                            <th pSortableColumn="name">
+                                <div class="flex justify-content-between align-items-center">
+                                    Rol
+                                    <p-sortIcon field="name"></p-sortIcon>
+                                    <p-columnFilter type="text" field="name" display="menu"
+                                        class="ml-auto"></p-columnFilter>
+                                </div>
+                            </th>
+                            <th style="width: 8rem;text-align: center">
+                                Acciones
+                            </th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-rol let-rowIndex="rowIndex">
+                        <tr class="p-selectable-row">
+                            <td>
+                                <p-tableCheckbox [value]="rol"></p-tableCheckbox>
+                            </td>
+                            <td>
+                                {{rowIndex + 1 }}
+                            </td>
+                            <td>
+                                <span class="p-column-title">Nombre</span>
+                                {{rol.name}}
+                            </td>
+                            <td style="text-align: center" class="flex justify-content-center align-items-center">
+                                <button pButton type="button" icon="pi pi-eye" class="p-button-secondary m-1"
+                                    title="Detalles" (click)="changeDisplayFormDetail(rol.id, rol.name)"></button>
+                                <button pButton type=" button" icon="pi pi-pencil" class="p-button-warning m-1"
+                                    title="Editar" (click)="changeDisplayFormUpdate(rol.id, rol.name)"></button>
+                                <button pButton type=" button" icon="pi pi-trash" class="p-button-danger m-1"
+                                    title="Eliminar" (click)="confirm($event, rol.id)"></button>
+                                <p-confirmPopup></p-confirmPopup>
+
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td colspan="8">No hay datos que mostrar</td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </p-card>
+        </div>
+    </div>
+</app-card>
+
+<p-dialog header="Asignando Permisos" [(visible)]="displayFormCreate" [style]="{width: width,'text-aling': 'center'}"
+    [showHeader]="true" [modal]="true" [dismissableMask]="false" (onHide)="handleCloseFormCreateDialog()">
+
+    <app-custom-info-card [description]="inforCardDescriptionHeaderDialog"></app-custom-info-card>
+
+    <form [formGroup]="formCreate" class="mb-5">
+        <div class="flex flex-column gap-2 mb-3">
+            <label class="mb-2" [style]="{'font-weight': 'bold'}">Nombre del rol </label>
+            <div class="p-inputgroup my-1">
+                <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill" style="color:#f16357;"></i></span>
+                <input type="text" [maxlength]="30" [minlength]="6" formControlName="name" pInputText />
+            </div>
+        </div>
+    </form>
+
+        <div class="grid">
+            <div *ngFor="let item of modules; index as i;" class="col-12">
+                <p-table [value]="item.submodules" responsiveLayout="scroll">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th [style]="{ 'min-width': '14rem' }">
+                                {{item.title | formatPermissionName}}
+                            </th>
+                            <th>Crear</th>
+                            <th>Editar</th>
+                            <th>Eliminar</th>
+                            <th>Ver</th>
+                            <th>Gestionar</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-submodule>
+                        <tr>
+                            <td> {{submodule.title | formatPermissionName}} </td>
+                            <ng-container *ngIf="submodule.permissions.length === 1;else elseBlock">
+                                <td> <p-checkbox [disabled]="true"></p-checkbox> </td>
+                                <td> <p-checkbox [disabled]="true"></p-checkbox> </td>
+                                <td> <p-checkbox [disabled]="true"></p-checkbox> </td>
+                                <td> <p-checkbox [disabled]="true"></p-checkbox> </td>
+                                <td *ngFor="let permission of submodule.permissions">
+                                    <p-checkbox [name]="submodule.title + permission.name"
+                                        [value]="submodule.title + ' ' +permission.name"
+                                        [(ngModel)]="permissionsSelectedToCreate" (change)="onPermissionChangeToCreate(submodule.title + ' ' +permission.name)"></p-checkbox>
+                                </td>
+                            </ng-container>
+                            <ng-template #elseBlock>
+                                <td *ngFor="let permission of submodule.permissions">
+                                    <p-checkbox [name]="permission.name" [value]="permission.name"
+                                        [(ngModel)]="permissionsSelectedToCreate" (change)="onPermissionChangeToCreate(permission.name)"></p-checkbox>
+                                </td>
+                                <td> <p-checkbox [disabled]="true"></p-checkbox> </td>
+                            </ng-template>
+
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+            <div class="col-12 flex justify-content-center align-items-center">
+                <button pButton pRipple type="button" label="Guardar" class="p-button-success mx-5"
+                    (click)="onSubmitFormCreate()"></button>
+                <button pButton pRipple type="button" label="Cancelar" class="p-button-outlined p-button-danger mx-5"
+                    (click)="handleCloseFormCreateDialog()"></button>
+            </div>
+        </div>
+
+</p-dialog>
+
+<p-dialog header="Detalle Rol" [(visible)]="displayFormDetail" [style]="{width: width,'text-aling': 'center'}"
+    [showHeader]="true" [modal]="true" [dismissableMask]="false" (onHide)="handleCloseFormShowDialog()">
+
+    <app-custom-info-card [description]="inforCardDescriptionHeaderDialog"></app-custom-info-card>
+
+    <form [formGroup]="formDetail" class="mb-5">
+        <div class="flex flex-column gap-2 mb-3">
+            <label class="mb-2" [style]="{'font-weight': 'bold'}">Nombre del rol </label>
+            <div class="p-inputgroup my-1">
+                <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill" style="color:#f16357;"></i></span>
+                <input type="text" [maxlength]="30" [minlength]="6" formControlName="name" pInputText />
+            </div>
+        </div>
+
+        <div class="grid">
+            <div *ngFor="let item of modules; index as i;" class="col-12">
+                <p-table [value]="item.submodules" responsiveLayout="scroll">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th [style]="{ 'min-width': '14rem' }">
+                                {{item.title | formatPermissionName}}
+                            </th>
+                            <th>Crear</th>
+                            <th>Editar</th>
+                            <th>Eliminar</th>
+                            <th>Ver</th>
+                            <th>Gestionar</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-submodule>
+                        <tr>
+                            <td> {{submodule.title | formatPermissionName}} </td>
+                            <ng-container *ngIf="submodule.permissions.length === 1;else elseBlock">
+                                <td> <p-checkbox [disabled]="true"></p-checkbox> </td>
+                                <td> <p-checkbox [disabled]="true"></p-checkbox> </td>
+                                <td> <p-checkbox [disabled]="true"></p-checkbox> </td>
+                                <td> <p-checkbox [disabled]="true"></p-checkbox> </td>
+                                <td *ngFor="let permission of submodule.permissions">
+                                    <p-checkbox [name]="submodule.title + permission.name"
+                                        [value]="submodule.title + ' ' +permission.name"
+                                        formControlName="permissions"></p-checkbox>
+                                </td>
+                            </ng-container>
+                            <ng-template #elseBlock>
+                                <td *ngFor="let permission of submodule.permissions">
+                                    <p-checkbox [name]="permission.name" [value]="permission.name"
+                                        formControlName="permissions"></p-checkbox>
+                                </td>
+                                <td> <p-checkbox [disabled]="true"></p-checkbox> </td>
+                            </ng-template>
+
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+            <div class="col-12 flex justify-content-center align-items-center">
+                <button pButton pRipple type="button" label="Cancelar" class="p-button-outlined p-button-danger mx-5"
+                    (click)="handleCloseFormShowDialog()"></button>
+            </div>
+        </div>
+
+    </form>
+
+</p-dialog>
+
+<p-dialog header="Actualizando Rol" [(visible)]="displayFormUpdate" [style]="{width: width,'text-aling': 'center'}"
+    [showHeader]="true" [modal]="true" [dismissableMask]="false" (onHide)="handleCloseFormEditDialog()">
+
+    <app-custom-info-card [description]="inforCardDescriptionHeaderDialog"></app-custom-info-card>
+
+    <form [formGroup]="formUpdate" class="mb-5">
+        <div class="flex flex-column gap-2 mb-3">
+            <label class="mb-2" [style]="{'font-weight': 'bold'}">Nombre del rol </label>
+            <div class="p-inputgroup my-1">
+                <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill" style="color:#f16357;"></i></span>
+                <input type="text" [maxlength]="30" [minlength]="6" formControlName="name" pInputText />
+            </div>
+        </div>
+    </form>
+
+    <div class="grid">
+        <div *ngFor="let item of modules; index as i;" class="col-12">
+            <p-table [value]="item.submodules" responsiveLayout="scroll">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th [style]="{ 'min-width': '14rem' }">
+                            {{item.title | formatPermissionName}}
+                        </th>
+                        <th>Crear</th>
+                        <th>Editar</th>
+                        <th>Eliminar</th>
+                        <th>Ver</th>
+                        <th>Gestionar</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-submodule>
+                    <tr>
+                        <td> {{submodule.title | formatPermissionName}} </td>
+                        <ng-container *ngIf="submodule.permissions.length === 1;else elseBlock">
+                            <td> <p-checkbox [disabled]="true"></p-checkbox> </td>
+                            <td> <p-checkbox [disabled]="true"></p-checkbox> </td>
+                            <td> <p-checkbox [disabled]="true"></p-checkbox> </td>
+                            <td> <p-checkbox [disabled]="true"></p-checkbox> </td>
+                            <td *ngFor="let permission of submodule.permissions">
+                                <p-checkbox [name]="submodule.title + permission.name"
+                                    [value]="submodule.title + ' ' +permission.name"
+                                    [(ngModel)]="permissionsSelectedToEdit"
+                                    (change)="onPermissionChangeToEddit(submodule.title + ' ' +permission.name)"></p-checkbox>
+                            </td>
+                        </ng-container>
+                        <ng-template #elseBlock>
+                            <td *ngFor="let permission of submodule.permissions">
+                                <p-checkbox [name]="permission.name" [value]="permission.name"
+                                    [(ngModel)]="permissionsSelectedToEdit"
+                                    (change)="onPermissionChangeToEddit(permission.name)"></p-checkbox>
+                            </td>
+                            <td> <p-checkbox [disabled]="true"></p-checkbox> </td>
+                        </ng-template>
+
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+        <div class="col-12 flex justify-content-center align-items-center">
+            <button pButton pRipple type="button" label="Actualizar" class="p-button-warning mx-5"
+                (click)="onSubmitFormUpdate()"></button>
+            <button pButton pRipple type="button" label="Cancelar" class="p-button-outlined p-button-danger mx-5"
+                (click)="handleCloseFormEditDialog()"></button>
+        </div>
+    </div>
+
+
+</p-dialog>
+
+
+<p-toast></p-toast>

@@ -1,0 +1,149 @@
+<app-card titulo="Gestionar Generos">
+    <div card-body class="grid">
+        <app-custom-info-card [description]="inforCardDescription"></app-custom-info-card>
+        <div class="col-12">
+            <button (click)="changeDisplayFormCreate()" pButton pRipple type="submit" icon="pi pi-plus"
+                label="Crear Genero" class="p-button-success mr-2"></button>
+            <button pButton pRipple type="submit" label=" Eliminar seleccionados" icon="pi pi-trash"
+                class="p-button-danger mr-2" (click)="deleteAll()"></button>
+        </div>
+        <div class="col-12 md:col-12 lg:col-12">
+            <div class="flex flex-column gap-2">
+
+                <p-card>
+                    <p-table #dt [value]="generos" [(selection)]="itemsBulkDelete" dataKey="id"
+                        styleClass="p-datatable-customers" [rowHover]="true" [rows]="10" [showCurrentPageReport]="true"
+                        [rowsPerPageOptions]="[10,25,50]" [loading]="loading" responsiveLayout="scroll"
+                        [paginator]="true"
+                        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} elementos"
+                        [filterDelay]="0" [globalFilterFields]="['tipo']" responsiveLayout="scroll">
+                        <ng-template pTemplate="caption">
+                            <div class="table-header">
+                                <div class="grid" [style]="{'display': 'flex', 'justify-content': 'space-between'}">
+                                    <div class="col-12 md:col-6 lg:col-6" [style]="{'font-size': '20px'}">
+                                        Lista de Generos
+                                    </div>
+                                    <div class="col-12 md:col-6 lg:col-3">
+                                        <span [style]="{'width':'100%'}" class="p-input-icon-left">
+                                            <i class="pi pi-search"></i>
+                                            <input [style]="{'width':'100%'}" pInputText type="text"
+                                                (input)="dt.filterGlobal(getEventValue($event), 'contains')"
+                                                placeholder="Busqueda global" />
+                                        </span>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </ng-template>
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th style="width: 3rem">
+                                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+
+                                </th>
+                                <th style="width: 5rem">
+                                    <p>Indice</p>
+                                </th>
+                                <th pSortableColumn="tipo">
+                                    <div class="flex justify-content-between align-items-center">
+                                        Nombre
+                                        <p-sortIcon field="tipo"></p-sortIcon>
+                                        <p-columnFilter type="text" field="tipo" display="menu"
+                                            class="ml-auto"></p-columnFilter>
+                                    </div>
+                                </th>
+                                <th style="width: 8rem;text-align: center">
+                                    Editar
+                                </th>
+                                <th style="width: 8rem; text-align: center">
+                                    Eliminar
+                                </th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-genero let-rowIndex="rowIndex">
+                            <tr class="p-selectable-row">
+                                <td>
+                                    <p-tableCheckbox [value]="genero"></p-tableCheckbox>
+                                </td>
+                                <td>
+                                    {{rowIndex + 1 }}
+                                </td>
+                                <td>
+                                    <span class="p-column-title">Tipo</span>
+                                    {{genero.name}}
+                                </td>
+                                <td style="text-align: center">
+                                    <button pButton type="button" icon="pi pi-pencil" class="p-button-warning"
+                                        (click)="changeDisplayFormEdit(genero)"></button>
+                                </td>
+                                <td style="text-align: center">
+                                    <p-confirmPopup></p-confirmPopup>
+                                    <button pButton type="button" icon="pi pi-trash" class="p-button-danger "
+                                        (click)="confirm($event, genero.id)"></button>
+                                </td>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="emptymessage">
+                            <tr>
+                                <td colspan="8">No hay datos que mostrar</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </p-card>
+
+            </div>
+        </div>
+
+    </div>
+</app-card>
+
+<p-dialog [(visible)]="displayFormCreate" [style]="{width: width, 'text-aling': 'center'}" [showHeader]="false"
+    [modal]="true" [dismissableMask]="true">
+
+    <app-card-dialog titulo="Creando Genero">
+        <form [formGroup]="formCreate">
+            <div class="grid">
+                <div class="col-12 md:col-12 lg:col-12">
+                    <div class="flex flex-column gap-2">
+                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Nombre </label>
+                        <input type="text" placeholder="Escribe aqui.." formControlName="name" pInputText />
+                    </div>
+                </div>
+
+                <div class="col-12 md:col-12 lg:col-12 flex justify-content-center">
+                    <button pButton pRipple type="button" label="Guardar" class="p-button-success m-3"
+                        [style]="{ width: '40%'}" (click)="onSubmit()" [disabled]="!formCreate.valid"></button>
+                    <button pButton pRipple type="button" label="Volver" class="p-button-raised p-button-secondary  m-3"
+                        [style]="{ width: '40%'}" (click)="changeDisplayFormCreate()"></button>
+                </div>
+            </div>
+        </form>
+    </app-card-dialog>
+
+</p-dialog>
+
+<p-dialog [(visible)]="displayFormEdit" [style]="{width: width, 'text-aling': 'center'}" [showHeader]="false"
+    [modal]="true" [dismissableMask]="true">
+
+    <app-card-dialog titulo="Editando Genero">
+        <form [formGroup]="formEdit">
+            <div class="grid">
+                <div class="col-12 md:col-12 lg:col-12">
+                    <div class="flex flex-column gap-2">
+                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Nombre </label>
+                        <input type="text" placeholder="Escribe aqui.." formControlName="name" pInputText />
+                    </div>
+                </div>
+
+                <div class="col-12 md:col-12 lg:col-12 flex justify-content-center">
+                    <button pButton pRipple type="button" label="Editar" class="p-button-warning m-3"
+                        [style]="{ width: '40%'}" (click)="handleEdit()" [disabled]="!formEdit.valid"></button>
+                    <button pButton pRipple type="button" label="Volver" class="p-button-raised p-button-secondary  m-3"
+                        [style]="{ width: '40%'}" (click)="changeDisplayFormEdit()"></button>
+                </div>
+            </div>
+        </form>
+    </app-card-dialog>
+</p-dialog>
+
+<p-toast></p-toast>

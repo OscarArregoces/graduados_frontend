@@ -1,0 +1,313 @@
+<app-card titulo="Emprendimientos" width="80%">
+    <div card-body class="grid">
+        <app-custom-info-card [description]="inforCardDescription"></app-custom-info-card>
+        <div class="col-12 md:col-12 lg:col-12">
+            <div class="flex flex-column gap-2">
+
+                <p-card>
+                    <p-table #dt [value]="emprendimientos" [(selection)]="emprendimientosSeleccionados" dataKey="id"
+                        styleClass="p-datatable-customers" [rowHover]="true" [rows]="10" [showCurrentPageReport]="true"
+                        [rowsPerPageOptions]="[10,25,50]" [loading]="loading" responsiveLayout="scroll"
+                        [paginator]="true"
+                        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} elementos"
+                        [filterDelay]="0"
+                        [globalFilterFields]="['nombre_emprendimiento', 'municipio', 'subCategoria.name', 'municipio']"
+                        responsiveLayout="scroll">
+                        <ng-template pTemplate="caption">
+                            <div class="table-header">
+                                <div class="grid" [style]="{'display': 'flex', 'justify-content': 'space-between'}">
+                                    <div class="col-12 md:col-6 lg:col-6" [style]="{'font-size': '20px'}">
+                                        Lista de Emprendimientos
+                                    </div>
+                                    <div class="col-12 md:col-6 lg:col-3">
+                                        <span [style]="{'width':'100%'}" class="p-input-icon-left">
+                                            <i class="pi pi-search"></i>
+                                            <input [style]="{'width':'100%'}" pInputText type="text"
+                                                (input)="dt.filterGlobal(getEventValue($event), 'contains')"
+                                                placeholder="Busqueda global" />
+                                        </span>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </ng-template>
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th style="width: 3rem">
+                                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+
+                                </th>
+                                <th style="width: 5rem">
+                                    <p>Indice</p>
+                                </th>
+                                <th pSortableColumn="nombre_emprendimiento">
+                                    <div class="flex justify-content-between align-items-center">
+                                        Nombre
+                                        <p-sortIcon field="nombre_emprendimiento"></p-sortIcon>
+                                        <p-columnFilter type="text" field="nombre_emprendimiento" display="menu"
+                                            class="ml-auto"></p-columnFilter>
+                                    </div>
+                                </th>
+                                <th pSortableColumn="telefono_emprendimiento">
+                                    <div class="flex justify-content-between align-items-center">
+                                        Telefono
+                                        <p-sortIcon field="telefono_emprendimiento"></p-sortIcon>
+                                        <p-columnFilter type="text" field="telefono_emprendimiento" display="menu"
+                                            class="ml-auto"></p-columnFilter>
+                                    </div>
+                                </th>
+                                <th pSortableColumn="subCategoria.name">
+                                    <div class="flex justify-content-between align-items-center">
+                                        SubCategoria
+                                        <p-sortIcon field="subCategoria.name"></p-sortIcon>
+                                        <p-columnFilter type="text" field="subCategoria.name" display="menu"
+                                            class="ml-auto"></p-columnFilter>
+                                    </div>
+                                </th>
+                                <th pSortableColumn="municipio">
+                                    <div class="flex justify-content-between align-items-center">
+                                        Municipio
+                                        <p-sortIcon field="municipio"></p-sortIcon>
+                                        <p-columnFilter type="text" field="municipio" display="menu"
+                                            class="ml-auto"></p-columnFilter>
+                                    </div>
+                                </th>
+                                <th style="width: 8rem;text-align: center">
+                                    Editar
+                                </th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-emprendimiento let-rowIndex="rowIndex">
+                            <tr class="p-selectable-row">
+                                <td>
+                                    <p-tableCheckbox [value]="emprendimiento"></p-tableCheckbox>
+                                </td>
+                                <td>
+                                    {{rowIndex + 1 }}
+                                </td>
+                                <td>
+                                    <span class="p-column-title">Asunto</span>
+                                    {{emprendimiento.nombre_emprendimiento}}
+                                </td>
+                                <td>
+                                    <span class="p-column-title">Tipo de solicitud</span>
+                                    {{emprendimiento.telefono_emprendimiento}}
+                                </td>
+                                <td>
+                                    <span class="p-column-title">Usuario</span>
+                                    {{emprendimiento.subCategoria.name}}
+                                </td>
+                                <td>
+                                    <span class="p-column-title">Usuario</span>
+                                    {{emprendimiento.municipio}}
+                                </td>
+                                <td style="text-align: center">
+                                    <button pButton type="button" icon="pi pi-pencil" class="p-button-warning"
+                                        (click)="changeDisplay(emprendimiento.id, emprendimiento)"></button>
+                                </td>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="emptymessage">
+                            <tr>
+                                <td colspan="8">No hay datos que mostrar</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </p-card>
+
+            </div>
+        </div>
+
+    </div>
+</app-card>
+
+
+<p-dialog [(visible)]="display" [style]="{width: width, 'text-aling': 'center'}" [showHeader]="false" [modal]="true"
+    [dismissableMask]="true">
+
+    <app-card-dialog titulo="Detalles">
+        <form [formGroup]="form" *ngIf="capacitaciones.length > 0; else elseBlock">
+            <div class="grid">
+                <div class="col-12 md:col-6 lg:col-6">
+                    <div class="flex flex-column gap-2">
+                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Nombre del emprendiento: </label>
+                        <div class="p-inputgroup my-1">
+                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                    style="color:#f16357;"></i></span>
+                            <input type="text" placeholder="Escribe aqui.." formControlName="nombre_emprendimiento"
+                                pInputText />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 md:col-6 lg:col-6">
+                    <div class="flex flex-column gap-2">
+                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Dirección: </label>
+                        <div class="p-inputgroup my-1">
+                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                    style="color:#f16357;"></i></span>
+                            <input type="text" placeholder="Escribe aqui.." formControlName="direccion" pInputText />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 md:col-6 lg:col-6">
+                    <div class="flex flex-column gap-2">
+                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Municipio: </label>
+                        <div class="p-inputgroup my-1">
+                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                    style="color:#f16357;"></i></span>
+                            <input type="text" placeholder="Escribe aqui.." formControlName="municipio" pInputText />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 md:col-6 lg:col-6">
+                    <div class="flex flex-column gap-2">
+                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Corregimiento: </label>
+                        <div class="p-inputgroup my-1">
+                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                    style="color:#f16357;"></i></span>
+                            <input type="text" placeholder="Escribe aqui.." formControlName="corregimiento"
+                                pInputText />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 md:col-6 lg:col-6">
+                    <div class="flex flex-column gap-2">
+                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Descripcion de lo que ofrece tu
+                            emprendimiento: </label>
+                        <textarea rows="5" cols="30" maxlength="500" pInputTextarea formControlName="descripcion"
+                            placeholder="Escribe aqui..."></textarea>
+                    </div>
+                </div>
+                <div class="col-12 md:col-6 lg:col-3">
+                    <div class="flex flex-column gap-2">
+                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Telefono: </label>
+                        <div class="p-inputgroup my-1">
+                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                    style="color:#f16357;"></i></span>
+                                    <p-inputMask 
+                                    mask="999 999 9999" 
+                                    placeholder="999 999 9999"
+                                    [maxlength]="11"
+                                    formControlName="telefono_emprendimiento"
+                                    ></p-inputMask>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-column gap-2">
+                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Correo electronico: </label>
+                        <div class="p-inputgroup my-1">
+                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                    style="color:#f16357;"></i></span>
+                            <input type="text" placeholder="Correo electronico" formControlName="correo_emprendimiento"
+                                pInputText />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 md:col-6 lg:col-3">
+                    <div class="flex flex-column gap-2">
+                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Categoria: </label>
+                        <div class="p-inputgroup my-1">
+                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                    style="color:#f16357;"></i></span>
+                            <p-dropdown [options]="categorias" optionLabel="name" [style]="{'width': '100%'}"
+                                placeholder="Selecciona una opcion" formControlName="categoria"
+                                (ngModelChange)="onChangeCategorias($event)"></p-dropdown>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-column gap-2">
+                        <label class="mb-2" [style]="{'font-weight': 'bold'}">SubCategoria: </label>
+                        <div class="p-inputgroup my-1">
+                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                    style="color:#f16357;"></i></span>
+                            <p-dropdown [options]="subCategorias" [style]="{'width': '100%'}" optionLabel="name"
+                                placeholder="Selecciona una opcion" formControlName="subCategoria"></p-dropdown>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-12 md:col-6 lg:col-6">
+                    <div class="flex flex-column gap-2">
+                        <label class="mb-2" [style]="{'font-weight': 'bold'}">¿Con que tipo de entrega cuentas? </label>
+                        <div class="my-1" *ngFor="let metodo of metodosEntrega;let indice=index">
+                            <p-checkbox class="mr-1" [value]="metodo" inputId="ny"
+                                [formControl]="metodos_entrega"></p-checkbox>
+                            <label for="ny">{{metodo}}</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 md:col-6 lg:col-6">
+                    <div class="flex flex-column gap-2">
+                        <label class="mb-2" [style]="{'font-weight': 'bold'}">¿Con que metodos de pago cuentas?</label>
+                        <span [style]="{'font-size': '13px', 'color':'#606770'}">Puedes escoger una o varias
+                            opciones</span>
+                        <div class="my-1" *ngFor="let metodo of metodosPago;let indice=index">
+                            <p-checkbox class="mr-1" [value]="metodo" inputId="ny"
+                                [formControl]="formas_pago"></p-checkbox>
+                            <label for="ny"> {{ metodo }}</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 md:col-6 lg:col-6">
+                    <div class="flex flex-column gap-2">
+                        <label class="mb-2" [style]="{'font-weight': 'bold'}">¿Cual de estas capacitaciones te gustaria
+                            recibir?</label>
+                        <span [style]="{'font-size': '13px', 'color':'#606770'}">Puedes escoger una o varias
+                            opciones</span>
+                        <div class="my-1" *ngFor="let capacitacion of capacitaciones;let indice=index">
+                            <p-checkbox class="mr-1" [value]="capacitacion" inputId="ny"
+                                [formControl]="tipo_capacitacion"></p-checkbox>
+                            <label for="ny">{{ capacitacion.name }}</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 md:col-6 lg:col-6">
+                    <div class="flex flex-column gap-2">
+                        <label class="mb-2" [style]="{'font-weight': 'bold'}">¿Como te podemos encontrar en tus redes
+                            sociales?</label>
+                        <span class="mb-2" [style]="{'font-size': '13px', 'color':'#606770'}">Agrega la URL de tus
+                            redes</span>
+
+                        <label [style]="{'font-weight': 'bold'}">Facebook:</label>
+                        <div class="p-inputgroup my-1">
+                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"></i></span>
+                            <input type="text" placeholder=" https://www.facebook.com/miemprendimiento"
+                                formControlName="Facebook" pInputText />
+                        </div>
+
+                        <label [style]="{'font-weight': 'bold'}">Instagram:</label>
+                        <div class="p-inputgroup my-1">
+                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"></i></span>
+                            <input type="text" placeholder=" https://www.instagram.com/miemprendimiento/"
+                                formControlName="Instagram" pInputText />
+                        </div>
+
+                        <label [style]="{'font-weight': 'bold'}">Pagina web:</label>
+                        <div class="p-inputgroup my-1">
+                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"></i></span>
+                            <input type="text" placeholder="https://www.miemprendimiento.com/"
+                                formControlName="PaginaWeb" pInputText />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 md:col-12 lg:col-12 flex justify-content-center">
+                    <button pButton pRipple type="button" label="Editar" class="p-button-warning m-3"
+                        [style]="{ width: '40%'}" (click)="onSubmit()"></button>
+                    <button pButton pRipple type="button" label="Volver" class="p-button-raised p-button-secondary  m-3"
+                        [style]="{ width: '40%'}" (click)="closeDisplay()"></button>
+                </div>
+            </div>
+        </form>
+    </app-card-dialog>
+</p-dialog>
+
+<ng-template #elseBlock>
+    <app-spinner></app-spinner>
+</ng-template>
+
+<p-toast></p-toast>

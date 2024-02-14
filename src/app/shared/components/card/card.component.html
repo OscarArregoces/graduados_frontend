@@ -1,0 +1,17 @@
+<p-card class="flex justify-content-center" [style]="{'width': width}">
+
+    <ng-template pTemplate="header">
+        <img [style]="{'width':'100%'}" alt="Card" src="/assets/images/header.png" />
+        <div id="header" class=" mb-5 flex align-items-center justify-content-center">
+            <h2 class="text-white"> {{ titulo }}</h2>
+        </div>
+    </ng-template>
+
+    <div id="card-body">
+        <ng-content select="[card-body]"></ng-content>
+    </div>
+
+    <ng-template pTemplate="footer">
+        <img [style]="{'width':'100%'}" alt="Card" src="/assets/images/footer.png" />
+    </ng-template>
+</p-card>

@@ -1,0 +1,30 @@
+.product-item {
+    .product-item-content {
+        /* border: 1px solid var(--surface-d); */
+        /* border-radius: 3px; */
+        margin: .3rem;
+        text-align: center;
+        padding: 2rem 0;
+    }
+
+    .product-image {
+        width: 100%;
+        /* box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23) */
+    }
+}
+
+:host ::ng-deep #contact {
+    .p-card.p-component {
+        height: 100%;
+    }
+}
+
+.card-hover {
+    transition: box-shadow 0.3s ease;
+}
+
+.card-hover:hover {
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+    transform: translateY(-2px);
+    cursor: pointer;
+}

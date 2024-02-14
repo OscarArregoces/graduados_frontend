@@ -1,0 +1,306 @@
+<app-card *ngIf="!cargando && !mostrarMensaje" titulo="Mis emprendimientos">
+    <div card-body>
+        <app-custom-info-card [description]="inforCardDescription"></app-custom-info-card>
+
+        <p-paginator [rows]="5" [totalRecords]="emprendimientos.length" [rowsPerPageOptions]="[1,5,10]"
+            (onPageChange)="paginate($event)"></p-paginator>
+        <div class="my-3" *ngFor="let emprendimiento of emprendimientos">
+            <div id="card-custom">
+                <div id="card-header">
+                    <div class="p-inputgroup">
+                        <span style="background-color: #f16357; border:1px solid #f16357; color: white;"
+                            class="p-inputgroup-addon">
+                            <i class="pi pi-briefcase"></i>
+                        </span>
+                    </div>
+                </div>
+
+                <div id="card-body">
+                    <div class="grid">
+                        <div class="col-12 md:col-4 lg:col-3 ">
+                            <img appImgError src="{{API_URI_MEDIA}}{{emprendimiento.logo}}"
+                                [title]="emprendimiento.nombre_emprendimiento"
+                                [alt]="emprendimiento.nombre_emprendimiento" class="product-image"
+                                style="max-width: 300px;max-height: 300px;" />
+                        </div>
+                        <div class="col-12 md:col-8 lg:col-9 flex justify-content-center align-items-center">
+
+                            <div class="grid flex justify-content-end align-items-center">
+                                <div class="col-12 md:col-12 lg:col-12 text-center">
+                                    <h2>{{ emprendimiento.nombre_emprendimiento}}</h2>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-12 md:col-12 lg:col-12">
+                            <div class="grid">
+                                <div class="col-12 md:col-12 lg:col-10">
+                                    <div>
+                                        <strong>Telefono:</strong> {{ emprendimiento.telefono_emprendimiento}}
+                                    </div>
+                                    <div>
+                                        <strong>Correo:</strong> {{ emprendimiento.correo_emprendimiento}}
+                                    </div>
+                                    <div>
+                                        <strong>Dirección:</strong> {{ emprendimiento.direccion}}
+                                    </div>
+                                </div>
+
+                                <div class="col-12 md:col-12 lg:col-2 ">
+                                    <div class="lg:mx-2">
+                                        <strong>Corregimiento:</strong> {{ emprendimiento.corregimiento}}
+                                    </div>
+                                    <div class="lg:mx-2">
+                                        <strong>Municipio: </strong> {{ emprendimiento.municipio}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-12 lg:col-12">
+                            <p>{{ emprendimiento.descripcion}}</p>
+                        </div>
+                        <div class="col-12 md:col-12 lg:col-12">
+                            <div class="grid">
+                                <div class="col-12 md:col-4 lg:col-4">
+                                    <h3 class="text-center ">Metodos de entrega</h3>
+                                    <ul class="text-center m-0 p-0" style=" list-style: none;">
+                                        <li class="text-center " *ngFor="let metodo of emprendimiento.metodos_entrega">
+                                            {{
+                                            metodo
+                                            }}</li>
+                                    </ul>
+                                </div>
+                                <div class="col-12 md:col-4 lg:col-4">
+                                    <h3 class="text-center ">Metodos de pago</h3>
+                                    <ul class="text-center m-0 p-0" style=" list-style: none;">
+                                        <li class="text-center " *ngFor="let forma of emprendimiento.formas_pago">
+                                            {{
+                                            forma
+                                            }}
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="col-12 md:col-4 lg:col-4">
+                                    <h3 class="text-center ">Capacitaciones</h3>
+                                    <ul class="text-center m-0 p-0" style=" list-style: none;">
+                                        <li class="text-center " *ngFor="let tipo of emprendimiento.tipo_capacitacion">
+                                            {{
+                                            tipo.name }}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 md:col-6 lg:col-6">
+                            <div>
+                                <p-chip [label]="emprendimiento.categoria.name" icon="pi pi-shopping-bag"
+                                    styleClass="m-2"></p-chip>
+                                <p-chip [label]="emprendimiento.subCategoria.name" icon="pi pi-shopping-bag"
+                                    styleClass="m-2"></p-chip>
+                            </div>
+                            <p-tag styleClass="m-2"
+                                [icon]="emprendimiento.state ? 'pi pi-check-circle' : 'pi pi-exclamation-triangle'"
+                                [severity]="emprendimiento.state ? '' : 'warning'"
+                                [value]="emprendimiento.state ? 'Verificado' : 'Pendiente'"></p-tag>
+                        </div>
+                        <div class="col-12 md:col-6 lg:col-6">
+                            <div
+                                class="flex justify-content-center md:flex md:justify-content-end lg:flex lg:justify-content-end ">
+                                <div class="mx-2 ">
+                                    <i class="pi pi-envelope p-text-secondary m-2" pBadge style="font-size: 2rem"
+                                        [value]="emprendimiento.mensajes.length" [style]="{'cursor':'pointer'}"
+                                        (click)="changeDisplayMensajes(emprendimiento.id)"></i>
+                                    <button pButton title="Editar" type="button" icon="pi pi-pencil"
+                                        class="p-button-warning m-2" (click)="changeDisplay(emprendimiento)"></button>
+                                    <button pButton type="button" icon="pi pi-trash" class="p-button-danger m-2"
+                                        (click)="confirm($event, emprendimiento.id)"></button>
+                                    <p-confirmPopup></p-confirmPopup>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+</app-card>
+
+<div *ngIf="cargando">
+    <app-spinner></app-spinner>
+</div>
+
+<div *ngIf="!cargando && mostrarMensaje">
+    <app-ups nameModule="emprendimientos"></app-ups>
+</div>
+
+<p-dialog [(visible)]="display" [style]="{width: width, 'text-aling': 'center'}" [showHeader]="false" [modal]="true"
+    [dismissableMask]="true">
+
+    <app-card-dialog titulo="Detalles">
+        <form [formGroup]="form">
+            <div class="grid">
+                <div class="col-12 md:col-6 lg:col-6">
+                    <div class="flex flex-column gap-2">
+                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Nombre del emprendiento: </label>
+                        <input type="text" placeholder="Escribe aqui.." formControlName="nombre_emprendimiento"
+                            pInputText />
+                    </div>
+                </div>
+                <div class="col-12 md:col-6 lg:col-6">
+                    <div class="flex flex-column gap-2">
+                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Dirección: </label>
+                        <input type="text" placeholder="Escribe aqui.." formControlName="direccion" pInputText />
+                    </div>
+                </div>
+                <div class="col-12 md:col-6 lg:col-6">
+                    <div class="flex flex-column gap-2">
+                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Municipio: </label>
+                        <input type="text" placeholder="Escribe aqui.." formControlName="municipio" pInputText />
+                    </div>
+                </div>
+                <div class="col-12 md:col-6 lg:col-6">
+                    <div class="flex flex-column gap-2">
+                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Corregimiento: </label>
+                        <input type="text" placeholder="Escribe aqui.." formControlName="corregimiento" pInputText />
+                    </div>
+                </div>
+
+                <div class="col-12 md:col-6 lg:col-6">
+                    <div class="flex flex-column gap-2">
+                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Descripcion de lo que ofrece tu
+                            emprendimiento: </label>
+                        <textarea rows="5" cols="30" maxlength="500" pInputTextarea formControlName="descripcion"
+                            placeholder="Escribe aqui..."></textarea>
+                    </div>
+                </div>
+                <div class="col-12 md:col-6 lg:col-3">
+                    <div class="flex flex-column gap-2">
+                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Telefono: </label>
+                        <p-inputMask mask="999 999 9999" placeholder="999 999 9999" [maxlength]="11"
+                            formControlName="telefono_emprendimiento"></p-inputMask>
+                    </div>
+
+                    <div class="flex flex-column gap-2">
+                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Correo electronico: </label>
+                        <input type="text" placeholder="Correo electronico" formControlName="correo_emprendimiento"
+                            pInputText />
+                    </div>
+                </div>
+
+                <div class="col-12 md:col-6 lg:col-3">
+                    <div class="flex flex-column gap-2">
+                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Categoria: </label>
+                        <p-dropdown [options]="categorias" optionLabel="name" [style]="{'width': '100%'}"
+                            placeholder="Selecciona una opcion" formControlName="categoria"
+                            (ngModelChange)="onChangeCategorias($event)"></p-dropdown>
+                    </div>
+
+                    <div class="flex flex-column gap-2">
+                        <label class="mb-2" [style]="{'font-weight': 'bold'}">SubCategoria: </label>
+                        <p-dropdown [options]="subCategorias" [style]="{'width': '100%'}" optionLabel="name"
+                            placeholder="Selecciona una opcion" formControlName="subCategoria"></p-dropdown>
+                    </div>
+                </div>
+
+
+                <div class="col-12 md:col-6 lg:col-6">
+                    <div class="flex flex-column gap-2">
+                        <label class="mb-2" [style]="{'font-weight': 'bold'}">¿Con que tipo de entrega cuentas? </label>
+                        <div class="my-1" *ngFor="let metodo of metodosEntrega;let indice=index">
+                            <p-checkbox class="mr-1" [value]="metodo" inputId="ny"
+                                [formControl]="metodos_entrega"></p-checkbox>
+                            <label for="ny">{{metodo}}</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 md:col-6 lg:col-6">
+                    <div class="flex flex-column gap-2">
+                        <label class="mb-2" [style]="{'font-weight': 'bold'}">¿Con que metodos de pago cuentas?</label>
+                        <span [style]="{'font-size': '13px', 'color':'#606770'}">Puedes escoger una o varias
+                            opciones</span>
+                        <div class="my-1" *ngFor="let metodo of metodosPago;let indice=index">
+                            <p-checkbox class="mr-1" [value]="metodo" inputId="ny"
+                                [formControl]="formas_pago"></p-checkbox>
+                            <label for="ny"> {{ metodo }}</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 md:col-6 lg:col-6">
+                    <div class="flex flex-column gap-2">
+                        <label class="mb-2" [style]="{'font-weight': 'bold'}">¿Cual de estas capacitaciones te gustaria
+                            recibir?</label>
+                        <span [style]="{'font-size': '13px', 'color':'#606770'}">Puedes escoger una o varias
+                            opciones</span>
+                        <div class="my-1" *ngFor="let capacitacion of capacitaciones;let indice=index">
+                            <p-checkbox class="mr-1" [value]="capacitacion" inputId="ny"
+                                [formControl]="tipo_capacitacion"></p-checkbox>
+                            <label for="ny">{{ capacitacion.name }}</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 md:col-6 lg:col-6">
+                    <div class="flex flex-column gap-2">
+                        <label class="mb-2" [style]="{'font-weight': 'bold'}">¿Como te podemos encontrar en tus redes
+                            sociales?</label>
+                        <span class="mb-2" [style]="{'font-size': '13px', 'color':'#606770'}">Agrega la URL de tus
+                            redes</span>
+
+                        <label [style]="{'font-weight': 'bold'}">Facebook:</label>
+                        <input type="text" class="my-2" placeholder=" https://www.facebook.com/miemprendimiento"
+                            formControlName="Facebook" pInputText />
+
+                        <label [style]="{'font-weight': 'bold'}">Instagram:</label>
+                        <input type="text" class="my-2" placeholder=" https://www.instagram.com/miemprendimiento/"
+                            formControlName="Instagram" pInputText />
+
+                        <label [style]="{'font-weight': 'bold'}">Pagina web:</label>
+                        <input type="text" class="my-2" placeholder="https://www.miemprendimiento.com/"
+                            formControlName="PaginaWeb" pInputText />
+                    </div>
+                </div>
+
+                <div class="col-12 md:col-12 lg:col-12 flex justify-content-center">
+                    <button pButton pRipple type="button" label="Editar" class="p-button-warning m-3"
+                        [style]="{ width: '40%'}" (click)="onSubmit()"></button>
+                    <button pButton pRipple type="button" label="Volver" class="p-button-raised p-button-secondary  m-3"
+                        [style]="{ width: '40%'}" (click)="closeDisplay()"></button>
+                </div>
+            </div>
+        </form>
+    </app-card-dialog>
+</p-dialog>
+
+
+<p-dialog [(visible)]="displayMensajes" [style]="{width: width, 'text-aling': 'center'}" [showHeader]="false"
+    [modal]="true" [dismissableMask]="true">
+
+    <app-card-dialog titulo="Observaciones">
+        <div *ngIf="currentMensajesEmprendimientos.length > 0; else elseBlock">
+            <div class="custom-mensajes my-2" *ngFor="let mensaje of currentMensajesEmprendimientos">
+                <div class="custom-header">
+                    <p class="ml-2">Mensaje</p>
+                    <i class="pi pi-envelope mr-2"></i>
+                </div>
+                <div class="custom-body">
+                    <p class="ml-2">{{ mensaje.mensaje }}</p>
+                </div>
+                <div class="custom-footer">
+                    <p class="ml-2">Fecha de publicación: {{ mensaje.createdAt }}</p>
+                </div>
+            </div>
+        </div>
+        <ng-template #elseBlock>
+            <p class="text-center">No tienes observaciones</p>
+        </ng-template>
+    </app-card-dialog>
+</p-dialog>
+
+
+<p-toast></p-toast>

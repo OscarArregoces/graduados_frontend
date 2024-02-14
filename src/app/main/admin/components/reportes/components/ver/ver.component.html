@@ -1,0 +1,11 @@
+<app-card titulo="Reportes" [width]="width">
+    <div card-body class="content">
+        <div class="w-full " *ngFor="let reporte of reportes">
+            <div class="card cursor-pointer" [routerLink]="['../reporte',reporte.id]">
+                <i [class]="reporte.icon"></i>
+                <h1>{{reporte.titulo}}</h1>
+            </div>
+        </div>
+    </div>
+</app-card>
+

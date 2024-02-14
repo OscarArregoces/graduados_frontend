@@ -1,0 +1,34 @@
+.content-question {
+    border: 1px solid rgb(160, 160, 160);
+    border-radius: 5px;
+}
+
+.content-title {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    background-color: gainsboro;
+    margin-bottom: 10px;
+    border-radius: 5px 5px 0 0;
+}
+
+.content-title h3 {
+    margin: 0 5px 0 5px;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.content-answer {
+    margin-left: 5px;
+    margin-bottom: 5px;
+}
+
+.content-question input {
+    margin-left: 5px;
+    margin-bottom: 5px;
+}
+
+.content-question textarea {
+    margin-left: 5px;
+    margin-bottom: 5px;
+}

@@ -1,0 +1,232 @@
+<app-card titulo="Formulario Emprendimiento"
+    *ngIf="!loading && categorias.length > 0 && subCategoriasVerify.length > 0 && capacitaciones.length> 0">
+    <form card-body [formGroup]="form">
+        <div class="grid">
+            <div class="col-12 mb-2">
+                <div class="grid p-5 shadow-3" style="background-color:#f5f5f58e;">
+                    <div class="col-12">
+                        <span class="customText">Datos Basicos</span>
+                    </div>
+                    <div class="col-12 md:col-6 lg:col-4">
+                        <div class="flex flex-column gap-2">
+                            <label class="mb-2" [style]="{'font-weight': 'bold'}">Nombre del emprendiento</label>
+                            <div class="p-inputgroup my-1">
+                                <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                        style="color:#f16357;"></i></span>
+                                <input type="text" placeholder="Escribe aqui..." [maxlength]="256"
+                                    formControlName="nombre_emprendimiento" pInputText />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 md:col-6 lg:col-4">
+                        <div class="flex flex-column gap-2">
+                            <label class="mb-2" [style]="{'font-weight': 'bold'}">Telefono</label>
+                            <div class="p-inputgroup my-1">
+                                <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                        style="color:#f16357;"></i></span>
+                                <p-inputMask mask="999 999 9999" placeholder="000 000 0000" [maxlength]="13"
+                                    formControlName="telefono_emprendimiento"></p-inputMask>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 md:col-6 lg:col-4">
+                        <div class="flex flex-column gap-2">
+                            <label class="mb-2" [style]="{'font-weight': 'bold'}">Correo electronico</label>
+                            <div class="p-inputgroup my-1">
+                                <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                        style="color:#f16357;"></i></span>
+                                <input type="text" placeholder="Usuario@Ejemplo.com"
+                                    formControlName="correo_emprendimiento" pInputText />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 md:col-6 lg:col-4">
+                        <div class="flex flex-column gap-2">
+                            <label class="mb-2" [style]="{'font-weight': 'bold'}">Dirección</label>
+                            <div class="p-inputgroup my-1">
+                                <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                        style="color:#f16357;"></i></span>
+                                <input type="text" placeholder="Escribe aqui..." [maxlength]="50"
+                                    formControlName="direccion" pInputText />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 md:col-6 lg:col-4">
+                        <div class="flex flex-column gap-2">
+                            <label class="mb-2" [style]="{'font-weight': 'bold'}">Municipio</label>
+                            <div [style]="{'width': '100%'}" class="grid flex flex-row justify-content-space">
+                                <div class="p-inputgroup my-1">
+                                    <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                            style="color:#f16357;"></i></span>
+                                    <p-dropdown [options]="municipios" [style]="{'width': '100%'}" optionLabel="nombre"
+                                        placeholder="Selecciona una opcion" formControlName="municipio" (onChange)="onChangeMunicipios($event)"></p-dropdown>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 md:col-6 lg:col-4">
+                        <div class="flex flex-column gap-2">
+                            <label class="mb-2" [style]="{'font-weight': 'bold'}">Corregimiento</label>
+                            <div [style]="{'width': '100%'}" class="grid flex flex-row justify-content-space">
+                                <div class="p-inputgroup my-1">
+                                    <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                            style="color:#f16357;"></i></span>
+                                    <p-dropdown [options]="corregimientos" [style]="{'width': '100%'}" optionLabel="nombre"
+                                        placeholder="Selecciona una opcion" formControlName="corregimiento"></p-dropdown>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 mb-2">
+                <div class="grid p-5 shadow-3" style="background-color:#f5f5f58e;">
+                    <div class="col-12">
+                        <span class="customText">Mas Información</span>
+                    </div>
+                    <div class="col-12 md:col-12 lg:col-6">
+                        <div class="flex flex-column gap-2">
+                            <label class="mb-2" [style]="{'font-weight': 'bold'}">Descripcion de lo que ofrece tu
+                                emprendimiento </label>
+                            <textarea rows="5" cols="30" [maxlength]="600" pInputTextarea formControlName="descripcion"
+                                placeholder="Mi emprendimiento se centra en..." [autoResize]="true"></textarea>
+                        </div>
+                    </div>
+                    <div class="col-12 md:col-12 lg:col-6 flex flex-column justify-content-center aling-items-center">
+                        <div class="flex flex-column gap-2">
+                            <label class="mb-2" [style]="{'font-weight': 'bold'}">Categoria</label>
+                            <div [style]="{'width': '100%'}" class="grid flex flex-row justify-content-space">
+                                <div class="p-inputgroup my-1">
+                                    <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                            style="color:#f16357;"></i></span>
+                                    <p-dropdown [options]="categorias" optionLabel="name" [style]="{'width': '100%'}"
+                                        placeholder="Selecciona una opcion" formControlName="categoria"
+                                        (ngModelChange)="onChangeCategorias($event)"></p-dropdown>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex flex-column gap-2">
+                            <label class="mb-2" [style]="{'font-weight': 'bold'}">Subcategoria</label>
+                            <div [style]="{'width': '100%'}" class="grid flex flex-row justify-content-space">
+                                <div class="p-inputgroup my-1">
+                                    <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                            style="color:#f16357;"></i></span>
+                                    <p-dropdown [options]="subCategorias" [style]="{'width': '100%'}" optionLabel="name"
+                                        placeholder="Selecciona una opcion" formControlName="subCategori"></p-dropdown>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 md:col-12 lg:col-4">
+                        <div class="flex flex-column gap-2">
+                            <label class="mb-2" [style]="{'font-weight': 'bold'}">¿Con que metodos de entrega cuentas?
+                            </label>
+                            <span [style]="{'font-size': '13px', 'color':'#606770'}">Puedes escoger una o varias
+                                opciones</span>
+                            <div class="my-1" *ngFor="let metodo of metodosEntrega;let indice=index">
+                                <p-checkbox class="mr-1" [value]="metodo" inputId="ny"
+                                    [formControl]="metodos_entrega"></p-checkbox>
+                                <label for="ny">{{metodo}}</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 md:col-12 lg:col-4">
+                        <div class="flex flex-column gap-2">
+                            <label class="mb-2" [style]="{'font-weight': 'bold'}">¿Con que metodos de pago
+                                cuentas?</label>
+                            <span [style]="{'font-size': '13px', 'color':'#606770'}">Puedes escoger una o varias
+                                opciones</span>
+                            <div class="my-1" *ngFor="let metodo of metodosPago;let indice=index">
+                                <p-checkbox class="mr-1" [value]="metodo" inputId="ny"
+                                    [formControl]="formas_pago"></p-checkbox>
+                                <label for="ny"> {{ metodo }}</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 md:col-12 lg:col-4">
+                        <div class="flex flex-column gap-2">
+                            <label class="mb-2" [style]="{'font-weight': 'bold'}">¿Cual de estas capacitaciones te
+                                gustaria
+                                recibir?</label>
+                            <span [style]="{'font-size': '13px', 'color':'#606770'}">Puedes escoger una o varias
+                                opciones</span>
+                            <div class="my-1" *ngFor="let capacitacion of capacitaciones;let indice=index">
+                                <p-checkbox class="mr-1" [value]="capacitacion.id" inputId="ny"
+                                    [formControl]="tipo_capacitacion"></p-checkbox>
+                                <label for="ny">{{ capacitacion.name }}</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 mb-2">
+                <div class="grid p-5 shadow-3" style="background-color:#f5f5f58e;">
+                    <div class="col-12">
+                        <span class="customText">Información Adicional</span>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="flex flex-column gap-2">
+                            <label class="mb-2" [style]="{'font-weight': 'bold'}">¿Como te podemos encontrar en tus
+                                redes
+                                sociales?</label>
+                            <span class="mb-2" [style]="{'font-size': '13px', 'color':'#606770'}">Agrega la URL de tus
+                                redes</span>
+                            <div class="grid">
+                                <div class="col-12 md:col-12 lg:col-4 flex flex-column justify-content-center">
+                                    <label [style]="{'font-weight': 'bold'}">Facebook</label>
+                                    <input type="text" class="my-2" placeholder="facebook.com/miemprendimiento"
+                                        formControlName="Facebook" pInputText />
+                                </div>
+                                <div class="col-12 md:col-12 lg:col-4 flex flex-column justify-content-center">
+                                    <label [style]="{'font-weight': 'bold'}">Instagram</label>
+                                    <input type="text" class="my-2" placeholder="instagram.com/miemprendimiento"
+                                        formControlName="Instagram" pInputText />
+                                </div>
+                                <div class="col-12 md:col-12 lg:col-4 flex flex-column justify-content-center">
+                                    <label [style]="{'font-weight': 'bold'}">Pagina web</label>
+                                    <input type="text" class="my-2" placeholder="miemprendimiento.com"
+                                        formControlName="PaginaWeb" pInputText />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 md:col-12 lg:col-12">
+                        <div class="flex flex-column gap-2">
+                            <label class="my-3" htmlFor="Asunto" [style]="{'font-weight': 'bold'}">Aquí puedes adjuntar
+                                una
+                                imagen de tu emprendimiento <span style="color: #7c7c7c;">(Opcional)</span></label>
+                            <p-fileUpload #fileUpload [maxFileSize]="5242880" name="anexo"
+                                (onSelect)="adjuntarArchivo($event)" [showUploadButton]="false"
+                                [showCancelButton]="false" chooseLabel="Subir" accept="image/*"></p-fileUpload>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="flex justify-content-center aling-items-center my-3">
+                    <button [style]="{'width': '40%'}" pButton pRipple type="submit" label="Crear"
+                        class="p-button-success" (click)="onSubmit()" [disabled]="!form.valid"></button>
+                </div>
+            </div>
+        </div>
+    </form>
+</app-card>
+
+<div *ngIf="!loading && categorias.length <= 0">
+    <h1>No hay Categorias</h1>
+</div>
+<div *ngIf="!loading && subCategoriasVerify.length <= 0">
+    <h1>No hay Subcategorias</h1>
+</div>
+<div *ngIf="!loading &&  categorias.length <= 0 ">
+    <h1>No hay capacitaciones</h1>
+</div>
+
+<div *ngIf="loading">
+    <app-spinner></app-spinner>
+</div>
+
+
+<p-toast></p-toast>

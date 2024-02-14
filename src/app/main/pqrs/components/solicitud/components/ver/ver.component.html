@@ -1,0 +1,249 @@
+<app-card titulo="Solicitudes" width="80%">
+    <div card-body class="grid">
+        <div class="col-12">
+            <app-custom-info-card [description]="inforCardDescription"></app-custom-info-card>
+            <form [formGroup]="form">
+                <div class="grid">
+                    <div class="col-12 md:col-12 lg:col-4">
+                        <div class="p-inputgroup">
+                            <span class="p-inputgroup-addon"><i class="pi pi-filter-fill"
+                                    style="color:#f16357;"></i></span>
+                            <p-multiSelect [style]="{ width: '100%'}" (onChange)="onChangeSelectedFilter($event)"
+                                [options]="filterOptions" placeholder="Selecciona una opcion" display="chip"></p-multiSelect>
+                        </div>
+                    </div>
+                    <div *ngIf="optionsSelectedFilter.includes('Estado')" class="col-12 md:col-12 lg:col-4">
+                        <div class="p-inputgroup">
+                            <span class="p-inputgroup-addon"><i class="pi pi-filter-fill"
+                                    style="color:#f16357;"></i></span>
+                            <p-dropdown [style]="{ width: '100%'}" [options]="filterStatus" (onChange)="onChangeSelectedStatus($event)"
+                                formControlName="optionsSelectedStatus" optionLabel="name"
+                                placeholder="Filtrar por estado" [showClear]="true"></p-dropdown>
+                        </div>
+                    </div>
+                    <div *ngIf="optionsSelectedFilter.includes('Mas reciente/Menos reciente')"
+                    class="col-12 md:col-12 lg:col-4">
+                    <div class="p-inputgroup">
+                        <span class="p-inputgroup-addon"><i class="pi pi-filter-fill" style="color:#f16357;"></i></span>
+                        <p-dropdown [style]="{ width: '100%'}" [options]="filterOrder" (onChange)="onChangeSelectedOrder($event)"
+                            formControlName="optionsSelectedOrder" placeholder="Filtrar por orden" optionLabel="name"
+                            [showClear]="true"></p-dropdown>
+                    </div>
+                </div>
+                    <div *ngIf="optionsSelectedFilter.includes('Rango de fechas')"
+                    class="col-12 md:col-12 lg:col-4">
+                    <div class="p-inputgroup mx-1">
+                        <span class="p-inputgroup-addon"><i class="pi pi-filter-fill" style="color:#f16357;"></i></span>
+                        <p-calendar [style]="{'width':'100%'}" formControlName="initialDate" placeholder="Fecha inicial" dateFormat="mm-dd-yy"
+                            inputId="dateformat" (onSelect)="onChangeInitialDate($event)"></p-calendar>
+                    </div>
+                </div>
+                    <div *ngIf="optionsSelectedFilter.includes('Rango de fechas')"
+                    class="col-12 md:col-12 lg:col-4">
+                    <div class="p-inputgroup mx-1">
+                        <span class="p-inputgroup-addon"><i class="pi pi-filter-fill" style="color:#f16357;"></i></span>
+                        <p-calendar [style]="{'width':'100%'}" placeholder="Fecha final" dateFormat="mm-dd-yy"
+                            inputId="dateformat" formControlName="finalDate" (onSelect)="onChangeFinalDate($event)"></p-calendar>
+                    </div>
+                </div>
+                    <div class="col-12 md:col-12 lg:col-4 flex justify-content-center" *ngIf="optionsSelectedFilter.length > 0">
+                        <button pButton pRipple type="submit" label="Filtrar" (click)="filtrar()" ></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-12 md:col-12 lg:col-12">
+            <div class="flex flex-column gap-2">
+
+                <p-card>
+                    <p-table #dt [value]="solicitudes" [(selection)]="solicitudesSeleccionadas" dataKey="id"
+                        styleClass="p-datatable-customers" [rowHover]="true" [rows]="10" [showCurrentPageReport]="true"
+                        [rowsPerPageOptions]="[10,25,50]" [loading]="loading" responsiveLayout="scroll"
+                        [paginator]="true"
+                        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} elementos"
+                        [filterDelay]="0" [globalFilterFields]="['titulo', 'tipopqrs.tipo','status.valor', 'persona']"
+                        responsiveLayout="scroll">
+                        <ng-template pTemplate="caption">
+                            <div class="table-header">
+                                <div class="grid" [style]="{'display': 'flex', 'justify-content': 'space-between'}">
+                                    <div class="col-12 md:col-6 lg:col-6" [style]="{'font-size': '20px'}">
+                                        Lista de Solicitudes
+                                    </div>
+                                    <div class="col-12 md:col-6 lg:col-3">
+                                        <span [style]="{'width':'100%'}" class="p-input-icon-left">
+                                            <i class="pi pi-search"></i>
+                                            <input [style]="{'width':'100%'}" pInputText type="text"
+                                                (input)="dt.filterGlobal(getEventValue($event), 'contains')"
+                                                placeholder="Busqueda global" />
+                                        </span>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </ng-template>
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th style="width: 3rem">
+                                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+
+                                </th>
+                                <th style="width: 5rem">
+                                    <p>Indice</p>
+                                </th>
+                                <th pSortableColumn="titulo">
+                                    <div class="flex justify-content-between align-items-center">
+                                        Asunto
+                                        <p-sortIcon field="titulo"></p-sortIcon>
+                                        <p-columnFilter type="text" field="titulo" display="menu"
+                                            class="ml-auto"></p-columnFilter>
+                                    </div>
+                                </th>
+                                <th pSortableColumn="tipopqrs.tipo">
+                                    <div class="flex justify-content-between align-items-center">
+                                        Tipo
+                                        <p-sortIcon field="tipopqrs.tipo"></p-sortIcon>
+                                        <p-columnFilter type="text" field="tipopqrs.tipo" display="menu"
+                                            class="ml-auto"></p-columnFilter>
+                                    </div>
+                                </th>
+                                <th pSortableColumn="persona">
+                                    <div class="flex justify-content-between align-items-center">
+                                        Usuario
+                                        <p-sortIcon field="persona"></p-sortIcon>
+                                        <p-columnFilter type="text" field="persona" display="menu"
+                                            class="ml-auto"></p-columnFilter>
+                                    </div>
+                                </th>
+                                <th pSortableColumn="status.valor">
+                                    <div class="flex justify-content-between align-items-center">
+                                        Estado
+                                        <p-sortIcon field="status.valor"></p-sortIcon>
+                                        <p-columnFilter type="text" field="status.valor" display="menu"
+                                            class="ml-auto"></p-columnFilter>
+                                    </div>
+                                </th>
+                                <th style="width: 8rem;text-align: center">
+                                    Detalles
+                                </th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-solicitud let-rowIndex="rowIndex">
+                            <tr class="p-selectable-row">
+                                <td>
+                                    <p-tableCheckbox [value]="solicitud"></p-tableCheckbox>
+                                </td>
+                                <td>
+                                    {{rowIndex + 1 }}
+                                </td>
+                                <td>
+                                    <span class="p-column-title">Asunto</span>
+                                    {{solicitud.titulo}}
+                                </td>
+                                <td>
+                                    <span class="p-column-title">Tipo de solicitud</span>
+                                    {{solicitud.tipopqrs.tipo}}
+                                </td>
+                                <td>
+                                    <span class="p-column-title">Usuario</span>
+                                    {{solicitud.persona}}
+                                </td>
+                                <td>
+                                    <span class="p-column-title">Estado</span>
+
+                                    <p-button *ngIf="solicitud.status.valor === 'En espera'"
+                                        styleClass="p-button-warning"> {{solicitud.status.valor}}
+                                    </p-button>
+                                    <p-button *ngIf="solicitud.status.valor === 'Finalizada'"
+                                        styleClass="p-button-danger"> {{solicitud.status.valor}}
+                                    </p-button>
+                                    <p-button *ngIf="solicitud.status.valor === 'Activa'"> {{solicitud.status.valor}}
+                                    </p-button>
+
+                                </td>
+                                <td style="text-align: center">
+                                    <button pButton type="button" icon="pi pi-eye" class="p-button-secondary"
+                                        (click)="showDetalles(solicitud.id)"></button>
+                                </td>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="emptymessage">
+                            <tr>
+                                <td colspan="8">No hay datos que mostrar</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </p-card>
+
+            </div>
+        </div>
+
+    </div>
+</app-card>
+
+
+<p-dialog [(visible)]="visible" [style]="{width: width}"
+    [showHeader]="false" [modal]="true" [dismissableMask]="true">
+    <!-- <img [style]="{'width':'100%'}" alt="Card" src="/assets/images/header.png" /> -->
+
+    <div *ngIf="solicitud.length > 0" id="card-custom">
+        <div id="card-header">
+            <div class="p-inputgroup">
+                <span style="background-color: #f16357; border:1px solid #f16357; color: white;"
+                    class="p-inputgroup-addon">
+                    <i class="pi pi-calendar"></i>
+                </span>
+            </div>
+        </div>
+
+        <div id="card-body" class="grid">
+            <div class="col-12 md:col-4 lg:col-2 flex justify-content-center">
+                <img appImgError src="assets/images/logo.png" style="max-width: 100px; max-height: 100px;"
+                    title="Logo Uniguajira" alt="Logo Uniguajira">
+            </div>
+            <div class="col-12 md:col-8 lg:col-10">
+                <div class="grid flex justify-content-center">
+                    <div class="col-12 md:col-12 lg:col-12 text-center">
+                        <h3>{{ solicitud[0].titulo}}</h3>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 md:col-12 lg:col-12">
+                <div>
+                    <p><strong>Tipo de solicitud:</strong> {{ solicitud[0].tipopqrs.tipo}}</p>
+                    <p><strong>Usuario:</strong> {{ solicitud[0].persona}}</p>
+                    <p><strong>Fecha:</strong> 01-06-2023</p>
+                </div>
+            </div>
+            <div class="col-12 md:col-12 lg:col-12">
+                <p>
+                    {{ solicitud[0].description}}
+                </p>
+            </div>
+
+            <div class="col-12 md:col-6 lg:col-6">
+                <div *ngIf="solicitud[0].anexo !==''"
+                    class="mx-2 lg:flex lg:justify-content-start sm:flex sm:justify-content-start">
+                    <a href="{{API_URL_MEDIA}}{{solicitud[0].anexo}}" Target="_blank">
+                        <button pButton type="button" label="Anexo" icon="pi pi-paperclip"
+                            class="p-button-success m-2"></button>
+                    </a>
+                </div>
+            </div>
+            <div class="col-12 md:col-6 lg:col-6">
+                <div class="mx-2 lg:flex lg:justify-content-end sm:flex sm:justify-content-end">
+                    <button pButton type="button" [label]="solicitud[0].status.valor"
+                        [class]="solicitud[0].status.name === 'EP' ? 'p-button-warning m-2': solicitud[0].status.name === 'FN' ? 'p-button-danger m-2 ': 'p-button m-2'"></button>
+                </div>
+            </div>
+            <div class="col-12 flex justify-content-center">
+                <button pButton pRipple type="button" label="Volver" class="p-button-secondary" [style]="{ width: '30%'}"
+                    (click)="closeDetalles()"></button>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- <img [style]="{'width':'100%'}" alt="Card" src="/assets/images/footer.png" /> -->
+</p-dialog>

@@ -1,0 +1,155 @@
+<app-card *ngIf="solicitud.length > 0; else elseBlock" titulo="Detalles">
+    <div card-body>
+        <div id="card-custom" class="my-3">
+            <div id="card-header">
+                <div class="p-inputgroup">
+                    <span style="background-color: #f16357; border:1px solid #f16357; color: white;"
+                        class="p-inputgroup-addon">
+                        <i class="pi pi-calendar"></i>
+                    </span>
+                </div>
+            </div>
+
+            <div id="card-body" class="grid">
+                <div class="col-12 md:col-4 lg:col-2 flex justify-content-center">
+                    <img appImgError src="assets/images/logo.png" style="max-width: 100px; max-height: 100px;"
+                        title="Logo Uniguajira" alt="Logo Uniguajira">
+                </div>
+                <div class="col-12 md:col-8 lg:col-10">
+                    <div class="grid flex justify-content-center">
+                        <div class="col-12 md:col-12 lg:col-12 text-center">
+                            <h3>{{ solicitud[0].titulo}}</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 md:col-12 lg:col-12">
+                    <div>
+                        <p><strong>Tipo de solicitud:</strong> {{ solicitud[0].tipopqrs.tipo}}</p>
+                        <p><strong>Usuario:</strong> {{ solicitud[0].persona}}</p>
+                        <p><strong>Fecha:</strong> 01-06-2023</p>
+                    </div>
+                </div>
+                <div class="col-12 md:col-12 lg:col-12 ">
+                    <strong>Descripcion:</strong>
+                    <p>{{ solicitud[0].description}}</p>
+                </div>
+
+                <div class="col-12 md:col-6 lg:col-6">
+                    <div *ngIf="solicitud[0].anexo !==''"
+                        class="mx-2 lg:flex lg:justify-content-start sm:flex sm:justify-content-start">
+                        <a href="{{API_URI}}/media/{{solicitud[0].anexo}}" Target="_blank">
+                            <button pButton type="button" label="Anexo" icon="pi pi-paperclip"
+                                class="p-button-success m-2"></button>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-12 md:col-6 lg:col-6">
+                    <div class="mx-2 lg:flex lg:justify-content-end sm:flex sm:justify-content-end">
+                        <button pButton type="button" [label]="solicitud[0].status.valor"
+                            [class]="solicitud[0].status.name === 'EP' ? 'p-button-warning m-2': solicitud[0].status.name === 'FN' ? 'p-button-danger m-2 ': 'p-button m-2'"></button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div *ngIf="respuestas.length > 0; else elseBlockRespuestas">
+            <h1 class="text-center my-2">Respuestas</h1>
+
+            <div *ngFor="let respuesta of respuestas" id="card-anwser-custom" class="my-3">
+                <div id="card-header">
+                    <div class="p-inputgroup">
+                        <span style="background-color: #9BABB8; border:1px solid #9BABB8; color: white;"
+                            class="p-inputgroup-addon">
+                            <i class="pi pi-calendar-minus"></i>
+                        </span>
+                    </div>
+                </div>
+
+                <div id="card-body" class="grid">
+
+                    <div class="col-12 md:col-12 lg:col-12">
+                        <div>
+                            <p><strong>Fecha:</strong> 01-06-2023</p>
+                        </div>
+                    </div>
+                    <div class="col-12 md:col-12 lg:col-12">
+                        <strong>Descripcion:</strong>
+                        <p>
+                            {{ respuesta.descripcion}}
+                        </p>
+                    </div>
+
+                    <div class="col-12 md:col-6 lg:col-6">
+                        <div *ngIf="respuesta.anexo !== ''"
+                            class="mx-2 lg:flex lg:justify-content-start sm:flex sm:justify-content-start">
+                            <a href="{{API_URL_MEDIA}}{{respuesta.anexo}}" Target="_blank">
+                                <button pButton type="button" label="Anexo" icon="pi pi-paperclip"
+                                    class="p-button-success m-2"></button>
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+
+        <!-- <div *appRole="[addPermission]"> -->
+        <div>
+            <div id="card-custom" class="my-3">
+                <div id="card-header">
+                    <div class="p-inputgroup">
+                        <span style="background-color: #f16357; border:1px solid #f16357; color: white;"
+                            class="p-inputgroup-addon">
+                            <i class="pi pi-calendar-plus"></i>
+                        </span>
+                    </div>
+                </div>
+
+                <div id="card-body">
+                    <form [formGroup]="form">
+                        <div class="grid">
+                            <div class="col-12 flex justify-content-center">
+                                <h2>Adjuntar respuesta</h2>
+                            </div>
+                            <div class="col-12 flex justify-content-center">
+                                <textarea [style]="{'width': '100%'}" rows="7" cols="10"
+                                    placeholder="Aqui puedes escribir la respuesta a lo solicitado en la solicitud."
+                                    formControlName="descripcion" pInputTextarea [maxlength]="600"></textarea>
+                            </div>
+
+                            <div class="col-12 my-3">
+                                <label class="mb-2" htmlFor="Asunto" [style]="{'font-weight': 'bold'}">Puedes adjuntar
+                                    un archivo:
+                                    (Opcional)</label>
+                                <p-fileUpload #fileUpload [maxFileSize]="5242880" name="anexo"
+                                    (onSelect)="adjuntarArchivo($event)" [showUploadButton]="false"
+                                    [showCancelButton]="false" chooseLabel="Subir"></p-fileUpload>
+                            </div>
+
+                            <div class="col-12 flex justify-content-center">
+                                <button (click)="submit()" [style]="{'width': '40%'}" pButton pRipple type="submit"
+                                    label="Responder" class="p-button-success"></button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</app-card>
+
+<ng-template #elseBlock>
+    <app-spinner></app-spinner>
+</ng-template>
+
+<ng-template #elseBlockRespuestas>
+    <div class="text-center">
+        <p>Aun no hay respuestas para esta solicitud.</p>
+    </div>
+</ng-template>
+
+<p-toast></p-toast>

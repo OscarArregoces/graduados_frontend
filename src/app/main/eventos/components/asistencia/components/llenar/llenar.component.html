@@ -1,0 +1,35 @@
+<app-card titulo="Confirmación de Asistencia">
+    <div card-body class="grid flex justify-content-center">
+        <app-custom-info-card [description]="inforCardDescription"></app-custom-info-card>
+        <div class="col-12 md:col-12 lg:col-12 flex justify-content-center">
+            <ngx-scanner-qrcode #action="scanner" [config]="config" (error)="onError($event)"></ngx-scanner-qrcode>
+        </div>
+        <p class="text-center" *ngIf="action.isLoading">⌛ Cargando...</p>
+
+        <div class="col-12 md:col-12 lg:col-12 flex justify-content-center">
+            <button [disabled]="verifyConfirm(action.data.value)" (click)="confirmQr(action.data.value[0].value, action)" pButton
+                type="button" label="Confirmar asistencia"></button>
+        </div>
+
+        <div class="col-12 md:col-12 lg:col-12 flex justify-content-center ">
+            <button [style]="{'width': '50px', 'height':'50px'}" pButton pRipple type="button"
+                [class]="!action.isStart ? 'p-button-success' : 'p-button-danger'" [disabled]="action.isLoading"
+                icon="pi pi-power-off" class="m-3 "
+                (click)=" !action.isStart ? handle(action, 'start') : handle(action, 'stop')">
+            </button>
+            <button [style]="{'width': '50px', 'height':'50px'}" pButton pRipple type="button"
+                class="m-3 p-button-warning" [disabled]="action.isLoading" icon="pi pi-pause"
+                (click)="handle(action, 'pause')" [disabled]="!action.isStart">
+            </button>
+            <button [style]="{'width': '50px', 'height':'50px'}" pButton pRipple type="button"
+                class="m-3 p-button-secondary" [disabled]="action.isLoading" icon="pi pi-play"
+                (click)="handle(action, 'play')" [disabled]="!action.isStart">
+            </button>
+            <button [style]="{'width': '50px', 'height':'50px'}" pButton pRipple type="button" class="m-3 p-button-help"
+                [disabled]="action.isLoading" icon="pi pi-image" (click)="action.download('ngx-scanner-qrcode')" [disabled]="!action.isStart">
+            </button>
+        </div>
+    </div>
+</app-card>
+
+<p-toast></p-toast>

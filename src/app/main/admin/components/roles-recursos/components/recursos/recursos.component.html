@@ -1,0 +1,218 @@
+<app-card titulo="Roles y Recursos">
+    <div class="grid" card-body>
+        <div class="col-12">
+            <app-custom-info-card [description]="inforCardDescription"></app-custom-info-card>
+            <div>
+                <button pButton pRipple type="button" label="Crear recurso" icon="pi pi-plus"
+                    class="p-button-success mr-2" (click)="changeDisplayFormCreate()"></button>
+                <button pButton pRipple type="button" label="Eliminar seleccionados" icon="pi pi-trash"
+                    class="p-button-danger mr-2" (click)="deleteAll()"></button>
+            </div>
+        </div>
+        <div class="col-12">
+            <p-dropdown [options]="roles" [(ngModel)]="roleSelected" placeholder="Selecciona un rol"
+                [style]="{'min-width': '250px','max-width': '250px'}" optionLabel="name" [showClear]="true"
+                (onChange)="onChangeRole($event)"></p-dropdown>
+        </div>
+
+        <div *ngIf="resourcesByRol.length > 0 && roleSelected !== null" class="col-12">
+            <p-card>
+                <p-table #dt [value]="resourcesByRol" [(selection)]="itemsBulkDelete" dataKey="id"
+                    styleClass="p-datatable-customers" [rowHover]="true" [rows]="10" [showCurrentPageReport]="true"
+                    [rowsPerPageOptions]="[10,25,50]" [loading]="loading" responsiveLayout="scroll" [paginator]="true"
+                    currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} elementos" [filterDelay]="0"
+                    [globalFilterFields]="['name']" responsiveLayout="scroll">
+                    <ng-template pTemplate="caption">
+                        <div class="table-header">
+                            <div class="grid" [style]="{'display': 'flex', 'justify-content': 'space-between'}">
+                                <div class="col-12 md:col-6 lg:col-6" [style]="{'font-size': '20px'}">
+                                    Recursos de {{roleSelected.name}}
+                                </div>
+                                <div class="col-12 md:col-6 lg:col-3">
+                                    <span [style]="{'width':'100%'}" class="p-input-icon-left">
+                                        <i class="pi pi-search"></i>
+                                        <input [style]="{'width':'100%'}" pInputText type="text"
+                                            (input)="dt.filterGlobal(getEventValue($event), 'contains')"
+                                            placeholder="Busqueda global" />
+                                    </span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </ng-template>
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th style="width: 3rem">
+                                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                            </th>
+                            <th style="width: 5rem">
+                                <p>Indice</p>
+                            </th>
+
+                            <th pSortableColumn="path">
+                                <div class="flex justify-content-between align-items-center">
+                                    path
+                                    <p-sortIcon field="path"></p-sortIcon>
+                                    <p-columnFilter type="text" field="path" display="menu"
+                                        class="ml-auto"></p-columnFilter>
+                                </div>
+                            </th>
+                            <th pSortableColumn="id_padre">
+                                <div class="flex justify-content-between align-items-center">
+                                    id_padre
+                                    <p-sortIcon field="id_padre"></p-sortIcon>
+                                    <p-columnFilter type="text" field="id_padre" display="menu"
+                                        class="ml-auto"></p-columnFilter>
+                                </div>
+                            </th>
+                            <th pSortableColumn="icono">
+                                <div class="flex justify-content-between align-items-center">
+                                    icono
+                                    <p-sortIcon field="icono"></p-sortIcon>
+                                    <p-columnFilter type="text" field="icono" display="menu"
+                                        class="ml-auto"></p-columnFilter>
+                                </div>
+                            </th>
+                            <th pSortableColumn="link">
+                                <div class="flex justify-content-between align-items-center">
+                                    link
+                                    <p-sortIcon field="link"></p-sortIcon>
+                                    <p-columnFilter type="text" field="link" display="menu"
+                                        class="ml-auto"></p-columnFilter>
+                                </div>
+                            </th>
+                            <th pSortableColumn="titulo">
+                                <div class="flex justify-content-between align-items-center">
+                                    titulo
+                                    <p-sortIcon field="titulo"></p-sortIcon>
+                                    <p-columnFilter type="text" field="titulo" display="menu"
+                                        class="ml-auto"></p-columnFilter>
+                                </div>
+                            </th>
+                            <th style="width: 8rem;text-align: center">
+                                Acciones
+                            </th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-resource let-rowIndex="rowIndex">
+                        <tr class="p-selectable-row">
+                            <td>
+                                <p-tableCheckbox [value]="resource"></p-tableCheckbox>
+                            </td>
+                            <td>
+                                {{rowIndex + 1 }}
+                            </td>
+                            <td>
+                                <span class="p-column-title">Nombre</span>
+                                {{resource.path}}
+                            </td>
+                            <td>
+                                <span class="p-column-title">Nombre</span>
+                                {{resource.id_padre}}
+                            </td>
+                            <td>
+                                <span class="p-column-title">Nombre</span>
+                                {{resource.icono}}
+                            </td>
+                            <td>
+                                <span class="p-column-title">Nombre</span>
+                                {{resource.link}}
+                            </td>
+                            <td>
+                                <span class="p-column-title">Nombre</span>
+                                {{resource.titulo}}
+                            </td>
+                            <td style="text-align: center" class="flex justify-content-center align-items-center">
+                                <button pButton type="button" icon="pi pi-eye" class="p-button-secondary m-1"
+                                    title="Detalles"></button>
+                                <button pButton type=" button" icon="pi pi-pencil" class="p-button-warning m-1"
+                                    title="Editar"></button>
+                                <button pButton type=" button" icon="pi pi-trash" class="p-button-danger m-1"
+                                    title="Eliminar"></button>
+                                <p-confirmPopup></p-confirmPopup>
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td colspan="8">No hay datos que mostrar</td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </p-card>
+        </div>
+
+        <div *ngIf="resourcesByRol.length === 0 && roleSelected === null"
+            class="mt-5 col-12 flex justify-content-center">
+            <p-message severity="info" [text]="inforCardDescriptionErrorInitial" styleClass="mr-2"></p-message>
+        </div>
+
+        <div *ngIf="resourcesByRol.length === 0 && roleSelected !== null"
+            class="mt-5 col-12 flex justify-content-center">
+            <p-message severity="warn" text="El Rol [{{roleSelected.name}}] no tiene ningun recurso aún."
+                styleClass="mr-2"></p-message>
+        </div>
+
+    </div>
+</app-card>
+
+<p-dialog header="Creando Recurso" [(visible)]="displayFormCreate" [style]="{width: width, 'min-height':'70vh'}"
+    [showHeader]="true" [modal]="true" [dismissableMask]="false" (onHide)="handleCloseFormCreateDialog()">
+    <form [formGroup]="formCreate">
+        <div class="grid">
+            <app-custom-info-card [description]="inforCardDescriptionHeaderDialog"
+                [variant]="variantColor"></app-custom-info-card>
+            <div class="col-8">
+                <div class="grid">
+                    <div class="col-6">
+                        <div class="flex flex-column gap-2">
+                            <label class="mb-2" [style]="{'font-weight': 'bold'}">Titulo </label>
+                            <div class="p-inputgroup my-1">
+                                <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                        style="color:#f16357;"></i></span>
+                                <input type="text" placeholder="Admin" [maxlength]="50" formControlName="titulo"
+                                    pInputText />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="flex flex-column gap-2">
+                            <label class="mb-2" [style]="{'font-weight': 'bold'}">Padre </label>
+                            <div class="p-inputgroup my-1">
+                                <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                        style="color:#f16357;"></i></span>
+
+                                <p-dropdown [options]="resources" formControlName="id_padre"
+                                    placeholder="Selecciona una opcion" [style]="{'min-width': '250px', 'width':'100%'}"
+                                    optionLabel="path" [showClear]="true"></p-dropdown>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="flex flex-column gap-2">
+                            <label class="mb-2" [style]="{'font-weight': 'bold'}">Path </label>
+                            <div class="p-inputgroup my-1">
+                                <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                        style="color:#f16357;"></i></span>
+                                <input type="text" placeholder="/dashboard/admin/" [maxlength]="50"
+                                    formControlName="path" pInputText />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="flex flex-column gap-2">
+                            <label class="mb-2" [style]="{'font-weight': 'bold'}">Icono </label>
+                            <div class="p-inputgroup my-1">
+                                <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                        style="color:#f16357;"></i></span>
+                                <input type="text" placeholder="pi pi-home" [maxlength]="50" formControlName="icono"
+                                    pInputText />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4"></div>
+        </div>
+    </form>
+</p-dialog>

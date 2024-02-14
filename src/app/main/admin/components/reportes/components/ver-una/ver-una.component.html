@@ -1,0 +1,13 @@
+<app-card [titulo]="titulo" [width]="width">
+    <div card-body>
+       <div [ngSwitch]="reporteId">
+        <div *ngSwitchCase="1">
+            <app-report-graduados></app-report-graduados>
+        </div>
+        <div *ngSwitchCase="2">
+            <app-report-encuesta></app-report-encuesta>
+        </div>
+        <div *ngSwitchDefault>No es una ID valida</div>
+       </div>
+    </div>
+</app-card>

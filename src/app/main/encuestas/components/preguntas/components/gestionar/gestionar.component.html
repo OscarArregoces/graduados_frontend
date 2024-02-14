@@ -1,0 +1,292 @@
+<app-card titulo="Gestionar preguntas">
+    <div card-body class="grid">
+        <app-custom-info-card [description]="inforCardDescription"></app-custom-info-card>
+
+        <div class="col-12">
+            <button (click)="changeDisplayFormCreate()" pButton pRipple type="submit" icon="pi pi-plus"
+                label="Crear Nuevo" class="p-button-success mr-2"></button>
+            <button pButton pRipple type="submit" label=" Eliminar seleccionados" icon="pi pi-trash"
+                class="p-button-danger mr-2" (click)="deleteAll()"></button>
+        </div>
+        <div class="col-12 md:col-12 lg:col-12">
+            <div class="flex flex-column gap-2">
+
+                <p-card>
+                    <p-table #dt [value]="preguntas" [(selection)]="itemsBulkDelete" dataKey="id"
+                        styleClass="p-datatable-customers" [rowHover]="true" [rows]="10" [showCurrentPageReport]="true"
+                        [rowsPerPageOptions]="[10,25,50]" [loading]="loading" responsiveLayout="scroll"
+                        [paginator]="true"
+                        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} elementos"
+                        [filterDelay]="0" [globalFilterFields]="['pregunta_nombre','tipo_pregunta']"
+                        responsiveLayout="scroll">
+                        <ng-template pTemplate="caption">
+                            <div class="table-header">
+                                <div class="grid" [style]="{'display': 'flex', 'justify-content': 'space-between'}">
+                                    <div class="col-12 md:col-6 lg:col-6" [style]="{'font-size': '20px'}">
+                                        Lista de preguntas
+                                    </div>
+                                    <div class="col-12 md:col-6 lg:col-3">
+                                        <span [style]="{'width':'100%'}" class="p-input-icon-left">
+                                            <i class="pi pi-search"></i>
+                                            <input [style]="{'width':'100%'}" pInputText type="text"
+                                                (input)="dt.filterGlobal(getEventValue($event), 'contains')"
+                                                placeholder="Busqueda global" />
+                                        </span>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </ng-template>
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th style="width: 3rem">
+                                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                                </th>
+                                <th style="width: 5rem">
+                                    <p>Indice</p>
+                                </th>
+                                <th pSortableColumn="pregunta_nombre">
+                                    <div class="flex justify-content-between align-items-center">
+                                        Pregunta
+                                        <p-sortIcon field="pregunta_nombre"></p-sortIcon>
+                                        <p-columnFilter type="text" field="pregunta_nombre" display="menu"
+                                            class="ml-auto"></p-columnFilter>
+                                    </div>
+                                </th>
+                                <th pSortableColumn="momento.tipo">
+                                    <div class="flex justify-content-between align-items-center">
+                                        Tipo
+                                        <p-sortIcon field="momento.tipo"></p-sortIcon>
+                                        <p-columnFilter type="text" field="momento.tipo" display="menu"
+                                            class="ml-auto"></p-columnFilter>
+                                    </div>
+                                </th>
+                                <th style="width: 8rem;text-align: center">
+                                    Editar
+                                </th>
+                                <th style="width: 8rem; text-align: center">
+                                    Eliminar
+                                </th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-pregunta let-rowIndex="rowIndex">
+                            <tr class="p-selectable-row">
+                                <td>
+                                    <p-tableCheckbox [value]="pregunta"></p-tableCheckbox>
+                                </td>
+                                <td>
+                                    {{rowIndex + 1 }}
+                                </td>
+                                <td>
+                                    <span class="p-column-title">Tipo</span>
+                                    {{pregunta.pregunta_nombre}}
+                                </td>
+                                <td>
+                                    <span class="p-column-title">Tipo</span>
+                                    {{pregunta.tipo_pregunta}}
+                                </td>
+                                <td style="text-align: center">
+                                    <button pButton type="button" icon="pi pi-pencil" class="p-button-warning"
+                                        (click)="changeDisplayFormEdit(pregunta)"></button>
+                                </td>
+                                <td style="text-align: center">
+                                    <p-confirmPopup></p-confirmPopup>
+                                    <button pButton type="button" icon="pi pi-trash" class="p-button-danger "
+                                        (click)="confirm($event, pregunta.id)"></button>
+                                </td>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="emptymessage">
+                            <tr>
+                                <td colspan="8">No hay datos que mostrar</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </p-card>
+
+            </div>
+        </div>
+
+    </div>
+</app-card>
+
+<p-dialog [(visible)]="displayFormEdit" [style]="{width: width, height: '70vh', 'text-aling': 'center'}"
+    [showHeader]="false" [modal]="true" [dismissableMask]="true">
+    <img [style]="{'width': '100%'}" alt="Card" src="assets/images/header.png" />
+
+    <div class="grid">
+        <div class="col-12 md:col-4 lg:col-4 flex justify-content-center align-items-center">
+            <img alt="Card" [style]="{  'max-height': '150px' ,'max-width': '150px'}" src="assets/images/logo.png" />
+        </div>
+        <div class="col-12 md:col-8 lg:col-8 text-center">
+            <h1 [style]="{ color: '#f16357'}"> Crear preguntas</h1>
+        </div>
+    </div>
+    <div class="grid ">
+        <div class="col-8">
+            <div class="flex flex-column gap-2">
+                <label class="mb-2" [style]="{'font-weight': 'bold'}">Pregunta </label>
+                <div class="p-inputgroup my-1">
+                    <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill" style="color:#f16357;"></i></span>
+                    <input [style]="{'width':'100%'}" type="text" placeholder="Escriba el nombre de la pregunta"
+                        pInputText [(ngModel)]="formEdit.pregunta_nombre" name="question" />
+                </div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="flex flex-column gap-2">
+                <label class="mb-2" [style]="{'font-weight': 'bold'}">Momento </label>
+                <div class="p-inputgroup my-1">
+                    <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill" style="color:#f16357;"></i></span>
+                    <p-dropdown [style]="{ width: '100%'}" [options]="momentos" placeholder="Selecciona una opcion"
+                        [(ngModel)]="formEdit.momento" optionLabel="tipo"></p-dropdown>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 flex justify-content-center">
+            <button pButton pRipple label="Guardar" (click)="handleEdit()" class="p-button-success "></button>
+        </div>
+    </div>
+</p-dialog>
+
+<p-dialog header="Creando Pregunta" [(visible)]="displayFormCreate" [style]="{width: width, 'min-height':'70vh'}"
+    [showHeader]="true" [modal]="true" [dismissableMask]="false" (onHide)="handleCloseFormCreate()">
+    <app-custom-info-card [description]="inforCardDescriptionFormCreate"
+        [variant]="variantColor"></app-custom-info-card>
+    <div class="grid ">
+        <div class="col-12">
+            <div class="grid p-5 shadow-3" style="background-color:#f5f5f58e;">
+                <div class="col-12">
+                    <span class="customText">Administrar pregunta</span>
+                </div>
+                <div class="col-12 md:col-4 lg:col-4">
+                    <div class="flex flex-column gap-2">
+                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Pregunta </label>
+                        <div class="p-inputgroup my-1">
+                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                    style="color:#f16357;"></i></span>
+                            <input [style]="{'width':'100%'}" type="text" placeholder="Escriba el nombre de la pregunta"
+                                pInputText [(ngModel)]="form.question" name="question" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 md:col-4 lg:col-4">
+                    <div class="flex flex-column gap-2">
+                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Tipo de pregunta </label>
+                        <div class="p-inputgroup my-1">
+                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                    style="color:#f16357;"></i></span>
+                            <p-dropdown (onChange)="onChangeType($event)" [style]="{'width':'100%'}"
+                                placeholder="Seleccione una opcion" optionLabel="title" [options]="typeQuestion"
+                                [(ngModel)]="form.type" name="type"></p-dropdown>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 md:col-4 lg:col-4">
+                    <div class="flex flex-column gap-2">
+                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Momento </label>
+                        <div class="p-inputgroup my-1">
+                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                    style="color:#f16357;"></i></span>
+                            <p-dropdown [style]="{ width: '100%'}" [options]="momentos"
+                                placeholder="Selecciona una opcion" [(ngModel)]="form.momento"
+                                optionLabel="tipo"></p-dropdown>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="grid p-5 shadow-3" style="background-color:#f5f5f58e;">
+                <div class="col-12">
+                    <span class="customText">Opcionas Avanzadas</span>
+                </div>
+
+                <div class="col-12">
+                    <container-element class="col-8" [ngSwitch]="optionSelected">
+
+                        <div *ngSwitchCase="'respuesta corta'">
+                            <input [style]="{'width':'100%'}" type="text" placeholder="Respuesta" pInputText
+                                name="answer" [disabled]="true" />
+                        </div>
+
+                        <div *ngSwitchCase="'respuesta larga'">
+                            <textarea [style]="{'width':'100%'}" rows="5" cols="100" placeholder="Respuesta"
+                                pInputTextarea name="answer" [disabled]="true"></textarea>
+                        </div>
+
+                        <div *ngSwitchCase="'multiple'">
+                            <div class="grid" *ngFor="let elemento of form.options; index as index">
+                                <div class="col-10">
+                                    <div class="mb-2 flex align-items-center gap-1">
+                                        <p-checkbox [value]="elemento.answer" name="option"></p-checkbox>
+                                        <input [style]="{'width':'100%'}" type="text" class="mx-2"
+                                            placeholder="Respuesta {{elemento.id + 1}}" pInputText
+                                            [(ngModel)]="elemento.answer" name="question" />
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <p-button *ngIf="index === 0" (onClick)="addOptionCheck()"
+                                        icon="pi pi-plus"></p-button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div *ngSwitchCase="'unica respuesta'">
+                            <div class="grid" *ngFor="let elemento of form.options; index as index">
+                                <div class="col-10">
+                                    <div class="mb-2 flex align-items-center gap-1">
+                                        <p-radioButton name="optionradio" [value]="elemento.answer"
+                                            [(ngModel)]="elemento.value"></p-radioButton>
+                                        <input [style]="{'width':'100%'}" type="text" class="mx-2"
+                                            placeholder="Respuesta {{elemento.id + 1}}" pInputText
+                                            [(ngModel)]="elemento.answer" name="question" />
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <p-button *ngIf="index === 0" (onClick)="addOptionRadio()"
+                                        icon="pi pi-plus"></p-button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p *ngSwitchDefault class="text-center m-2">Selecciona un tipo de pregunta.</p>
+                    </container-element>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="grid p-5 shadow-3" style="background-color:#f5f5f58e;">
+                <div class="col-12">
+                    <span class="customText">Dependencias</span>
+                </div>
+                <div class="col-12 flex justify-content-start">
+                    <p-inputSwitch class="mx-2" [(ngModel)]="depend_confirm"></p-inputSwitch>
+                    <label>¿Esta pregunta depende de otra pregunta?</label>
+                </div>
+                <div *ngIf="depend_confirm" class="col-12">
+                    <p-dropdown [style]="{'width':'100%'}" placeholder="Seleccione la pregunta"
+                        [options]="preguntasVerificated" [(ngModel)]="form.depend"
+                        optionLabel="pregunta_nombre"></p-dropdown>
+
+
+                    <div *ngIf="form.depend">
+                        <div class="mt-2" *ngFor="let respuesta of form.depend.answer_set">
+                            <p-radioButton class="mx-2" name="optionradio" [value]="respuesta.id"
+                                [(ngModel)]="form.dependID"></p-radioButton>
+                            <label>{{respuesta.respuesta}}</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 flex justify-content-center">
+            <button pButton pRipple label="Guardar" (click)="onSubmit()" class="p-button-success "></button>
+        </div>
+    </div>
+</p-dialog>
+
+
+<p-toast></p-toast>

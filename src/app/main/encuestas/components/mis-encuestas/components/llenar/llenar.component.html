@@ -1,0 +1,99 @@
+<app-card titulo="Mis encuestas">
+    <div card-body *ngIf="preguntas.length; else elseBlock">
+       <form>
+        <div class="my-3" *ngFor="let pregunta of preguntas; index as index">
+            <div *ngIf="pregunta.depende_respuesta === null; else elseBlock">
+                <div [ngSwitch]="pregunta.tipo_pregunta">
+                    <div class="content-question" *ngSwitchCase="'unica respuesta'">
+                        <div class="content-title">
+                            <h3>{{pregunta.pregunta_nombre}}</h3>
+                        </div>
+                        <div class="content-answer" *ngFor="let answer of pregunta.answer_set">
+                            <p-radioButton value="{{answer.id}}"
+                                [(ngModel)]="respuestas[index].respuesta" [name]="pregunta.pregunta_nombre"></p-radioButton>
+                            <label class="mx-1">{{ answer.respuesta}} </label>
+                        </div>
+                    </div>
+                    <div class="content-question" *ngSwitchCase="'respuesta corta'">
+                        <div class="content-title">
+                            <h3>{{pregunta.pregunta_nombre}}</h3>
+                        </div>
+                        <input [style]="{'width': '98%'}" type="text" pInputText placeholder="Respuesta"
+                            [(ngModel)]="respuestas[index].respuesta" [name]="pregunta.pregunta_nombre" />
+                    </div>
+                    <div class="content-question" *ngSwitchCase="'respuesta larga'">
+                        <div class="content-title">
+                            <h3>{{pregunta.pregunta_nombre}}</h3>
+                        </div>
+                        <textarea rows="5" cols="30" pInputTextarea 
+                            placeholder="Respuesta" [(ngModel)]="respuestas[index].respuesta" [name]="pregunta.pregunta_nombre"></textarea>
+                    </div>
+                    <div class="content-question" *ngSwitchCase="'multiple respuesta'">
+                        <div class="content-title">
+                            <h3>{{pregunta.pregunta_nombre}}</h3>
+                        </div>
+                        <div class="content-answer" *ngFor="let answer of pregunta.answer_set">
+                            <p-checkbox  [value]="answer.id"
+                                [(ngModel)]="respuestas[index].respuesta" [name]="pregunta.pregunta_nombre"></p-checkbox>
+                            <label class="mx-1">{{ answer.respuesta}} </label>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <ng-template #elseBlock>
+                <div class="my-3" *ngIf="dependeRespuestaValida(pregunta)">
+
+                    <div [ngSwitch]="pregunta.tipo_pregunta">
+                        <div class="content-question" *ngSwitchCase="'unica respuesta'">
+                            <div class="content-title">
+                                <h3>{{pregunta.pregunta_nombre}}</h3>
+                            </div>
+                            <div class="content-answer" *ngFor="let answer of pregunta.answer_set">
+                                <p-radioButton  value="{{answer.id}}"
+                                    [(ngModel)]="respuestas[index].respuesta" [name]="pregunta.pregunta_nombre"></p-radioButton>
+                                <label class="mx-1">{{ answer.respuesta}} </label>
+                            </div>
+                        </div>
+                        <div class="content-question" *ngSwitchCase="'respuesta corta'">
+                            <div class="content-title">
+                                <h3>{{pregunta.pregunta_nombre}}</h3>
+                            </div>
+                            <input [style]="{'width': '98%'}" type="text"  pInputText placeholder="Respuesta"
+                                [(ngModel)]="respuestas[index].respuesta" [name]="pregunta.pregunta_nombre" />
+                        </div>
+                        <div class="content-question" *ngSwitchCase="'respuesta larga'">
+                            <div class="content-title">
+                                <h3>{{pregunta.pregunta_nombre}}</h3>
+                            </div>
+                            <textarea rows="5" cols="30" pInputTextarea 
+                                placeholder="Respuesta" [(ngModel)]="respuestas[index].respuesta" [name]="pregunta.pregunta_nombre"></textarea>
+                        </div>
+                        <div class="content-question" *ngSwitchCase="'multiple respuesta'">
+                            <div class="content-title">
+                                <h3>{{pregunta.pregunta_nombre}}</h3>
+                            </div>
+                            <div class="content-answer" *ngFor="let answer of pregunta.answer_set">
+                                <p-checkbox  [value]="answer.id"
+                                    [(ngModel)]="respuestas[index].respuesta" [name]="pregunta.pregunta_nombre"></p-checkbox>
+                                <label class="mx-1">{{ answer.respuesta}} </label>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </ng-template>
+        </div>
+        <div class="flex justify-content-center">
+            <button pButton pRipple label="Enviar respuestas" icon="pi pi-send" class="p-button-success" (click)="onSubmit()"></button>
+        </div>
+       </form>
+    </div>
+
+</app-card>
+
+<ng-template #elseBlock>
+    <!-- <app-spinner></app-spinner> -->
+    <p class="text-center">No hay preguntas para ti</p>
+</ng-template>
+<p-toast></p-toast>

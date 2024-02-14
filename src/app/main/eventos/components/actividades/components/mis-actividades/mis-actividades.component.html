@@ -1,0 +1,17 @@
+<app-card *ngIf="!cargando && !mostrarMensaje" titulo="Mis actividades">
+  <div card-body>
+    <app-custom-info-card [description]="inforCardDescription"></app-custom-info-card>
+    <div class="my-3" *ngFor="let actividad of actividades">
+      <app-detail-activity (refreshActivities)="actividades = $event" [actividad]="actividad"></app-detail-activity>
+    </div>
+  </div>
+</app-card>
+
+
+<div *ngIf="cargando">
+  <app-spinner></app-spinner>
+</div>
+
+<div *ngIf="!cargando && mostrarMensaje">
+  <app-ups nameModule="actividades"></app-ups>
+</div>

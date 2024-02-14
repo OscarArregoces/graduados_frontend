@@ -1,0 +1,8 @@
+
+<form (ngSubmit)="onSubmit()" class="main m-auto p-5" [formGroup]="form"> 
+    <h1 class="m-3 text-center">Crear tipo evento</h1>
+    <input type="text" pInputText placeholder="Nombre" formControlName="name"> 
+    <button pButton pRipple type="submit" label="Crear" class="p-button-success"></button>
+</form>
+
+<p-toast></p-toast>

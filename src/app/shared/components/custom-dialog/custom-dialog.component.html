@@ -1,0 +1,4 @@
+<p-dialog header="Creando Usuario" [(visible)]="display" [style]="{width: width,'text-aling': 'center'}"
+    [showHeader]="true" [modal]="true" [dismissableMask]="false" [draggable]="false" (onHide)="changeDisplay()">
+    <ng-content select="[body]"></ng-content>
+</p-dialog>
