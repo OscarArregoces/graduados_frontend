@@ -7,6 +7,7 @@ import { Subscription } from 'rxjs';
 import { Municipios } from 'src/app/consts/Municipios';
 import { ClasificadosService } from 'src/app/core/services/dashboard/clasificados.service';
 import { PantallaService } from 'src/app/core/services/pantalla.service';
+import { Variant } from 'src/app/models/ui/CustomInfoCard';
 
 import { environment } from 'src/environments/environment';
 
@@ -27,6 +28,7 @@ export class CrearComponent implements OnInit, DoCheck, OnDestroy {
   public subscription$!: Subscription;
   public confirmChange: boolean = false;
   public loading: boolean = false;
+  public variantColor: Variant = Variant.Yellow;
 
   API_URI = environment.API_URI;
 

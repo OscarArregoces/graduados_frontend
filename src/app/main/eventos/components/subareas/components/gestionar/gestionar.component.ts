@@ -21,11 +21,18 @@ export class GestionarComponent implements OnInit, OnDestroy {
 
   public areas: any[] = [];
   public subAreas: any[] = [];
-  public subAreasVerificated: any[] = [];
+  // public subAreasVerificated: any[] = [];
   public itemsBulkDelete: any[] = [];
   public inforCardDescription: string = `
   'Gestionar Subareas' facilita la gestión detallada de subtemáticas dentro de las áreas principales. Permite a los administrativos personalizar y ajustar la organización temática de las actividades, mejorando la precisión y la coherencia en la presentación de eventos.
   `;
+  public inforCardDescriptionCreate: string = `
+  Amplía la riqueza temática de tus eventos al crear subáreas de manera eficiente. Añade capas de detalle a tus áreas principales, ofreciendo una experiencia más especializada y diversa. Esta función esencial potencia la versatilidad de tus eventos, asegurando una planificación integral y atractiva.
+  `;
+  public inforCardDescriptionEdit: string = `
+  Mantén la agilidad en la adaptación de tus eventos al editar subáreas existentes. Ajusta detalles específicos para reflejar cambios en tus dinámicas de evento. Con esta herramienta clave, optimizas la organización y personalización de tus actividades, asegurando una experiencia única y actualizada para tu audiencia.
+  `;
+
   public loading: boolean = false;
   public activityValues: number[] = [0, 100];
 
@@ -72,7 +79,7 @@ export class GestionarComponent implements OnInit, OnDestroy {
     try {
       this.eventosService.get(`${this.API_URI}/eventos/areas/`, this.token).subscribe(respuesta => {
         this.areas = respuesta.data
-        respuesta.data.map((area: any) => this.subAreasVerificated.push(area.name.toLowerCase().replace(/\s+/g, '')))
+        // respuesta.data.map((area: any) => this.subAreasVerificated.push(area.name.toLowerCase().replace(/\s+/g, '')))
       })
     } catch (error) {
       console.log('Error en consulta', error)
@@ -80,11 +87,11 @@ export class GestionarComponent implements OnInit, OnDestroy {
   }
   traerSubAreas() {
     this.subAreas = []
-    this.subAreasVerificated = []
+    // this.subAreasVerificated = []
     try {
       this.eventosService.get(`${this.API_URI}/eventos/sub/areas/`, this.token).subscribe(respuesta => {
         this.subAreas = respuesta.data
-        respuesta.data.map((area: any) => this.subAreasVerificated.push(area.name.toLowerCase().replace(/\s+/g, '')))
+        // respuesta.data.map((area: any) => this.subAreasVerificated.push(area.name.toLowerCase().replace(/\s+/g, '')))
       })
     } catch (error) {
       console.log('Error en consulta', error)
@@ -92,9 +99,9 @@ export class GestionarComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
-    if (this.subAreasVerificated.includes(this.formCreate.value.name.toLowerCase().replace(/\s+/g, ''))) {
-      return this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Esta subArea ya existe' })
-    }
+    // if (this.subAreasVerificated.includes(this.formCreate.value.name.toLowerCase().replace(/\s+/g, ''))) {
+    //   return this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Esta subArea ya existe' })
+    // }
     let body = {
       "name": this.formCreate.value.name,
       "area": this.formCreate.value.area.id,
@@ -105,7 +112,7 @@ export class GestionarComponent implements OnInit, OnDestroy {
         this.formCreate.reset();
         this.traerSubAreas();
         this.changeDisplayFormCreate();
-        return this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Creado correctamente' })
+        return this.messageService.add({ severity: 'success', summary: 'Notificación', detail: 'Creado correctamente' })
       })
     } catch (error) {
       console.log('Error en consulta', error)
@@ -119,15 +126,15 @@ export class GestionarComponent implements OnInit, OnDestroy {
       "area": this.formEdit.value.area.id
     }
 
-    if (this.subAreasVerificated.includes(this.formEdit.value.name.toLowerCase().replace(/\s+/g, ''))) {
-      return this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Esta subArea ya existe' })
-    }
+    // if (this.subAreasVerificated.includes(this.formEdit.value.name.toLowerCase().replace(/\s+/g, ''))) {
+    //   return this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Esta subArea ya existe' })
+    // }
     try {
       this.eventosService.put(`${this.API_URI}/eventos/sub/areas/update/${this.idEdit}/`, body, this.token).subscribe(respuesta => {
         this.traerSubAreas();
         this.formEdit.reset();
         this.changeDisplayFormEdit()
-        return this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Editado correctamente' })
+        return this.messageService.add({ severity: 'success', summary: 'Notificación', detail: 'Editado correctamente' })
       })
     } catch (error) {
       console.log('Error en consulta', error)
@@ -143,7 +150,7 @@ export class GestionarComponent implements OnInit, OnDestroy {
     try {
       this.eventosService.delete(`${this.API_URI}/eventos/sub/areas/delete/`, this.token, body).subscribe(respuesta => {
         this.traerSubAreas();
-        return this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Eliminado correctamente !!!' })
+        return this.messageService.add({ severity: 'success', summary: 'Notificación', detail: 'Eliminado correctamente !!!' })
       });
     } catch (error) {
       console.log(error)
@@ -153,11 +160,18 @@ export class GestionarComponent implements OnInit, OnDestroy {
   changeDisplayFormCreate() {
     this.displayFormCreate = !this.displayFormCreate;
   }
+  closeDisplayFormCreate() {
+    this.displayFormCreate = false;
+    this.formCreate.reset();
+  }
   changeDisplayFormEdit(subArea: any = {}) {
     this.idEdit = subArea.id;
-    console.log(subArea)
     this.formEdit.patchValue(subArea)
     this.displayFormEdit = !this.displayFormEdit;
+  }
+  closeDisplayFormEdit() {
+    this.displayFormEdit = false;
+    this.formEdit.reset();
   }
 
   getEventValue($event: any): string {
@@ -165,8 +179,6 @@ export class GestionarComponent implements OnInit, OnDestroy {
   }
 
   confirm(event: Event | any, id: any) {
-    console.log(id)
-
     this.confirmationService.confirm({
       target: event.target,
       message: '¿Seguro que desea eliminar esta subArea?',

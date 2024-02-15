@@ -31,13 +31,22 @@ export class GestionarComponent implements OnInit, OnDestroy {
   public token: any;
   public displayFormCreate: boolean = false;
   public displayFormEdit: boolean = false;
-  
+
   public formCreate = this.fb.group({
     name: ['', Validators.required]
   })
   public formEdit = this.fb.group({
     name: ['', Validators.required]
   })
+  public infoCardDescription: string = `
+  Domina la formación empresarial al gestionar capacitaciones de manera centralizada. Este espacio integral te permite crear, visualizar, actualizar y eliminar programas formativos. Asegura una administración estratégica de las capacitaciones, potenciando el crecimiento continuo de emprendimientos y empresas. Con esta función, la institución toma las riendas de su desarrollo, garantizando una oferta formativa alineada con las demandas cambiantes del entorno empresarial.
+  `;
+  public infoCardDescriptionCreate: string = `
+  Empodera el desarrollo empresarial al crear capacitaciones de manera eficaz. Diseña programas formativos que enriquecerán las habilidades de emprendimientos y empresas. Esta función clave impulsa la formación continua, asegurando un ecosistema emprendedor vibrante y en constante crecimiento.
+  `;
+  public infoCardDescriptionEdit: string = `
+  Mantén la relevancia y adaptabilidad en la formación empresarial al editar capacitaciones existentes. Ajusta detalles para reflejar cambios en las dinámicas del mercado y garantiza una oferta formativa siempre actualizada. Con esta herramienta esencial, optimizas el impacto de las capacitaciones, proporcionando a los emprendimientos las herramientas necesarias para enfrentar los desafíos empresariales contemporáneos.
+  `;
 
   constructor(
     private clasificadosService: ClasificadosService,
@@ -69,7 +78,6 @@ export class GestionarComponent implements OnInit, OnDestroy {
     }
   }
 
-
   onSubmit() {
     if (this.capacitacionesVerificated.includes(this.formCreate.value.name.toLowerCase().replace(/\s+/g, ''))) {
       return this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Esta capacitacion ya existe' })
@@ -79,7 +87,7 @@ export class GestionarComponent implements OnInit, OnDestroy {
         this.formCreate.reset();
         this.traerCapacitaciones();
         this.changeDisplayFormCreate();
-        return this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Creado correctamente' })
+        return this.messageService.add({ severity: 'success', summary: 'Notificación', detail: 'Creado correctamente' })
       })
     } catch (error) {
       console.log('Error en consulta', error)
@@ -95,7 +103,7 @@ export class GestionarComponent implements OnInit, OnDestroy {
         this.traerCapacitaciones();
         this.formEdit.reset();
         this.changeDisplayFormEdit()
-        return this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Editado correctamente' })
+        return this.messageService.add({ severity: 'success', summary: 'Notificación', detail: 'Editado correctamente' })
       })
     } catch (error) {
       console.log('Error en consulta', error)
@@ -105,10 +113,18 @@ export class GestionarComponent implements OnInit, OnDestroy {
   changeDisplayFormCreate() {
     this.displayFormCreate = !this.displayFormCreate;
   }
+  closeDisplayFormCreate() {
+    this.displayFormCreate = false;
+    this.formCreate.reset();
+  }
   changeDisplayFormEdit(capacitacion: any = {}) {
     this.idEdit = capacitacion.id;
     this.formEdit.patchValue(capacitacion)
     this.displayFormEdit = !this.displayFormEdit;
+  }
+  closeDisplayFormEdit() {
+    this.displayFormEdit = false;
+    this.formEdit.reset();
   }
 
   getEventValue($event: any): string {
@@ -128,7 +144,7 @@ export class GestionarComponent implements OnInit, OnDestroy {
     try {
       this.clasificadosService.delete(`${this.API_URI}/advertisements/capacitaciones/delete/`, this.token, body).subscribe(respuesta => {
         this.traerCapacitaciones();
-        return this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Eliminado correctamente !!!' })
+        return this.messageService.add({ severity: 'success', summary: 'Notificación', detail: 'Eliminado correctamente !!!' })
       });
     } catch (error) {
       console.log(error)
@@ -146,7 +162,7 @@ export class GestionarComponent implements OnInit, OnDestroy {
         try {
           this.clasificadosService.delete(`${this.API_URI}/advertisements/capacitaciones/delete/${id}/`, this.token).subscribe(respuesta => {
             this.traerCapacitaciones();
-            return this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Eliminado correctamente !!!' })
+            return this.messageService.add({ severity: 'success', summary: 'Notificación', detail: 'Eliminado correctamente !!!' })
           });
         } catch (error) {
           console.log(error)

@@ -91,7 +91,7 @@
     </div>
 </app-card>
 
-<p-dialog header="Asignando Permisos" [(visible)]="displayFormCreate" [style]="{width: width,'text-aling': 'center'}"
+<p-dialog header="Creando Permisos" [(visible)]="displayFormCreate" [style]="{width: width,'text-aling': 'center'}"
     [showHeader]="true" [modal]="true" [dismissableMask]="false" (onHide)="handleCloseFormCreateDialog()">
 
     <app-custom-info-card [description]="inforCardDescriptionHeaderDialog"></app-custom-info-card>
@@ -149,7 +149,7 @@
             </div>
             <div class="col-12 flex justify-content-center align-items-center">
                 <button pButton pRipple type="button" label="Guardar" class="p-button-success mx-5"
-                    (click)="onSubmitFormCreate()"></button>
+                    (click)="onSubmitFormCreate()" [disabled]="!formCreate.valid"></button>
                 <button pButton pRipple type="button" label="Cancelar" class="p-button-outlined p-button-danger mx-5"
                     (click)="handleCloseFormCreateDialog()"></button>
             </div>

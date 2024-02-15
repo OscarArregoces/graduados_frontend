@@ -25,6 +25,11 @@ export class GestionarComponent implements OnInit, OnDestroy {
   public inforCardDescription: string = `
   El módulo 'Gestionar Areas' centraliza las funciones de creación, visualización, edición y eliminación de las áreas temáticas asociadas a las actividades. Proporciona una interfaz completa para administrar y personalizar la clasificación de eventos.
   `;
+  public inforCardDescriptionAreasCreate: string = `
+  Sienta las bases para eventos excepcionales al crear áreas con esta función vital. Define espacios temáticos clave que enriquecerán la diversidad de tus actividades. Con la capacidad de crear áreas de manera eficiente, garantizas una planificación estructurada y una experiencia de evento más completa.
+  `;
+  public inforCardDescriptionAreasEdit: string = `
+  Asegura la adaptabilidad de tus eventos al editar áreas existentes. Mantén la relevancia ajustando áreas temáticas para reflejar las dinámicas cambiantes de tus actividades. Con esta función esencial, optimizas la organización de eventos para satisfacer las expectativas en constante evolución de tu audiencia.`;
 
   public idEdit: string = '';
   public token: any;
@@ -131,11 +136,19 @@ export class GestionarComponent implements OnInit, OnDestroy {
   changeDisplayFormCreate() {
     this.displayFormCreate = !this.displayFormCreate;
   }
+  closeDisplayFormCreate() {
+    this.displayFormCreate = false;
+    this.formCreate.reset();
+  }
   changeDisplayFormEdit(pregunta: any = {}) {
     this.idEdit = pregunta.id;
     console.log(pregunta)
     this.formEdit.patchValue(pregunta)
     this.displayFormEdit = !this.displayFormEdit;
+  }
+  closeDisplayFormEdit(pregunta: any = {}) {
+    this.displayFormEdit = false;
+    this.formEdit.reset();
   }
 
   getEventValue($event: any): string {

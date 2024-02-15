@@ -59,7 +59,8 @@
                                     <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
                                             style="color:#f16357;"></i></span>
                                     <p-dropdown [options]="municipios" [style]="{'width': '100%'}" optionLabel="nombre"
-                                        placeholder="Selecciona una opcion" formControlName="municipio" (onChange)="onChangeMunicipios($event)"></p-dropdown>
+                                        placeholder="Selecciona una opcion" formControlName="municipio"
+                                        (onChange)="onChangeMunicipios($event)"></p-dropdown>
                                 </div>
                             </div>
                         </div>
@@ -71,8 +72,9 @@
                                 <div class="p-inputgroup my-1">
                                     <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
                                             style="color:#f16357;"></i></span>
-                                    <p-dropdown [options]="corregimientos" [style]="{'width': '100%'}" optionLabel="nombre"
-                                        placeholder="Selecciona una opcion" formControlName="corregimiento"></p-dropdown>
+                                    <p-dropdown [options]="corregimientos" [style]="{'width': '100%'}"
+                                        optionLabel="nombre" placeholder="Selecciona una opcion"
+                                        formControlName="corregimiento"></p-dropdown>
                                 </div>
                             </div>
                         </div>
@@ -215,13 +217,13 @@
 </app-card>
 
 <div *ngIf="!loading && categorias.length <= 0">
-    <h1>No hay Categorias</h1>
+    <app-custom-info-card description="No hay Categorias" [variant]="variantColor"></app-custom-info-card>
 </div>
 <div *ngIf="!loading && subCategoriasVerify.length <= 0">
-    <h1>No hay Subcategorias</h1>
+    <app-custom-info-card description="No hay Subcategorias" [variant]="variantColor"></app-custom-info-card>
 </div>
 <div *ngIf="!loading &&  categorias.length <= 0 ">
-    <h1>No hay capacitaciones</h1>
+    <app-custom-info-card description="No hay capacitaciones" [variant]="variantColor"></app-custom-info-card>
 </div>
 
 <div *ngIf="loading">

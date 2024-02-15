@@ -25,14 +25,13 @@ export class DetailActivityComponent implements OnInit {
   }
 
   handleBtnAsistire(idActividad: number) {
-    console.log(idActividad)
     let body = {
       "evento": idActividad
     }
     try {
       this.eventosService.post(`${this.API_URI}/eventos/inscripciones/confirmar/asistencia/`, body, this.token).subscribe((res: any) => {
         this.traerActividades();
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Gracias por hacernos saber que asistirás' });
+        this.messageService.add({ severity: 'success', summary: 'Notificación', detail: 'Gracias por hacernos saber que asistirás' });
       })
     } catch (error) {
       console.log('Error', error)

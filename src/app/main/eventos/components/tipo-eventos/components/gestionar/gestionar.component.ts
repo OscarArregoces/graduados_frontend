@@ -25,6 +25,12 @@ export class GestionarComponent implements OnInit, OnDestroy {
   public inforCardDescription: string = `
   En 'Gestionar Tipo Actividad', los administrativos pueden definir y ajustar los distintos tipos de eventos disponibles, desde charlas y reuniones hasta exposiciones. Ofrece una herramienta centralizada para adaptar la oferta de actividades a las necesidades y preferencias de los usuarios.
   `;
+  public infoCardDescriptionCreate: string = `
+  Infunde diversidad a tus eventos al crear tipos de actividad de manera ágil. Define categorías significativas que enriquecerán la variedad de experiencias para tu audiencia. Esta función esencial impulsa la planificación versátil de eventos, asegurando una oferta atractiva y adaptada.
+  `;
+  public infoCardDescriptionEdit: string = `
+  Mantén tus eventos frescos y relevantes al editar tipos de actividad existentes. Ajusta detalles para reflejar cambios en las dinámicas de tus actividades y garantiza una oferta siempre a la vanguardia. Con esta herramienta clave, optimizas la diversidad y personalización de tus eventos para satisfacer las expectativas cambiantes de tu audiencia.
+  `;
   public loading: boolean = false;
   public activityValues: number[] = [0, 100];
 
@@ -51,12 +57,12 @@ export class GestionarComponent implements OnInit, OnDestroy {
     private fb: UntypedFormBuilder,
     private pantallaService: PantallaService
   ) { }
-  
+
   ngOnInit(): void {
     this.token = localStorage.getItem('token')
     this.traerTipoEventos();
-    const [ width ] = this.pantallaService.calcularEspacioPantalla();
-    this.subscription$ = width.subscribe( width => this.width = width);
+    const [width] = this.pantallaService.calcularEspacioPantalla();
+    this.subscription$ = width.subscribe(width => this.width = width);
   }
   ngOnDestroy(): void {
     this.subscription$.unsubscribe();
@@ -76,16 +82,16 @@ export class GestionarComponent implements OnInit, OnDestroy {
 
 
   onSubmit() {
-    if(this.tipoEventosVerificated.includes(this.formCreate.value.name.toLowerCase().replace(/\s+/g, ''))){
-      return this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Este tipo de actividad ya existe' })
+    if (this.tipoEventosVerificated.includes(this.formCreate.value.name.toLowerCase().replace(/\s+/g, ''))) {
+      return this.messageService.add({ severity: 'error', summary: 'Notificación', detail: 'Este tipo de actividad ya existe' })
     }
 
     try {
-      this.eventosService.post(`${this.API_URI}/eventos/tipos/create/`, this.formCreate.value , this.token).subscribe(respuesta => {
+      this.eventosService.post(`${this.API_URI}/eventos/tipos/create/`, this.formCreate.value, this.token).subscribe(respuesta => {
         this.formCreate.reset();
         this.traerTipoEventos();
         this.changeDisplayFormCreate();
-        return this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Creado correctamente' })
+        return this.messageService.add({ severity: 'success', summary: 'Notificación', detail: 'Creado correctamente' })
       })
     } catch (error) {
       console.log('Error en consulta', error)
@@ -93,22 +99,22 @@ export class GestionarComponent implements OnInit, OnDestroy {
   }
 
   handleEdit() {
-    
-    if(this.tipoEventosVerificated.includes(this.formEdit.value.name.toLowerCase().replace(/\s+/g, ''))){
-      return this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Esta subArea ya existe' })
+
+    if (this.tipoEventosVerificated.includes(this.formEdit.value.name.toLowerCase().replace(/\s+/g, ''))) {
+      return this.messageService.add({ severity: 'error', summary: 'Notificación', detail: 'Esta Subarea ya existe' })
     }
     try {
-      this.eventosService.put(`${this.API_URI}/eventos/tipos/update/${this.idEdit}/`, this.formEdit.value , this.token).subscribe(respuesta => {
+      this.eventosService.put(`${this.API_URI}/eventos/tipos/update/${this.idEdit}/`, this.formEdit.value, this.token).subscribe(respuesta => {
         this.formEdit.reset();
         this.traerTipoEventos();
         this.changeDisplayFormEdit()
-        return this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Editado correctamente' })
+        return this.messageService.add({ severity: 'success', summary: 'Notificación', detail: 'Editado correctamente' })
       })
     } catch (error) {
       console.log('Error en consulta', error)
     }
   }
-  
+
   deleteAll() {
     const itemsMaped = this.itemsBulkDelete.map((item: any) => item.id)
 
@@ -119,7 +125,7 @@ export class GestionarComponent implements OnInit, OnDestroy {
     try {
       this.eventosService.delete(`${this.API_URI}/eventos/tipos/delete/`, this.token, body).subscribe(respuesta => {
         this.traerTipoEventos();
-        return this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Eliminado correctamente !!!' })
+        return this.messageService.add({ severity: 'success', summary: 'Notificación', detail: 'Eliminado correctamente !!!' })
       });
     } catch (error) {
       console.log(error)
@@ -129,11 +135,19 @@ export class GestionarComponent implements OnInit, OnDestroy {
   changeDisplayFormCreate() {
     this.displayFormCreate = !this.displayFormCreate;
   }
+  closeDisplayFormCreate() {
+    this.displayFormCreate = false;
+    this.formCreate.reset();
+  }
   changeDisplayFormEdit(tipoEvento: any = {}) {
     this.idEdit = tipoEvento.id;
     console.log(tipoEvento)
     this.formEdit.patchValue(tipoEvento)
     this.displayFormEdit = !this.displayFormEdit;
+  }
+  closeDisplayFormEdit() {
+    this.displayFormEdit = false;
+    this.formEdit.reset();
   }
 
   getEventValue($event: any): string {
@@ -145,7 +159,7 @@ export class GestionarComponent implements OnInit, OnDestroy {
 
     this.confirmationService.confirm({
       target: event.target,
-      message: '¿Seguro que desea eliminar este tipo de evento?',
+      message: '¿Seguro que desea eliminar este Tipo de Actividad?',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
         try {

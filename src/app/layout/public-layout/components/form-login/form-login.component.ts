@@ -88,6 +88,7 @@ export class FormLoginComponent implements OnInit {
 
       }, async error => {
         this.motrar = false
+        console.log(error);
 
         if (error != undefined) {
           // if (error.error.data.non_field_errores[0]) {
@@ -97,7 +98,6 @@ export class FormLoginComponent implements OnInit {
             // this.messageService.add({ severity: 'error', summary: 'Error', detail: `Error. ${error}` });
             this.messageService.add({ severity: 'error', summary: 'Error', detail: `Credenciales incorrectas` });
           }
-          console.log(error);
 
         }
       })

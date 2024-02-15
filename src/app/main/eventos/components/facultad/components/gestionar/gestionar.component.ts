@@ -26,6 +26,13 @@ export class GestionarComponent implements OnInit, OnDestroy {
   public inforCardDescription: string = `
   'Gestionar Facultad' facilita la administración de las facultades a las que están asociados los programas académicos. Permite a los administrativos organizar eventos según las distintas disciplinas académicas, optimizando la presentación y promoción de actividades.
   `;
+
+  public inforCardDescriptionCreate: string = `
+  Cimienta la excelencia académica al crear facultades de manera eficiente. Establece pilares educativos que enriquecerán la diversidad de disciplinas en tu institución. Esta función esencial potencia la versatilidad académica, asegurando una oferta educativa integral y enriquecedora.
+  `;
+  public inforCardDescriptionEdit: string = `
+  Mantén la adaptabilidad y relevancia académica al editar facultades existentes. Ajusta detalles para reflejar cambios en las dinámicas educativas y garantiza una estructura académica siempre alineada con las expectativas cambiantes. Con esta herramienta clave, optimizas la diversidad y especialización de tu oferta educativa para satisfacer las necesidades en evolución de la comunidad estudiantil.
+  `;
   public loading: boolean = false;
   public activityValues: number[] = [0, 100];
 
@@ -60,7 +67,7 @@ export class GestionarComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-   this.subscription$.unsubscribe();
+    this.subscription$.unsubscribe();
   }
   traerFacultades() {
     this.facultades = []
@@ -149,11 +156,19 @@ export class GestionarComponent implements OnInit, OnDestroy {
   changeDisplayFormCreate() {
     this.displayFormCreate = !this.displayFormCreate;
   }
+  closeDisplayFormCreate() {
+    this.displayFormCreate = false;
+    this.formCreate.reset();
+  }
   changeDisplayFormEdit(sede: any = {}) {
     this.idEdit = sede.id;
     console.log(sede)
     this.formEdit.patchValue(sede)
     this.displayFormEdit = !this.displayFormEdit;
+  }
+  closeDisplayFormEdit() {
+    this.displayFormEdit = false;
+    this.formEdit.reset();
   }
 
   getEventValue($event: any): string {

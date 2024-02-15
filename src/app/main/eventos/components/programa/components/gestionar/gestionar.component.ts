@@ -26,6 +26,12 @@ export class GestionarComponent implements OnInit, OnDestroy {
   public inforCardDescription: string = `
   El módulo 'Gestionar Programas' brinda una interfaz completa para administrar los programas académicos asociados a las actividades. Permite a los administrativos asignar eventos específicos a programas de pregrado o postgrado, mejorando la relevancia y orientación de las actividades.
   `;
+  public inforCardDescriptionCreate: string = `
+  Forja la excelencia académica al crear programas de manera eficaz. Define trayectorias educativas significativas que enriquecerán la experiencia de los estudiantes. Esta función esencial potencia la versatilidad en la oferta académica, asegurando una planificación educativa integral y enriquecedora.
+  `
+  public inforCardDescriptionEdit: string = `
+  Mantén la actualización y relevancia en tu oferta educativa al editar programas existentes. Ajusta detalles para reflejar cambios en las dinámicas académicas y garantiza una oferta siempre a la vanguardia. Con esta herramienta clave, optimizas la calidad y personalización de la formación académica para satisfacer las expectativas en constante evolución de tus estudiantes.
+  `
   public loading: boolean = false;
   public activityValues: number[] = [0, 100];
 
@@ -44,10 +50,6 @@ export class GestionarComponent implements OnInit, OnDestroy {
     faculty: ['', Validators.required],
 
   })
-
-
-  // .replace(/\s+/g, '')
-
 
   constructor(
     private eventosService: EventosService,
@@ -159,11 +161,19 @@ export class GestionarComponent implements OnInit, OnDestroy {
   changeDisplayFormCreate() {
     this.displayFormCreate = !this.displayFormCreate;
   }
+  closeDisplayFormCreate() {
+    this.displayFormCreate = false;
+    this.formCreate.reset();
+  }
   changeDisplayFormEdit(programa: any = {}) {
     this.idEdit = programa.id;
     this.formEdit.patchValue(programa)
     console.log(programa)
     this.displayFormEdit = !this.displayFormEdit;
+  }
+  closeDisplayFormEdit() {
+    this.displayFormEdit = false;
+    this.formEdit.reset();
   }
 
   getEventValue($event: any): string {

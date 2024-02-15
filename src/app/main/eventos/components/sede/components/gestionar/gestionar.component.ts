@@ -25,6 +25,12 @@ export class GestionarComponent implements OnInit, OnDestroy {
   public inforCardDescription: string = `
   En 'Gestionar Sede', los administrativos pueden gestionar las distintas sedes a las que pertenecen las facultades. Ofrece una herramienta centralizada para organizar y presentar eventos según la ubicación geográfica, mejorando la accesibilidad y relevancia de las actividades para los usuarios.
   `;
+  public inforCardDescriptionCreate: string = `
+  Construye el mapa educativo al crear sedes de manera eficiente. Establece centros de aprendizaje estratégicos que enriquecerán la presencia de la universidad. Esta función esencial potencia la expansión y diversificación de tu institución, asegurando una red educativa completa y accesible.
+  `;
+  public inforCardDescriptionEdit: string = `
+  Mantén la adaptabilidad y relevancia institucional al editar sedes existentes. Ajusta detalles para reflejar cambios en las dinámicas educativas y garantiza una presencia universitaria siempre alineada con las expectativas cambiantes. Con esta herramienta clave, optimizas la infraestructura educativa para satisfacer las necesidades en evolución de la comunidad académica.
+  `;
   public loading: boolean = false;
   public activityValues: number[] = [0, 100];
 
@@ -51,15 +57,15 @@ export class GestionarComponent implements OnInit, OnDestroy {
     private fb: UntypedFormBuilder,
     private pantallaService: PantallaService
   ) { }
-  
+
   ngOnInit(): void {
     this.token = localStorage.getItem('token')
     this.traerSedes();
-    const [ width ] = this.pantallaService.calcularEspacioPantalla();
-    this.subscription$ = width.subscribe( width => this.width = width);
+    const [width] = this.pantallaService.calcularEspacioPantalla();
+    this.subscription$ = width.subscribe(width => this.width = width);
   }
   ngOnDestroy(): void {
-   this.subscription$.unsubscribe();
+    this.subscription$.unsubscribe();
   }
 
   traerSedes() {
@@ -76,12 +82,12 @@ export class GestionarComponent implements OnInit, OnDestroy {
 
 
   onSubmit() {
-    if(this.sedesVerificated.includes(this.formCreate.value.name.toLowerCase().replace(/\s+/g, ''))){
+    if (this.sedesVerificated.includes(this.formCreate.value.name.toLowerCase().replace(/\s+/g, ''))) {
       return this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Esta subArea ya existe' })
     }
 
     try {
-      this.eventosService.post(`${this.API_URI}/university/sede/create/`, this.formCreate.value , this.token).subscribe(respuesta => {
+      this.eventosService.post(`${this.API_URI}/university/sede/create/`, this.formCreate.value, this.token).subscribe(respuesta => {
         this.formCreate.reset();
         this.traerSedes();
         this.changeDisplayFormCreate();
@@ -94,12 +100,12 @@ export class GestionarComponent implements OnInit, OnDestroy {
 
   handleEdit() {
 
-    if(this.sedesVerificated.includes(this.formEdit.value.name.toLowerCase().replace(/\s+/g, ''))){
+    if (this.sedesVerificated.includes(this.formEdit.value.name.toLowerCase().replace(/\s+/g, ''))) {
       return this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Esta subArea ya existe' })
     }
-    
+
     try {
-      this.eventosService.put(`${this.API_URI}/university/sede/update/${this.idEdit}/`, this.formEdit.value , this.token).subscribe(respuesta => {
+      this.eventosService.put(`${this.API_URI}/university/sede/update/${this.idEdit}/`, this.formEdit.value, this.token).subscribe(respuesta => {
         this.formEdit.reset();
         this.traerSedes();
         this.changeDisplayFormEdit()
@@ -128,11 +134,19 @@ export class GestionarComponent implements OnInit, OnDestroy {
   changeDisplayFormCreate() {
     this.displayFormCreate = !this.displayFormCreate;
   }
+  closeDisplayFormCreate() {
+    this.displayFormCreate = false;
+    this.formCreate.reset();
+  }
   changeDisplayFormEdit(sede: any = {}) {
     this.idEdit = sede.id;
     console.log(sede)
     this.formEdit.patchValue(sede)
     this.displayFormEdit = !this.displayFormEdit;
+  }
+  closeDisplayFormEdit() {
+    this.displayFormEdit = false;
+    this.formEdit.reset();
   }
 
   getEventValue($event: any): string {

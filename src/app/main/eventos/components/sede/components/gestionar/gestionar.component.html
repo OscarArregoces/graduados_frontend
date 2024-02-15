@@ -97,61 +97,60 @@
     </div>
 </app-card>
 
-<p-dialog [(visible)]="displayFormCreate" [style]="{width: width, 'text-aling': 'center'}" [showHeader]="false"
-    [modal]="true" [dismissableMask]="true">
+<p-dialog header="Creando Sede" [(visible)]="displayFormCreate" [style]="{width: width,'text-aling': 'center'}"
+    [showHeader]="true" [modal]="true" [dismissableMask]="false" (onHide)="closeDisplayFormCreate()">
 
-    <app-card-dialog titulo="Crear sede">
-        <form [formGroup]="formCreate">
-            <div class="grid">
-                <div class="col-12 md:col-12 lg:col-12">
-                    <div class="flex flex-column gap-2">
-                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Nombre </label>
-                        <div class="p-inputgroup my-1">
-                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                    style="color:#f16357;"></i></span>
-                            <input [style]="{'width':'100%'}" type="text" [style]="{'width':'100%'}"
-                                placeholder="Escribe aqui.." formControlName="name" pInputText />
-                        </div>
+    <app-custom-info-card [description]="inforCardDescriptionCreate"></app-custom-info-card>
+
+    <form [formGroup]="formCreate">
+        <div class="grid">
+            <div class="col-12 md:col-12 lg:col-12">
+                <div class="flex flex-column gap-2">
+                    <label class="mb-2" [style]="{'font-weight': 'bold'}">Nombre </label>
+                    <div class="p-inputgroup my-1">
+                        <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                style="color:#f16357;"></i></span>
+                        <input [style]="{'width':'100%'}" type="text" [style]="{'width':'100%'}"
+                            placeholder="Escribe aqui.." formControlName="name" pInputText />
                     </div>
                 </div>
-
-                <div class="col-12 md:col-12 lg:col-12 flex justify-content-center my-3">
-                    <button pButton pRipple type="button" label="Guardar" class="p-button-success m-3"
-                        [style]="{ width: '40%'}" (click)="onSubmit()" [disabled]="!formCreate.valid"></button>
-                    <button pButton pRipple type="button" label="Volver" class="p-button-raised p-button-secondary  m-3"
-                        [style]="{ width: '40%'}" (click)="changeDisplayFormCreate()"></button>
-                </div>
             </div>
-        </form>
-    </app-card-dialog>
+        </div>
+    </form>
+
+    <div class="col-12 flex justify-content-center align-items-center">
+        <button pButton pRipple type="submit" label="Guardar" icon="pi pi-save" class="p-button-success mx-5"
+            (click)="onSubmit()" [disabled]="!formCreate.valid"></button>
+        <button pButton pRipple type="button" label="Cancelar" class="p-button-outlined p-button-danger mx-5"
+            (click)="closeDisplayFormCreate()"></button>
+    </div>
 
 </p-dialog>
 
-<p-dialog [(visible)]="displayFormEdit" [style]="{width: width, 'text-aling': 'center'}" [showHeader]="false"
-    [modal]="true" [dismissableMask]="true">
-    <app-card-dialog titulo="Editar sede">
+<p-dialog header="Actualizando Sede" [(visible)]="displayFormEdit" [style]="{width: width,'text-aling': 'center'}"
+    [showHeader]="true" [modal]="true" [dismissableMask]="false" (onHide)="closeDisplayFormEdit()">
 
-        <form [formGroup]="formEdit">
-            <div class="grid">
-                <div class="col-12 md:col-12 lg:col-12">
-                    <div class="flex flex-column gap-2">
-                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Nombre </label>
-                        <div class="p-inputgroup my-1">
-                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                    style="color:#f16357;"></i></span>
-                            <input [style]="{ width: '100%'}" type="text" placeholder="Escribe aqui.."
-                                formControlName="name" pInputText />
-                        </div>
+    <app-custom-info-card [description]="inforCardDescriptionEdit"></app-custom-info-card>
+    <form [formGroup]="formEdit">
+        <div class="grid">
+            <div class="col-12 md:col-12 lg:col-12">
+                <div class="flex flex-column gap-2">
+                    <label class="mb-2" [style]="{'font-weight': 'bold'}">Nombre </label>
+                    <div class="p-inputgroup my-1">
+                        <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                style="color:#f16357;"></i></span>
+                        <input [style]="{ width: '100%'}" type="text" placeholder="Escribe aqui.."
+                            formControlName="name" pInputText />
                     </div>
                 </div>
-                <div class="col-12 md:col-12 lg:col-12 flex justify-content-center">
-                    <button pButton pRipple type="button" label="Editar" class="p-button-warning m-3"
-                        [style]="{ width: '40%'}" (click)="handleEdit()" [disabled]="!formEdit.valid"></button>
-                    <button pButton pRipple type="button" label="Volver" class="p-button-raised p-button-secondary  m-3"
-                        [style]="{ width: '40%'}" (click)="changeDisplayFormEdit()"></button>
-                </div>
             </div>
-        </form>
-    </app-card-dialog>
+            <div class="col-12 flex justify-content-center align-items-center">
+                <button pButton pRipple type="submit" label="Editar" icon="pi pi-save" class="p-button-warning mx-5"
+                    (click)="handleEdit()" [disabled]="!formCreate.valid"></button>
+                <button pButton pRipple type="button" label="Cancelar" class="p-button-outlined p-button-danger mx-5"
+                    (click)="closeDisplayFormEdit()"></button>
+            </div>
+        </div>
+    </form>
 </p-dialog>
 <p-toast></p-toast>

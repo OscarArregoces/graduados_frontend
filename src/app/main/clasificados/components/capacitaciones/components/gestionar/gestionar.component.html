@@ -1,20 +1,13 @@
 <app-card titulo="Gestionar Capacitaciones">
     <div card-body class="grid">
-
-        <div class="col-12 md:col-6 lg:col-6">
-            <div class="flex flex-column gap-2">
-                <button (click)="changeDisplayFormCreate()"
-                    [style]="{'width':'60%','max-width': '40rem','margin':'auto'}" pButton pRipple type="submit"
-                    label="Nuevo" class="p-button-success"></button>
-            </div>
+        <app-custom-info-card [description]="infoCardDescription"></app-custom-info-card>
+        <div class="col-12">
+            <button (click)="changeDisplayFormCreate()" pButton pRipple type="submit" icon="pi pi-plus"
+                label="Crear Nuevo" class="p-button-success mr-2"></button>
+            <button pButton pRipple type="submit" label=" Eliminar seleccionados" class="p-button-danger mr-2"
+                (click)="deleteAll()" icon="pi pi-trash"></button>
         </div>
-        <div class="col-12 md:col-6 lg:col-6">
-            <div class="flex flex-column gap-2">
-                <button [style]="{'width':'60%','max-width': '30rem','margin':'auto'}" pButton pRipple type="submit"
-                    label=" Eliminar seleccionados" class="p-button-danger" (click)="deleteAll()"
-                    [disabled]="capacitacionesSeleccionadas.length <= 0"></button>
-            </div>
-        </div>
+   
         <div class="col-12 md:col-12 lg:col-12">
             <div class="flex flex-column gap-2">
 
@@ -105,61 +98,65 @@
     </div>
 </app-card>
 
-<p-dialog [(visible)]="displayFormCreate" [style]="{width: width, 'text-aling': 'center'}" [showHeader]="false"
-    [modal]="true" [dismissableMask]="true">
 
-    <app-card-dialog titulo="Creando Capacitaciones">
-        <form [formGroup]="formCreate">
-            <div class="grid">
-                <div class="col-12 md:col-12 lg:col-12">
-                    <div class="flex flex-column gap-2">
-                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Nombre </label>
-                        <div class="p-inputgroup my-1">
-                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                    style="color:#f16357;"></i></span>
-                            <input type="text" placeholder="Escribe aqui.." formControlName="name" pInputText />
-                        </div>
+<p-dialog header="Creando Capacitación" [(visible)]="displayFormCreate"
+    [style]="{width: width,'text-aling': 'center','min-height':'70vh'}" [showHeader]="true" [modal]="true"
+    [dismissableMask]="false" (onHide)="closeDisplayFormEdit()">
+
+    <app-custom-info-card [description]="infoCardDescriptionCreate"></app-custom-info-card>
+    <form [formGroup]="formCreate">
+        <div class="grid">
+            <div class="col-12 md:col-12 lg:col-12">
+                <div class="flex flex-column gap-2">
+                    <label class="mb-2" [style]="{'font-weight': 'bold'}">Nombre </label>
+                    <div class="p-inputgroup my-1">
+                        <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                style="color:#f16357;"></i></span>
+                        <input type="text" placeholder="Escribe aqui.." formControlName="name" pInputText />
                     </div>
                 </div>
-
-                <div class="col-12 md:col-12 lg:col-12 flex justify-content-center">
-                    <button pButton pRipple type="button" label="Guardar" class="p-button-success m-3"
-                        [style]="{ width: '40%'}" (click)="onSubmit()" [disabled]="!formCreate.valid"></button>
-                    <button pButton pRipple type="button" label="Volver" class="p-button-raised p-button-secondary  m-3"
-                        [style]="{ width: '40%'}" (click)="changeDisplayFormCreate()"></button>
-                </div>
             </div>
-        </form>
-    </app-card-dialog>
+            <div class="col-12 flex justify-content-center align-items-center">
+                <button pButton pRipple type="submit" label="Guardar" icon="pi pi-save" class="p-button-success mx-5"
+                    (click)="onSubmit()" [disabled]="!formCreate.valid"></button>
+                <button pButton pRipple type="button" label="Cancelar" class="p-button-outlined p-button-danger mx-5"
+                    (click)="closeDisplayFormCreate()"></button>
+            </div>
+        </div>
+    </form>
+
+
 
 </p-dialog>
 
-<p-dialog [(visible)]="displayFormEdit" [style]="{width: width, 'text-aling': 'center'}" [showHeader]="false"
-    [modal]="true" [dismissableMask]="true">
+<p-dialog header="Actualizando Capacitación" [(visible)]="displayFormEdit"
+    [style]="{width: width,'text-aling': 'center','min-height':'70vh'}" [showHeader]="true" [modal]="true"
+    [dismissableMask]="false" (onHide)="closeDisplayFormEdit()">
 
-    <app-card-dialog titulo="Editando Capacitaciones">
-        <form [formGroup]="formEdit">
-            <div class="grid">
-                <div class="col-12 md:col-12 lg:col-12">
-                    <div class="flex flex-column gap-2">
-                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Nombre </label>
-                        <div class="p-inputgroup my-1">
-                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                    style="color:#f16357;"></i></span>
-                            <input type="text" placeholder="Escribe aqui.." formControlName="name" pInputText />
-                        </div>
+    <app-custom-info-card [description]="infoCardDescriptionEdit"></app-custom-info-card>
+
+    <form [formGroup]="formEdit">
+        <div class="grid">
+            <div class="col-12 md:col-12 lg:col-12">
+                <div class="flex flex-column gap-2">
+                    <label class="mb-2" [style]="{'font-weight': 'bold'}">Nombre </label>
+                    <div class="p-inputgroup my-1">
+                        <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                style="color:#f16357;"></i></span>
+                        <input type="text" placeholder="Escribe aqui.." formControlName="name" pInputText />
                     </div>
                 </div>
-
-                <div class="col-12 md:col-12 lg:col-12 flex justify-content-center">
-                    <button pButton pRipple type="button" label="Editar" class="p-button-warning m-3"
-                        [style]="{ width: '40%'}" (click)="handleEdit()" [disabled]="!formEdit.valid"></button>
-                    <button pButton pRipple type="button" label="Volver" class="p-button-raised p-button-secondary  m-3"
-                        [style]="{ width: '40%'}" (click)="changeDisplayFormEdit()"></button>
-                </div>
             </div>
-        </form>
-    </app-card-dialog>
+            <div class="col-12 flex justify-content-center align-items-center">
+                <button pButton pRipple type="submit" label="Editar" icon="pi pi-save" class="p-button-warning mx-5"
+                    (click)="handleEdit()" [disabled]="!formEdit.valid"></button>
+                <button pButton pRipple type="button" label="Cancelar" class="p-button-outlined p-button-danger mx-5"
+                    (click)="closeDisplayFormEdit()"></button>
+            </div>
+        </div>
+    </form>
+
+
 </p-dialog>
 
 <p-toast></p-toast>
