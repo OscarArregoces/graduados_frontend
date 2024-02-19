@@ -41,7 +41,7 @@ export class DetailActivityComponent implements OnInit {
   traerActividades() {
     try {
       this.eventosService.get(`${this.API_URI}/eventos/inscripciones/egresado/`, this.token).subscribe(res => {
-       this.refreshActivities.emit(res.data)
+        this.refreshActivities.emit(res.data)
       })
     } catch (error) {
       console.log('Error en consulta', error)

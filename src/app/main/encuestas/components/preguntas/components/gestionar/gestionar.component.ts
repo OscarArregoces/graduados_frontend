@@ -43,8 +43,8 @@ export class GestionarComponent implements OnInit, OnDestroy {
   // typeQuestion: string[] = ['Respuesta corta', 'Respuesta larga', 'Multiple respuesta', 'Unica respuesta']
 
   public typeQuestion: TypeQuestion[] = [
-    { id: 1, title: 'Unica respuesta', value: 'unica respuesta' },
-    { id: 2, title: 'Multiple respuesta', value: 'multiple' },
+    { id: 1, title: 'Unica respuesta', value: 'respuesta' },
+    { id: 2, title: 'Multiple respuesta', value: 'multiple respuesta' },
     { id: 3, title: 'Respuesta corta', value: 'respuesta corta' },
     { id: 4, title: 'Respuesta larga', value: 'respuesta larga' },
   ]
@@ -103,7 +103,7 @@ export class GestionarComponent implements OnInit, OnDestroy {
     private confirmationService: ConfirmationService,
     private fb: UntypedFormBuilder,
     private pantallaService: PantallaService
-  ) { 
+  ) {
     this.variantColor = Variant.Blue
   }
 
@@ -152,12 +152,18 @@ export class GestionarComponent implements OnInit, OnDestroy {
       type,
       options,
       momento,
-      dependID } = this.form;
+      dependID
+    } = this.form;
+
+    const typeQuestion: TypeQuestion | undefined = this.typeQuestion.find(type => type.value === this.optionSelected);
+
+    if (!typeQuestion) return console.log("Type Question is undefined");
+
 
     let body = {
       question,
       depend: dependID,
-      type: type.id,
+      type: typeQuestion.id,
       options,
       momento: momento.id
     }
@@ -168,7 +174,7 @@ export class GestionarComponent implements OnInit, OnDestroy {
         this.formReset();
         this.traerPreguntas();
         this.changeDisplayFormCreate();
-        return this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Creado correctamente' })
+        return this.messageService.add({ severity: 'success', summary: 'Notififación', detail: 'Creado correctamente' })
       })
     } catch (error) {
       console.log('Error en consulta', error)
@@ -177,13 +183,13 @@ export class GestionarComponent implements OnInit, OnDestroy {
 
   formReset() {
     this.form = {
-      question: '',
+      ...this.form,
       depend: null,
       type: null,
       options: [{ id: 0, value: '', answer: '' }],
       momento: null,
       dependID: null
-    }
+    };
     this.optionSelected = ''
   }
 
@@ -198,7 +204,7 @@ export class GestionarComponent implements OnInit, OnDestroy {
         this.traerPreguntas();
         // this.formEdit.reset();
         this.changeDisplayFormEdit()
-        return this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Editado correctamente' })
+        return this.messageService.add({ severity: 'success', summary: 'Notififación', detail: 'Editado correctamente' })
       })
     } catch (error) {
       console.log('Error en consulta', error)
@@ -216,7 +222,7 @@ export class GestionarComponent implements OnInit, OnDestroy {
       this.encuestasService.delete(`${this.API_URI}/poll/questions/delete/`, this.token, body).subscribe(respuesta => {
         this.traerPreguntas();
         this.itemsBulkDelete = [];
-        return this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Eliminado correctamente !!!' })
+        return this.messageService.add({ severity: 'success', summary: 'Notififación', detail: 'Eliminado correctamente !!!' })
       });
     } catch (error) {
       console.log(error)
@@ -256,7 +262,7 @@ export class GestionarComponent implements OnInit, OnDestroy {
         try {
           this.encuestasService.delete(`${this.API_URI}/poll/questions/delete/${id}/`, this.token).subscribe(respuesta => {
             this.traerPreguntas();
-            return this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Eliminado correctamente !!!' })
+            return this.messageService.add({ severity: 'success', summary: 'Notififación', detail: 'Eliminado correctamente !!!' })
           });
         } catch (error) {
           console.log(error)
@@ -275,21 +281,12 @@ export class GestionarComponent implements OnInit, OnDestroy {
   enviar() {
     console.log(this.form)
   }
-  addOptionCheck() {
+  addOption() {
     this.form.options.push({ id: this.count, value: '', answer: '' });
     this.count++;
   }
-
-  addOptionRadio() {
-
-    this.form.options.push({ id: this.count, value: '', answer: '' });
-
-    this.count++;
-  }
-
   removeOption(idOption: number) {
     let resOptions = this.form.options.filter((elemento: any) => elemento.id !== idOption);
-
     this.form.options = resOptions;
     if (this.form.options.length == 0) {
       this.count = 0;
@@ -306,16 +303,15 @@ export class GestionarComponent implements OnInit, OnDestroy {
 
   onChangeType(event: any) {
     this.form = {
-      question: '',
+      ...this.form,
       depend: null,
-      type: event.value,
+      type: null,
       options: [{ id: 0, value: '', answer: '' }],
       momento: null,
       dependID: null
-    }
+    };
     this.count = 1;
     this.optionSelected = event.value.value;
-    console.log(event.value.value)
   }
 
   onChangeDependsType(event: any) {

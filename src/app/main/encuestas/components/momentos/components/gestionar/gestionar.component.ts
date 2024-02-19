@@ -36,7 +36,12 @@ export class GestionarComponent implements OnInit, OnDestroy {
   public inforCardDescription: string = `
   El módulo de Momentos en nuestro sistema de Encuestas añade una capa de temporalidad a la evaluación de egresados y graduados. Permite programar encuestas en diferentes momentos clave. Esta funcionalidad única posibilita observar la evolución y los cambios en las respuestas a lo largo del tiempo, proporcionando una visión detallada de cómo las experiencias post-académicas impactan en la percepción y perspectivas de los usuarios.
   `;
-
+  public inforCardDescriptionCreate: string = `
+  Infunde relevancia temporal a las evaluaciones al crear momentos significativos con esta función esencial. Define nuevos hitos, como el primer año post-graduación, para enriquecer la experiencia de tus usuarios. La capacidad de crear momentos eficientemente garantiza la programación adecuada de encuestas en puntos temporales clave. Esta herramienta potencia la personalización y profundidad en la recopilación de información, permitiéndote observar la evolución y cambios en las respuestas a lo largo del tiempo.  
+  `;
+  public inforCardDescriptionEdit: string = `
+  Mantén la actualización y relevancia temporal en tu investigación al editar momentos existentes. Ajusta detalles específicos para reflejar cambios en las dinámicas de los hitos graduales. Con esta herramienta clave, optimizas la flexibilidad y precisión en la recopilación de datos, asegurando que cada momento programado refleje de manera precisa la evolución y los cambios en las respuestas de los usuarios a lo largo del tiempo.
+  `;
   public formCreate = this.fb.group({
     tipo: ['', Validators.required]
   })
@@ -142,10 +147,18 @@ export class GestionarComponent implements OnInit, OnDestroy {
   changeDisplayFormCreate() {
     this.displayFormCreate = !this.displayFormCreate;
   }
+  closeDisplayFormCreate() {
+    this.displayFormCreate = false;
+    this.formCreate.reset();
+  }
   changeDisplayFormEdit(momento: any = {}) {
     this.idEdit = momento.id;
     this.formEdit.patchValue(momento)
     this.displayFormEdit = !this.displayFormEdit;
+  }
+  closeDisplayFormEdit() {
+    this.displayFormEdit = false;
+    this.formEdit.reset();
   }
 
   getEventValue($event: any): string {

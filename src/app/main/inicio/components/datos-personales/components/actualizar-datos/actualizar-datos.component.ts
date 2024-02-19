@@ -86,7 +86,7 @@ export class ActualizarDatosComponent implements OnInit, OnDestroy {
       surname,
       identification,
       address,
-      nationality: JSON.stringify(nationality),
+      nationality: nationality.name,
       date_of_birth: fullDate,
       phone: phone
     }
@@ -104,6 +104,7 @@ export class ActualizarDatosComponent implements OnInit, OnDestroy {
     this.infoUsuario = [];
     try {
       this.inicioService.get(`${this.API_URI}/persons`, this.token).subscribe(res => {
+        
         this.infoUsuario = res.data;
         const {
           document_type,
@@ -117,6 +118,12 @@ export class ActualizarDatosComponent implements OnInit, OnDestroy {
           phone
         } = res.data;
 
+        let currentCountry:any = '';
+        let countryFound = Paises.find( country => country.name === nationality);
+        if(countryFound){
+          currentCountry = countryFound;
+        }
+
         let body = {
           document_type,
           gender_type: gender_type,
@@ -124,7 +131,7 @@ export class ActualizarDatosComponent implements OnInit, OnDestroy {
           surname,
           identification,
           address,
-          nationality: JSON.parse(nationality),
+          nationality: currentCountry,
           date_of_birth,
           phone: phone.replace(/\s+/g, ''),
         }

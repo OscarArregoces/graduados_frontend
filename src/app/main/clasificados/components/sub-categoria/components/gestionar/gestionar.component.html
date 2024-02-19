@@ -154,7 +154,7 @@
 <p-dialog [(visible)]="displayFormEdit" [style]="{width: width, 'text-aling': 'center'}" [showHeader]="false"
     [modal]="true" [dismissableMask]="true">
 
-    <app-card-dialog titulo="Editando Subcategorias">
+    <app-card-dialog titulo="Actualizando Subcategorias">
         <form [formGroup]="formEdit">
             <div class="grid">
                 <div class="col-12 md:col-6 lg:col-6">
@@ -180,7 +180,7 @@
                 </div>
 
                 <div class="col-12 md:col-12 lg:col-12 flex justify-content-center">
-                    <button pButton pRipple type="button" label="Editar" class="p-button-warning m-3"
+                    <button pButton pRipple type="button" label="Actualizar" class="p-button-warning m-3"
                         [style]="{ width: '40%'}" (click)="handleEdit()" [disabled]="!formEdit.valid"></button>
                     <button pButton pRipple type="button" label="Volver" class="p-button-raised p-button-secondary  m-3"
                         [style]="{ width: '40%'}" (click)="changeDisplayFormEdit()"></button>

@@ -47,6 +47,8 @@ export class ReportEncuestaComponent implements OnInit {
     try {
       this.eventosService.get(`${this.API_URI}/reportes/encuestas/respuesta/facultad/`, this.token).subscribe((res: any) => {
         this.data = res.data;
+        console.log(res.data);
+        
       })
     } catch (error) {
       console.log(error)

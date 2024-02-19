@@ -135,16 +135,16 @@ export class CrearComponent implements OnInit, OnDestroy {
     }
     console.log(body);
     
-    // try {
-    //   this.eventosService.post(`${this.API_URI}/eventos/create/`, body, this.token).subscribe(r => {
-    //     this.form.reset();
-    //     this.clearAll();
-    //     this.messageService.add({ severity: 'success', summary: 'Notificación', detail: 'Creado correctamente' })
+    try {
+      this.eventosService.post(`${this.API_URI}/eventos/create/`, body, this.token).subscribe(r => {
+        this.form.reset();
+        this.clearAll();
+        this.messageService.add({ severity: 'success', summary: 'Notificación', detail: 'Creado correctamente' })
 
-    //   })
-    // } catch (error) {
-    //   return this.messageService.add({ severity: 'error', summary: 'Notificación', detail: 'Hubo un problema en la petición' })
-    // }
+      })
+    } catch (error) {
+      return this.messageService.add({ severity: 'error', summary: 'Notificación', detail: 'Hubo un problema en la petición' })
+    }
   }
 
 

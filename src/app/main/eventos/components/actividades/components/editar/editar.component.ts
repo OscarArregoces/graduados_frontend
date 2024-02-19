@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
+import { Subscription } from 'rxjs';
 import { EventosService } from 'src/app/core/services/dashboard/eventos.service';
+import { PantallaService } from 'src/app/core/services/pantalla.service';
 import { formateDateInput, formateDateOutPut } from 'src/app/helpers/formateDate';
 import { formateHours12 } from 'src/app/helpers/formateHours';
 import { verifyDate } from 'src/app/helpers/verifyDate';
@@ -13,6 +15,9 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./editar.component.css']
 })
 export class EditarComponent implements OnInit {
+
+  public width: string = '';
+  public subscription$!: Subscription;
 
   API_URI = environment.API_URI;
   public token: any;
@@ -47,6 +52,7 @@ export class EditarComponent implements OnInit {
     private fb: UntypedFormBuilder,
     private eventosService: EventosService,
     private messageService: MessageService,
+    private pantallaService: PantallaService
   ) { }
 
   ngOnInit(): void {
@@ -54,6 +60,8 @@ export class EditarComponent implements OnInit {
     this.traerActividades();
     this.traerTipoActividades();
     this.traerAreas();
+    const [width] = this.pantallaService.calcularEspacioPantalla();
+    this.subscription$ = width.subscribe(width => this.width = width);
   }
 
   getEventValue($event: any): string {
@@ -63,11 +71,11 @@ export class EditarComponent implements OnInit {
   showEditar(id: any, actividad: any) {
     this.id = id;
     this.display = !this.display;
-    // this.form.patchValue({ ...actividad, fecha: new Date(`${actividad.fecha}T00:00:00`) })
     this.form.patchValue({ ...actividad, fecha: formateDateInput(actividad.fecha) });
   }
   closeEditar() {
-    this.display = !this.display;
+    this.display = false;
+    this.form.reset();
   }
 
   onSubmit() {
@@ -84,7 +92,7 @@ export class EditarComponent implements OnInit {
       "descripcion": this.form.value.descripcion,
       "objectivo": this.form.value.objectivo,
     }
-    
+
     if (typeof (this.form.value.hora) === typeof ({})) {
       const hour = this.form.value.hora.getHours();
       const minute = this.form.value.hora.getMinutes();
@@ -96,7 +104,6 @@ export class EditarComponent implements OnInit {
     if (verifyDate(body.fecha, body.hora)) {
       return this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No puedes colocar una fecha pasada' })
     }
-
 
     try {
       this.eventosService.put(`${this.API_URI}/eventos/update/${this.id}/`, body, this.token).subscribe(r => {

@@ -2,19 +2,21 @@
     <div card-body class="grid">
         <app-custom-info-card [description]="inforCardDescription"></app-custom-info-card>
         <div class="col-12">
-            <button pButton pRipple type="button" icon="pi pi-trash" label="Eliminar seleccionados" (click)="deleteAll()"
-                class="p-button-danger mr-2" ></button>
+            <button pButton pRipple type="button" icon="pi pi-trash" label="Eliminar seleccionados"
+                (click)="deleteAll()" class="p-button-danger mr-2"></button>
         </div>
         <div class="col-12 md:col-12 lg:col-12">
             <div class="flex flex-column gap-2">
 
                 <p-card>
                     <p-table #dt [value]="actividades" [(selection)]="itemsBulkDelete" dataKey="id"
-                        styleClass="p-datatable-customers" [rowHover]="true"
-                        [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50]" [loading]="loading"
-                        responsiveLayout="scroll" [paginator]="true"
+                        styleClass="p-datatable-customers" [rowHover]="true" [rows]="10" [showCurrentPageReport]="true"
+                        [rowsPerPageOptions]="[10,25,50]" [loading]="loading" responsiveLayout="scroll"
+                        [paginator]="true"
                         currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} elementos"
-                        [filterDelay]="0" [globalFilterFields]="['nombre_actividad', 'tipo_actividad.name', 'responsable']" responsiveLayout="scroll">
+                        [filterDelay]="0"
+                        [globalFilterFields]="['nombre_actividad', 'tipo_actividad.name', 'responsable']"
+                        responsiveLayout="scroll">
                         <ng-template pTemplate="caption">
                             <div class="table-header">
                                 <div class="grid" [style]="{'display': 'flex', 'justify-content': 'space-between'}">
@@ -120,14 +122,15 @@
                                 </td>
                                 <td style="text-align: center">
                                     <button pButton type="button" icon="pi pi-eye" class="p-button-secondary"
-                                    (click)="showDetalles(actividad)"></button>
+                                        (click)="showDetalles(actividad)"></button>
                                 </td>
-                                <td> 
+                                <td>
                                     <p-confirmPopup></p-confirmPopup>
-                                    <button (click)="confirm($event, actividad.id)" pButton type="button" icon="pi pi-trash" class="p-button-danger"></button>
-                                  
+                                    <button (click)="confirm($event, actividad.id)" pButton type="button"
+                                        icon="pi pi-trash" class="p-button-danger"></button>
+
                                 </td>
-                
+
                             </tr>
                         </ng-template>
                         <ng-template pTemplate="emptymessage">
@@ -153,40 +156,46 @@
             <div class="col-12 md:col-6 lg:col-6">
                 <div class="flex flex-column gap-2">
                     <label class="mb-2" [style]="{'font-weight': 'bold'}">Nombre de la actividad: </label>
-                    <input type="text" placeholder="Escribe aqui.." pInputText [value]="actividad.nombre_actividad" [disabled]="true" />
+                    <input type="text" placeholder="Escribe aqui.." pInputText [value]="actividad.nombre_actividad"
+                        [disabled]="true" />
                 </div>
             </div>
             <div class="col-12 md:col-6 lg:col-6">
                 <div class="flex flex-column gap-2">
                     <label class="mb-2" [style]="{'font-weight': 'bold'}">Fecha: </label>
-                    <input type="text" placeholder="Escribe aqui.." pInputText [value]="actividad.fecha" [disabled]="true" />
-                    
+                    <input type="text" placeholder="Escribe aqui.." pInputText [value]="actividad.fecha"
+                        [disabled]="true" />
+
                 </div>
             </div>
             <div class="col-12 md:col-6 lg:col-6">
                 <div class="flex flex-column gap-2">
                     <label class="mb-2" [style]="{'font-weight': 'bold'}">Hora: </label>
-                    <input type="text" placeholder="Escribe aqui.." pInputText [value]="actividad.hora" [disabled]="true" />
-                    
+                    <input type="text" placeholder="Escribe aqui.." pInputText [value]="actividad.hora"
+                        [disabled]="true" />
+
                 </div>
             </div>
             <div class="col-12 md:col-6 lg:col-6">
                 <div class="flex flex-column gap-2">
                     <label class="mb-2" [style]="{'font-weight': 'bold'}">Tipo de actividad: </label>
-                    <input type="text" placeholder="Escribe aqui.." pInputText [value]="actividad.tipo_actividad.name" [disabled]="true" />
+                    <input type="text" placeholder="Escribe aqui.." pInputText [value]="actividad.tipo_actividad.name"
+                        [disabled]="true" />
 
                 </div>
             </div>
             <div class="col-12 md:col-6 lg:col-6">
                 <div class="flex flex-column gap-2">
                     <label class="mb-2" [style]="{'font-weight': 'bold'}">Responsable de la actividad: </label>
-                    <input type="text" placeholder="Escribe aqui..." pInputText [value]="actividad.responsable" [disabled]="true" />
+                    <input type="text" placeholder="Escribe aqui..." pInputText [value]="actividad.responsable"
+                        [disabled]="true" />
                 </div>
             </div>
             <div class="col-12 md:col-6 lg:col-6">
                 <div class="flex flex-column gap-2">
                     <label class="mb-2" [style]="{'font-weight': 'bold'}">Lugar donde se llevará a cabo: </label>
-                    <input type="text" placeholder="Escribe aqui..." pInputText [value]="actividad.lugar" [disabled]="true"/>
+                    <input type="text" placeholder="Escribe aqui..." pInputText [value]="actividad.lugar"
+                        [disabled]="true" />
                 </div>
             </div>
 
@@ -201,35 +210,203 @@
             <div class="col-12 md:col-6 lg:col-6">
                 <div class="flex flex-column gap-2">
                     <label class="mb-2" [style]="{'font-weight': 'bold'}">Objetivo de la actividad: </label>
-                    <input type="text" placeholder="Escribe aqui..." pInputText [value]="actividad.objectivo"  [disabled]="true"/>
+                    <input type="text" placeholder="Escribe aqui..." pInputText [value]="actividad.objectivo"
+                        [disabled]="true" />
                 </div>
                 <div class="flex flex-column gap-2">
                     <label class="mb-2" [style]="{'font-weight': 'bold'}">Area: </label>
-                    <input type="text" placeholder="Escribe aqui..." pInputText  [value]="actividad.area.name"  [disabled]="true"/>
+                    <input type="text" placeholder="Escribe aqui..." pInputText [value]="actividad.area.name"
+                        [disabled]="true" />
 
                 </div>
                 <div class="flex flex-column gap-2">
                     <label class="mb-2" [style]="{'font-weight': 'bold'}">SubArea: </label>
-                    <input type="text" placeholder="Escribe aqui..." pInputText  [value]="actividad.subArea.name"  [disabled]="true"/>
-   
+                    <input type="text" placeholder="Escribe aqui..." pInputText [value]="actividad.subArea.name"
+                        [disabled]="true" />
+
                 </div>
             </div>
 
             <div class="col-12 md:col-6 lg:col-6">
                 <div class="flex flex-column gap-2">
                     <label class="mb-2" [style]="{'font-weight': 'bold'}">Cupos disponibles: </label>
-                    <input type="number" placeholder="Escribe aqui..." pInputText [value]="actividad.cupos" [disabled]="true" />
+                    <input type="number" placeholder="Escribe aqui..." pInputText [value]="actividad.cupos"
+                        [disabled]="true" />
                 </div>
             </div>
 
         </div>
-      
+
         <div class="col-12 md:col-12 lg:col-12 flex justify-content-center">
             <button pButton pRipple type="button" label="Volver" class="p-button-outlined" [style]="{ width: '30%'}"
                 (click)="closeDetalles()"></button>
         </div>
     </app-card-dialog>
 </p-dialog>
+
+<!-- <p-dialog header="Detalle Actividad" [(visible)]="display" [style]="{ 'text-aling': 'center','min-height':'70vh'}"
+    [showHeader]="true" [modal]="true" [dismissableMask]="false" (onHide)="closeDetalles()">
+
+    <div class="grid">
+        <div class="col-12 md:col-12 lg:col-12 mb-2">
+            <div class="grid p-5 shadow-3" style="background-color:#f5f5f58e;">
+                <div class="col-12">
+                    <span class="customText">Datos Basicos</span>
+                </div>
+                <div class="col-12 md:col-6 lg:col-4">
+                    <div class="flex flex-column gap-2">
+                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Nombre de la actividad</label>
+                        <div class="p-inputgroup my-1">
+                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                    style="color:#f16357;"></i></span>
+                            <input type="text" placeholder="Nombre o titulo" [maxlength]="256" pInputText
+                                formControlName="nombre_actividad" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 md:col-6 lg:col-4">
+                    <div class="flex flex-column gap-2">
+                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Fecha</label>
+                        <div class="p-inputgroup my-1">
+                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                    style="color:#f16357;"></i></span>
+                            <p-calendar [style]="{'width':'100%'}" placeholder="Seleccione la fecha"
+                                formControlName="fecha" dateFormat="mm-dd-yy" inputId="dateformat"></p-calendar>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 md:col-6 lg:col-4">
+                    <div class="flex flex-column gap-2">
+                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Hora</label>
+                        <div class="p-inputgroup my-1">
+                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                    style="color:#f16357;"></i></span>
+                            <p-calendar [style]="{'width':'100%'}" placeholder="Seleccione la hora"
+                                formControlName="hora" [timeOnly]="true" hourFormat="12"
+                                inputId="timeonly"></p-calendar>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 md:col-6 lg:col-4">
+                    <div class="flex flex-column gap-2">
+                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Tipo de actividad</label>
+                        <div class="p-inputgroup my-1">
+                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                    style="color:#f16357;"></i></span>
+                            <p-dropdown [style]="{'width':'100%'}" [options]="tipoActividades"
+                                placeholder="Selecciona una opcion" formControlName="tipo_actividad"
+                                optionLabel="name"></p-dropdown>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 md:col-6 lg:col-4">
+                    <div class="flex flex-column gap-2">
+                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Area</label>
+                        <div class="p-inputgroup my-1">
+                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                    style="color:#f16357;"></i></span>
+                            <p-dropdown [style]="{'width':'100%'}" [options]="areas" optionLabel="name"
+                                placeholder="Selecciona una opcion" (ngModelChange)="onChangeAreas($event)"
+                                formControlName="area"></p-dropdown>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 md:col-6 lg:col-4">
+                    <div class="flex flex-column gap-2">
+                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Subarea</label>
+                        <div class="p-inputgroup my-1">
+                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                    style="color:#f16357;"></i></span>
+                            <p-dropdown [style]="{'width':'100%'}" [options]="subareas" optionLabel="name"
+                                placeholder="Selecciona una opcion" formControlName="subArea"></p-dropdown>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 md:col-12 lg:col-12 mb-2">
+            <div class="grid p-5 shadow-3" style="background-color:#f5f5f58e;">
+                <div class="col-12">
+                    <span class="customText">Mas Información</span>
+                </div>
+                <div class="col-12 md:col-4 lg:col-4">
+                    <div class="flex flex-column gap-2">
+                        <div class="flex flex-column gap-2">
+                            <label class="mb-2" [style]="{'font-weight': 'bold'}">Lugar donde se llevará a
+                                cabo</label>
+                            <div class="p-inputgroup my-1">
+                                <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                        style="color:#f16357;"></i></span>
+                                <input type="text" placeholder="Direccion o zona en el campus universitario" pInputText
+                                    formControlName="lugar" [maxlength]="256" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 md:col-4 lg:col-4">
+                    <div class="flex flex-column gap-2">
+                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Cupos disponibles</label>
+                        <div class="p-inputgroup my-1">
+                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                    style="color:#f16357;"></i></span>
+                            <input type="number" placeholder="Cantidad" pInputText formControlName="cupos" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 md:col-4 lg:col-4">
+                    <div class="flex flex-column gap-2">
+                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Responsable de la
+                            actividad</label>
+                        <div class="p-inputgroup my-1">
+                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                    style="color:#f16357;"></i></span>
+                            <input type="text" placeholder="Encargado de digirir la actividad" [maxlength]="256"
+                                pInputText formControlName="responsable" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 md:col-12 lg:col-12 mb-2">
+            <div class="grid p-5 shadow-3" style="background-color:#f5f5f58e;">
+                <div class="col-12">
+                    <span class="customText">Información Adicional</span>
+                </div>
+                <div class="col-12 md:col-12 lg:col-6">
+                    <div class="flex flex-column gap-2">
+                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Descripción</label>
+                        <textarea formControlName="descripcion" style="min-height: 200px;"
+                            placeholder="Describe brevemente los aspectos importantes" [rows]="7" [cols]="30"
+                            pInputTextarea [autoResize]="false" [maxlength]="600" [autoResize]="true"></textarea>
+                    </div>
+                </div>
+                <div class="col-12 md:col-12 lg:col-6">
+                    <div class="flex flex-column gap-2">
+                        <div class="flex flex-column gap-2">
+                            <label class="mb-2" [style]="{'font-weight': 'bold'}">Objetivo de la
+                                actividad</label>
+                            <textarea formControlName="objectivo" style="min-height: 200px;"
+                                placeholder="Finalidad con la que se llevará a cabo esta actividad" [rows]="7"
+                                [cols]="30" pInputTextarea [autoResize]="false" [maxlength]="300"
+                                [autoResize]="true"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 flex justify-content-center align-items-center">
+        <button pButton pRipple type="button" label="Cancelar" class="p-button-outlined p-button-danger mx-5"
+            (click)="closeDetalles()"></button>
+    </div>
+    <ng-template #elseBlock>
+        <i id="loading" class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
+    </ng-template>
+
+
+</p-dialog> -->
+
 <p-toast></p-toast>
 
 <p-confirmPopup></p-confirmPopup>
