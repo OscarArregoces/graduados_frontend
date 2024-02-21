@@ -1,0 +1,39 @@
+<!-- <div style="background-color: red;" class="grid m-0"> -->
+<div style="background-color: #fbf9f8;" class="grid m-0">
+    <div class="col-12 md:col-6 lg:col-6 p-5 p-0 m-0" style="height: 100vh;">
+        <div class="w-full flex justify-content-center">
+            <img src="assets/images/banner.png" alt="Banner Uniguajira" style="max-width: 300px;">
+        </div>
+        <form [formGroup]="form">
+            <div class="flex flex-column gap-2 my-2">
+                <label class="mb-2 customText">Usuario</label>
+                <input style="height: 50px;" type="text" placeholder="Documento" formControlName="username" required
+                    pInputText />
+            </div>
+            <div class="flex flex-column gap-2 my-2">
+                <label class="mb-2 customText">Contraseña</label>
+                <input style="height: 50px;" type="password" placeholder="Clave" formControlName="password" required
+                    pInputText />
+            </div>
+            <div class="field-checkbox my-5">
+                <p-checkbox [binary]="true" inputId="binary" formControlName="pliciy"></p-checkbox>
+                <label for="binary">
+                    <a href="https://drive.google.com/file/d/1gBm2SaK_8v6Y5Wf2hVBDspoPpIFDfyUK/view" target="_blank"
+                        title="Ir a Ver">Terminos y Condiciones
+                    </a>
+                </label>
+            </div>
+            <div class="w-full flex justify-content-center">
+                <button type="submit" id="btn_submit">Ingresar</button>
+            </div>
+        </form>
+    </div>
+    <div class="col-12 hidden p-0 m-0  md:col-6 md:block lg:col-6 lg:block" style="height:100vh;">
+        <img src="assets/images/campus.jpeg" alt="Imagen" style="height: 98.9%" />
+        <!-- <p-carousel [value]="images" [numVisible]="1" [numScroll]="1" [circular]="true" [autoplayInterval]="1000">
+            <ng-template let-image pTemplate="item">
+                <img [src]="image" alt="Imagen" style="height: 90vh;" />
+            </ng-template>
+        </p-carousel> -->
+    </div>
+</div>

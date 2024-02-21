@@ -99,8 +99,11 @@ export class PrivateLayoutComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.token = localStorage.getItem('token');
-    const { full_name } = JSON.parse(localStorage.getItem('user')!)
-    this.nombre = full_name;
+    const user = JSON.parse(localStorage.getItem('user')!)
+    if (user) {
+      const { full_name } = user;
+      this.nombre = full_name;
+    }
     this.datos$ = this.segundo.getInfoReloj();
     this.datos$.subscribe(x => {
       this.hora = x.hora;
@@ -243,7 +246,7 @@ export class PrivateLayoutComponent implements OnInit, OnDestroy {
   changeDisplayCuentaForm() {
     this.displayCuentaForm = !this.displayCuentaForm;
   }
-  closeDisplayCuentaForm(){
+  closeDisplayCuentaForm() {
     this.displayCuentaForm = false;
     this.formCuenta.reset();
   }

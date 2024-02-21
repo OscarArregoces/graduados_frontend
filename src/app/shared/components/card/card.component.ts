@@ -20,7 +20,11 @@ export class CardComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     const [width] = this.calcularPantalla.calcularEspacioPantalla();
-    width.subscribe( width => this.width = width);
+    width.subscribe(width => {
+      if (this.width.length === 0) {
+        this.width = width
+      }
+    });
   }
 
   ngOnDestroy(): void {

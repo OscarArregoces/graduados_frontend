@@ -131,10 +131,10 @@ export class CrearComponent implements OnInit, OnDestroy {
       "fecha": fullDate,
       "hora": fullHour12,
       publico,
-      "custom_email": this.customEmails.map( email => email.email)
+      "custom_email": this.customEmails.map(email => email.email)
     }
     console.log(body);
-    
+
     try {
       this.eventosService.post(`${this.API_URI}/eventos/create/`, body, this.token).subscribe(r => {
         this.form.reset();
@@ -233,8 +233,8 @@ export class CrearComponent implements OnInit, OnDestroy {
     this.formCustomEmails.reset();
   }
 
-  saveCustomEmails() { 
-    console.log(this.customEmails.map( email => email.email));
+  saveCustomEmails() {
+    console.log(this.customEmails.map(email => email.email));
   }
 
 }

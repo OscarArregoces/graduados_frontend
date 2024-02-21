@@ -45,12 +45,14 @@ import { FileUploadModule } from 'primeng/fileupload';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import {PasswordModule} from 'primeng/password';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormGraduadoComponent } from './components/form-graduado/form-graduado.component';
 
 @NgModule({
   declarations: [
     PublicLayoutComponent,
     FormLoginComponent,
-    FormRegisterComponent
+    FormRegisterComponent,
+    FormGraduadoComponent
     
   ],
   imports: [

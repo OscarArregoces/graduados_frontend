@@ -2,6 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
+import { catchError } from 'rxjs';
 import { AuthService } from 'src/app/core/services/auth/auth.service';
 import { UserLoginI } from 'src/app/models/authorization/usr_User';
 export interface datos {
@@ -25,7 +26,7 @@ export class FormLoginComponent implements OnInit {
   public footer: string = 'assets/images/footer.png'
   public logo: string = 'assets/images/logo.png'
   public campus: string = 'assets/images/campus.jpeg'
-  
+
   public image3: string = 'assets/demo.png'
 
   constructor(
@@ -59,48 +60,52 @@ export class FormLoginComponent implements OnInit {
 
   onSubmit() {
     let form: UserLoginI = this.form.value
-    this.authService.login(form).subscribe(
-      (result) => {
-        this.motrar = true
+    this.authService.login(form)
+      .pipe(
+        catchError(error => {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Credenciales Incorrectas' });
+          throw error;
+        })
+      ).subscribe(
+        (result) => {
+          this.motrar = true
 
-        var date = new Date('2020-01-01 00:00:04');
-        function padLeft(n: any) {
-          return n = "00".substring(0, "00".length - n.length) + n;
-        }
-        var interval = setInterval(() => {
-          var minutes = padLeft(date.getMinutes() + "");
-          var seconds = padLeft(date.getSeconds() + "");
-          // console.log(minutes, seconds);
-
-          if (seconds == '02') {
-            this.messageService.add({ severity: 'success', summary: `💻  Bienvenido ${result.data.user.full_name}` });
+          var date = new Date('2020-01-01 00:00:04');
+          function padLeft(n: any) {
+            return n = "00".substring(0, "00".length - n.length) + n;
           }
-          date = new Date(date.getTime() - 1000);
-          if (result.ok && minutes == '00' && seconds == '01') {
-            // console.log('aqui',seconds);
+          var interval = setInterval(() => {
+            var minutes = padLeft(date.getMinutes() + "");
+            var seconds = padLeft(date.getSeconds() + "");
+
+            if (seconds == '02') {
+              this.messageService.add({ severity: 'success', summary: "Notififación", detail: `👋  Bienvenido ${result.data.user.full_name}` });
+            }
+            date = new Date(date.getTime() - 1000);
+            if (result.ok && minutes == '00' && seconds == '01') {
+              // }
+              // if( minutes == '00' && seconds == '03' ) {
+              // this.router.navigateByUrl('/landing');
+              this.router.navigateByUrl('/inicio/datos-personales/actualizar-datos');
+              clearInterval(interval);
+            }
+          }, 1000)
+
+        }, async error => {
+          this.motrar = false
+          // console.log(error);
+
+          if (error != undefined) {
+            // if (error.error.data.non_field_errores[0]) {
+            //   this.messageService.add({ severity: 'error', summary: 'Error', detail: `Error. ${error}` });
             // }
-            // if( minutes == '00' && seconds == '03' ) {
-            // this.router.navigateByUrl('/landing');
-            this.router.navigateByUrl('/inicio/datos-personales/actualizar-datos');
-            clearInterval(interval);
+            if (error.error.data.non_field_errors[0]) {
+              // this.messageService.add({ severity: 'error', summary: 'Error', detail: `Error. ${error}` });
+              this.messageService.add({ severity: 'error', summary: 'Error', detail: `Credenciales incorrectas` });
+            }
+
           }
-        }, 1000)
-
-      }, async error => {
-        this.motrar = false
-        console.log(error);
-
-        if (error != undefined) {
-          // if (error.error.data.non_field_errores[0]) {
-          //   this.messageService.add({ severity: 'error', summary: 'Error', detail: `Error. ${error}` });
-          // }
-          if (error.error.data.non_field_errors[0]) {
-            // this.messageService.add({ severity: 'error', summary: 'Error', detail: `Error. ${error}` });
-            this.messageService.add({ severity: 'error', summary: 'Error', detail: `Credenciales incorrectas` });
-          }
-
-        }
-      })
+        })
 
   }
 

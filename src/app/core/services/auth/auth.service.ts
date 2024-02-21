@@ -70,7 +70,6 @@ export class AuthService {
   };
 
   getMenu(): Observable<{ mainSesionAdmin: listaMenuI[] }> {
-    console.log('getMenu called')
     return this.http
       .get<{ mainSesionAdmin: listaMenuI[] }>(this.base_path_get)
       .pipe(
@@ -80,7 +79,6 @@ export class AuthService {
   }
 
   getMenu2(userLoginResponse: UserLoginResponseI): Observable<{ mainSesion: listaMenuI[] }> {
-    console.log('getMenu called')
     const data = {
       // userId:userLoginResponse.user.id,
       token: userLoginResponse.token,
@@ -114,7 +112,6 @@ export class AuthService {
     return this.http.post<UserLoginResponseI>(this.base_path_get_login, dataLogin).pipe(tap(
       (res: UserLoginResponseI) => {
         if (res) {
-          console.log(res)
           // localStorage.setItem(KEY_MENU, JSON.stringify(res.menu));
           this.setLoginData(res.data);
           this.userLoginResponse$.next(res)

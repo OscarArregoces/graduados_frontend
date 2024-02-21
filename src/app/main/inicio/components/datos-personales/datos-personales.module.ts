@@ -17,6 +17,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { CalendarModule } from 'primeng/calendar';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputMaskModule } from 'primeng/inputmask';
+import {TabViewModule} from 'primeng/tabview';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,8 @@ import { InputMaskModule } from 'primeng/inputmask';
     CalendarModule,
     InputNumberModule,
     InputMaskModule,
+    TabViewModule
+    
 
   ]
 })

@@ -7,17 +7,23 @@ import { FormRegisterComponent } from './components/form-register/form-register.
 import { LandingComponent } from '../private-layout/landing/landing.component';
 import { PublicLayoutComponent } from './public-layout.component';
 import { RouterModule, Routes } from '@angular/router';
+import { FormGraduadoComponent } from './components/form-graduado/form-graduado.component';
 
 const routes: Routes = [
   {
     path: 'login',
-    component:FormLoginComponent,
-    canLoad:[!ValidateGuard]
+    component: FormGraduadoComponent,
+    canLoad: [!ValidateGuard]
+  },
+  {
+    path: 'login/funcionario',
+    component: FormLoginComponent,
+    canLoad: [!ValidateGuard]
   },
   {
     path: 'register',
     component: FormRegisterComponent,
-    canLoad:[!ValidateGuard]
+    canLoad: [!ValidateGuard]
 
   },
 ];

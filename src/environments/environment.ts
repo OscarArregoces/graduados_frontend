@@ -6,7 +6,7 @@ export const environment = {
   production: false,
   API_URI : ' http://127.0.0.1:8000',
   // API_URI : 'http://3.134.86.127',
-  API_URL_MEDIA: 'http://3.134.86.127/media/'
+  API_URL_MEDIA: 'http://127.0.0.1:8000/media/'
   // API_URI : 'http://127.0.0.1:8000',
   // API_URL_MEDIA: 'http://127.0.0.1:8000/media/'
 };
