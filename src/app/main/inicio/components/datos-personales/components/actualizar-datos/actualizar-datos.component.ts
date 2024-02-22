@@ -96,7 +96,7 @@ export class ActualizarDatosComponent implements OnInit, OnDestroy {
     this.token = localStorage.getItem('token')!;
     this.paises = Paises;
     this.condicionesVulnerables = CondicionesVulnerables;
-    this.traerInfoUsuario();
+    // this.traerInfoUsuario();
     this.traerGeneros();
     this.traerTiposDocumento();
 

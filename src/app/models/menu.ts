@@ -11,7 +11,6 @@ export interface listaMenuI {
     titulo: string;
 }
 
-
 export interface hijosI {
         id: number;
         id_padre:number;

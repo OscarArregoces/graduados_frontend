@@ -70,10 +70,12 @@ import { SharedModule } from 'src/app/shared/shared.module';
   ],
   imports: [
     CommonModule,
+    
+    PrivateLayoutRoutingModule,
+
     ReactiveFormsModule,
     DataViewModule,
     DashboardRoutingModule,
-    PrivateLayoutRoutingModule,
 
     SharedModule,
   

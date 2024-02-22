@@ -5,7 +5,7 @@ import { PublicLayoutRoutingModule } from './public-layout-routing.module';
 import { PublicLayoutComponent } from './public-layout.component';
 
 import { LandingComponent } from '../private-layout/landing/landing.component';
-import {MultiSelectModule} from 'primeng/multiselect';
+import { MultiSelectModule } from 'primeng/multiselect';
 
 import { FormRegisterComponent } from './components/form-register/form-register.component';
 import { FormLoginComponent } from './components/form-login/form-login.component';
@@ -43,20 +43,24 @@ import { CalendarModule } from 'primeng/calendar';
 import { FieldsetModule } from 'primeng/fieldset';
 import { FileUploadModule } from 'primeng/fileupload';
 import { InputTextareaModule } from 'primeng/inputtextarea';
-import {PasswordModule} from 'primeng/password';
+import { PasswordModule } from 'primeng/password';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormGraduadoComponent } from './components/form-graduado/form-graduado.component';
 
 @NgModule({
   declarations: [
     PublicLayoutComponent,
+    
     FormLoginComponent,
     FormRegisterComponent,
     FormGraduadoComponent
-    
+
   ],
   imports: [
     CommonModule,
+
+    PublicLayoutRoutingModule,
+
     ReactiveFormsModule,
     ButtonModule,
     DialogModule,
@@ -73,24 +77,23 @@ import { FormGraduadoComponent } from './components/form-graduado/form-graduado.
     // RouterModule,
     AvatarGroupModule,
     AvatarModule,
-    PublicLayoutRoutingModule,
     FormsModule,
     SharedModule,
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    
+
     DividerModule,
     ButtonModule,
     CheckboxModule,
     RadioButtonModule,
     RippleModule,
-  
+
     CardModule,
     MenuModule,
     MessagesModule,
     MessageModule,
-  
+
     SplitterModule,
     MenubarModule,
 
@@ -99,7 +102,7 @@ import { FormGraduadoComponent } from './components/form-graduado/form-graduado.
     ChartModule,
     ToolbarModule,
     SplitButtonModule,
-  
+
     TreeModule,
     // VirtualScrollerModule,
     TableModule,
@@ -109,8 +112,12 @@ import { FormGraduadoComponent } from './components/form-graduado/form-graduado.
     FieldsetModule,
     FileUploadModule,
     InputTextareaModule,
-  PasswordModule
+    PasswordModule
 
-  ],providers: [ConfirmationService,MessageService],
+  ],
+  providers: [
+    ConfirmationService,
+    MessageService
+  ],
 })
 export class PublicLayoutModule { }

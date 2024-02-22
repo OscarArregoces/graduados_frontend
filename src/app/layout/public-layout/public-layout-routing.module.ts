@@ -11,20 +11,12 @@ import { FormGraduadoComponent } from './components/form-graduado/form-graduado.
 
 const routes: Routes = [
   {
-    path: 'login',
+    path: 'graduado',
     component: FormGraduadoComponent,
-    canLoad: [!ValidateGuard]
   },
   {
-    path: 'login/funcionario',
+    path: 'funcionario',
     component: FormLoginComponent,
-    canLoad: [!ValidateGuard]
-  },
-  {
-    path: 'register',
-    component: FormRegisterComponent,
-    canLoad: [!ValidateGuard]
-
   },
 ];
 

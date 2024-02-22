@@ -51,30 +51,29 @@ import { CalendarModule } from 'primeng/calendar';
 import { FieldsetModule } from 'primeng/fieldset';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { FileUploadModule } from 'primeng/fileupload';
-import { MantenimientoComponent } from './main/mantenimiento/mantenimiento.component';
+// import { MantenimientoComponent } from './main/mantenimiento/mantenimiento.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
 
 @NgModule({
   declarations: [
     AppComponent,
-    MantenimientoComponent,
+    // MantenimientoComponent,
   ],
   imports: [
 
     // DashboardModule,
 
     CommonModule,
-    AppRoutingModule,
 
+    
     PublicLayoutModule,
     PrivateLayoutModule,
+    AppRoutingModule,
+
     HttpClientModule,
     FormsModule,
     BrowserModule,
     BrowserAnimationsModule,
-
-
 
     DividerModule,
     ButtonModule,
@@ -116,8 +115,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
   ],
   providers: [ConfirmationService, MessageService, CdkVirtualScrollViewport,
-    { provide: LOCALE_ID, useValue: 'es' },
-    { provide: LocationStrategy, useClass: HashLocationStrategy },
+    // { provide: LOCALE_ID, useValue: 'es' },
+    // { provide: LocationStrategy, useClass: HashLocationStrategy },
   ],
 
   bootstrap: [AppComponent]

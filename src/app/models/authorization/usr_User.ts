@@ -27,7 +27,7 @@ export interface UserRoleI {
 
 export interface UserLoginI {
   username: string;
-  email: string;
+  // email: string;
   password: string;
 }
 

@@ -12,6 +12,7 @@ import { PantallaService } from 'src/app/core/services/pantalla.service';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { MainService } from 'src/app/core/services/main/main.service';
 import { environment } from 'src/environments/environment';
+import { JsonPipe } from '@angular/common';
 interface menu {
   label: string,
   data?: string
@@ -41,7 +42,7 @@ export class PrivateLayoutComponent implements OnInit, OnDestroy {
     'password': ['', Validators.required],
   })
 
-  public isLoggedIn = false;
+  public isLoggedIn = true;
   public menu1: listaMenuI[] = [];
   public algo: listaMenuI[] = [];
   public publicMenu: listaMenuI[] = [];
@@ -89,15 +90,14 @@ export class PrivateLayoutComponent implements OnInit, OnDestroy {
     private fb: UntypedFormBuilder,
     private mainService: MainService
 
-  ) {
-    // this.form.patchValue({...body, date_of_birth: new Date(`${body.date_of_birth}T00:00:00`)})
-  }
+  ) { }
 
   ngOnDestroy(): void {
     this.subscription$.unsubscribe();
   }
 
   ngOnInit() {
+    this.getMenu()
     this.token = localStorage.getItem('token');
     const user = JSON.parse(localStorage.getItem('user')!)
     if (user) {
@@ -113,23 +113,6 @@ export class PrivateLayoutComponent implements OnInit, OnDestroy {
       this.ampm = x.ampm;
       this.segundos = x.segundo
     });
-    this.files1 =
-      [
-        {
-          "label": "Pictures",
-          "data": "Pictures Folder",
-          "expandedIcon": "pi pi-folder-open",
-          "collapsedIcon": "pi pi-folder",
-          "children": [
-            { "label": "barcelona.jpg", "icon": "pi pi-image", "data": "Barcelona Photo" },
-            { "label": "logo.jpg", "icon": "pi pi-image", "data": "PrimeFaces Logo" },
-            { "label": "primeui.png", "icon": "pi pi-image", "data": "PrimeUI Logo" }]
-        },
-
-      ]
-
-    this.verificar()
-
 
     this.primengConfig.ripple = true;
     this.items2 = [
@@ -196,14 +179,9 @@ export class PrivateLayoutComponent implements OnInit, OnDestroy {
     }
   }
   ocultarMenu(boolean: boolean) {
-    // this.display=boolean
+    this.display = boolean
   }
 
-
-
-  setLogin(value: boolean): void {
-    this.authService.setLogin(value);
-  }
 
   openDialogResgister(event: Event) {
     event.preventDefault();
@@ -226,10 +204,10 @@ export class PrivateLayoutComponent implements OnInit, OnDestroy {
     this.displayMaximizable = true
   }
   cerrarSesion() {
-    this.setLogin(false)
+    // this.setLogin(false)
     this.authService.logout()
-    this.ngOnInit()
-    this.router.navigateByUrl('/login')
+    // this.ngOnInit()
+    this.router.navigateByUrl('/graduado')
   }
 
   showConfirm() {
@@ -251,32 +229,12 @@ export class PrivateLayoutComponent implements OnInit, OnDestroy {
     this.formCuenta.reset();
   }
 
-  public verificar() {
-    var token: string | null = localStorage.getItem('token');
-    // var user :string | null= localStorage.getItem('user');
-    var menu: string | null = localStorage.getItem('menu');
-
-    if (token != null && menu != null) {
+  public getMenu() {
+    const menu = JSON.parse(localStorage.getItem('menu')!);
+    if (menu) {
       this.showSuccess()
-      // let userObjeto:any = JSON.parse(user); 
-      let menuObjeto: any = JSON.parse(menu);
-      // console.log(menuObjeto)
-      this.privateMenu = createMenu(menuObjeto) as any;
-      this.menu1 = this.privateMenu;
-      // console.log(this.privateMenu,'this.privateMenu;')
-
-      // this.menu1 = listMenu
-      // this.UserId=userObjeto.id
-
-      this.isLoggedIn = true
-      this.setLogin(true)
+      this.menu1 = createMenu(menu);
     } else {
-      this.isLoggedIn = false
-      this.setLogin(false)
-      // this.menu1 = [];
-      this.menu1 = listMenu
-
-      // console.log(this.isLoggedIn,'aqui')
       this.router.navigateByUrl('/login');
     }
   }

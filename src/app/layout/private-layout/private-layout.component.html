@@ -1,82 +1,77 @@
-<ng-template [ngIf]="isLoggedIn === true">
-  <div class="flex justify-content-start" [style]="{'background':'#f16357',
-  'color':'#fff','font-weight':'bold', 'padding':'10px'}">
+<div class="flex justify-content-start" [style]="{'background':'#f16357',
+'color':'#fff','font-weight':'bold', 'padding':'10px'}">
 
-    <p-button styleClass="p-button-outlined  p-button-warning" (click)="display = true" class="mr-3">
-      <i class="pi pi-align-justify" style="font-size: 1.5rem; margin-top: 5px;color:white;"></i>
-      <span class="ml-2 font-bold" style="color:white">Egresados</span>
-    </p-button>
+  <p-button styleClass="p-button-outlined  p-button-warning" (click)="display = true" class="mr-3">
+    <i class="pi pi-align-justify" style="font-size: 1.5rem; margin-top: 5px;color:white;"></i>
+    <span class="ml-2 font-bold" style="color:white">Egresados</span>
+  </p-button>
 
-    <div class="flex justify-content-end w-12 ">
-      <button id="btn-hora" pButton pRipple type="button" [disabled]="true"
-        class="p-button-outlined  p-button-warning ml-2" style="padding: 7px;">
-        <div class="clock" style="color:white;font-weight:bold">
-          {{dia | titlecase}} {{fecha | titlecase}} [<span class="mishoras">{{hora}}:{{minutos}}:<span
-              class="segundos">{{segundos}}</span></span><span class="ampm">{{ampm}}</span>]
-        </div>
-      </button>
-
-      <button type="button" pButton pRipple class="p-button-rounded p-button-text ml-5" icon="pi pi-plus"
-        (click)="menu.toggle($event)">
-        <p-avatar image="{{image3}}" styleClass="ml-3" size="large" shape="circle"></p-avatar>
-      </button>
-
-      <p-menu #menu [popup]="true" [model]="items" [style]="{'width':'200px','margin-top':'5px'}"></p-menu>
-      <div #menu2 class="box hidden" header="Anuncios" style="display: inline-block;margin:0px"></div>
-    </div>
-
-  </div>
-
-  <div class="container margen">
-    <p-sidebar [(visible)]="display" [style]="{'width':'345px','min-height': '88vh'}" [showCloseIcon]="false"
-      [blockScroll]="false">
-      <div class="grid">
-        <div class="col-11">
-          <a routerLink="/landing" (click)="display=false">
-            <img alt="logo" src="assets/images/banner.png" width="260px" height="92px"
-              style="margin-left: 20px ;margin-top: -5px;" styleClass="p-button-outlined" />
-          </a>
-        </div>
-        <div class="col-1">
-          <a pripple="" (click)="display=false" class="p-ripple p-element 
-          cursor-pointer inline-flex align-items-center 
-            justify-content-center text-white border-2 surface-border
-            hover:bg-gray-600 text-600 transition-colors transition-duration-150 border-circle" style="width: 40px; height: 40px;margin-left: -20px;margin-top:22px;
-            background-color: #f16357;"><i class="pi pi-sign-out text-xl"></i>
-            <span class="p-ink"></span>
-          </a>
-        </div>
+  <div class="flex justify-content-end w-12 ">
+    <button id="btn-hora" pButton pRipple type="button" [disabled]="true"
+      class="p-button-outlined  p-button-warning ml-2" style="padding: 7px;">
+      <div class="clock" style="color:white;font-weight:bold">
+        {{dia | titlecase}} {{fecha | titlecase}} [<span class="mishoras">{{hora}}:{{minutos}}:<span
+            class="segundos">{{segundos}}</span></span><span class="ampm">{{ampm}}</span>]
       </div>
+    </button>
 
-      <hr>
-      <h4 class="fondebabutton" style="text-align: center;margin-bottom:-5px;margin-top: -5px;">{{nombre}}</h4>
-      <hr>
-      <app-menu [menu]="menu1" (funcion)="ocultarMenu($event)"></app-menu>
-      <span style="margin:5px"></span>
+    <button type="button" pButton pRipple class="p-button-rounded p-button-text ml-5" icon="pi pi-plus"
+      (click)="menu.toggle($event)">
+      <p-avatar image="{{image3}}" styleClass="ml-3" size="large" shape="circle"></p-avatar>
+    </button>
 
-    </p-sidebar>
+    <p-menu #menu [popup]="true" [model]="items" [style]="{'width':'200px','margin-top':'5px'}"></p-menu>
+    <div #menu2 class="box hidden" header="Anuncios" style="display: inline-block;margin:0px"></div>
+  </div>
 
+</div>
 
-    <div class="content">
-      <router-outlet></router-outlet>
-      <footer class="footer" style="padding-top: 20px;">
-        <div class="footer__copyright">
-          <p style="color:gray;font-size: 1.1rem">© 2022 Desarrollo Universidad de la Guajira</p>
-        </div>
-        <div class="footer__copyright">
-          <p style="color:gray;font-size: 1rem">Todos los derechos reservados - Semillero SETEC</p>
-        </div>
-      </footer>
+<div class="container margen">
+  <p-sidebar [(visible)]="display" [style]="{'width':'345px','min-height': '88vh'}" [showCloseIcon]="false"
+    [blockScroll]="false">
+    <div class="grid">
+      <div class="col-11">
+        <a routerLink="/landing" (click)="display=false">
+          <img alt="logo" src="assets/images/banner.png" width="260px" height="92px"
+            style="margin-left: 20px ;margin-top: -5px;" styleClass="p-button-outlined" />
+        </a>
+      </div>
+      <div class="col-1">
+        <a pripple="" (click)="display=false" class="p-ripple p-element 
+        cursor-pointer inline-flex align-items-center 
+          justify-content-center text-white border-2 surface-border
+          hover:bg-gray-600 text-600 transition-colors transition-duration-150 border-circle" style="width: 40px; height: 40px;margin-left: -20px;margin-top:22px;
+          background-color: #f16357;"><i class="pi pi-sign-out text-xl"></i>
+          <span class="p-ink"></span>
+        </a>
+      </div>
     </div>
 
-  </div>
-</ng-template>
+    <hr>
+    <h4 class="fondebabutton" style="text-align: center;margin-bottom:-5px;margin-top: -5px;">{{nombre}}</h4>
+    <hr>
+    <app-menu [menu]="menu1" (funcion)="ocultarMenu($event)"></app-menu>
+    <span style="margin:5px"></span>
+  </p-sidebar>
 
+
+  <div class="content">
+    <router-outlet></router-outlet>
+    <footer class="footer" style="padding-top: 20px;">
+      <div class="footer__copyright">
+        <p style="color:gray;font-size: 1.1rem">© 2022 Desarrollo Universidad de la Guajira</p>
+      </div>
+      <div class="footer__copyright">
+        <p style="color:gray;font-size: 1rem">Todos los derechos reservados - Semillero SETEC</p>
+      </div>
+    </footer>
+  </div>
+
+</div>
 
 <div style="display:relative;">
   <p-menu #menu [popup]="true" [model]="items" [style]="{'width':'200px','margin-top':'5px'}"></p-menu>
 </div>
-
 
 <p-dialog [(visible)]="Dialog" [style]="{'width': '40vw'}" [resizable]="false" zindex="10000" [showHeader]="false"
   [closeOnEscape]="false" [closable]="false" [modal]="true">

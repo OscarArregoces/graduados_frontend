@@ -4,7 +4,9 @@ import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { catchError } from 'rxjs';
 import { AuthService } from 'src/app/core/services/auth/auth.service';
+import { MainService } from 'src/app/core/services/main/main.service';
 import { UserLoginI } from 'src/app/models/authorization/usr_User';
+import { environment } from 'src/environments/environment';
 export interface datos {
   dato?: number;
 }
@@ -28,6 +30,7 @@ export class FormLoginComponent implements OnInit {
   public campus: string = 'assets/images/campus.jpeg'
 
   public image3: string = 'assets/demo.png'
+  API_URI = environment.API_URI;
 
   constructor(
     private formBuilder: UntypedFormBuilder,
@@ -36,77 +39,54 @@ export class FormLoginComponent implements OnInit {
     private messageService: MessageService,
   ) { }
 
-
-
   ngOnInit(): void {
-    var token: string | null = localStorage.getItem('token');
-    // var user :string | null= localStorage.getItem('user');
-    // var menu :string | null= localStorage.getItem('menu');
-    if (token != null) {
-      // this.showSuccess()
-      // let userObjeto:any = JSON.parse(user); 
-      // let menuObjeto:any = JSON.parse(menu); 
-      // let userLoginResponse={
-      //   user:userObjeto,
-      //   token:token,
-      // }
-      // this.router.navigateByUrl('/landing');
-      this.router.navigateByUrl('/inicio/datos-personales/actualizar-datos');
-    } else {
-      // this.isLoggedIn=false
-      this.router.navigateByUrl('/login');
-    }
+    // var token: string | null = localStorage.getItem('token');
+    // if (token != null) {
+    //   this.router.navigateByUrl('/inicio/datos-personales/actualizar-datos');
+    // } else {
+    //   this.router.navigateByUrl('/graduado');
+    // }
   }
 
   onSubmit() {
-    let form: UserLoginI = this.form.value
-    this.authService.login(form)
+    let form: UserLoginI = this.form.value;
+
+    this.authService.post(`${this.API_URI}/auth/login/`, form)
       .pipe(
         catchError(error => {
+          this.authService.logout();
           this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Credenciales Incorrectas' });
           throw error;
         })
-      ).subscribe(
-        (result) => {
-          this.motrar = true
+      )
+      .subscribe(res => {
+        const { token: { access, refresh }, user, menu } = res.data;
+        this.motrar = true
+        var date = new Date('2020-01-01 00:00:04');
+        function padLeft(n: any) {
+          return n = "00".substring(0, "00".length - n.length) + n;
+        }
+        var interval = setInterval(() => {
+          var minutes = padLeft(date.getMinutes() + "");
+          var seconds = padLeft(date.getSeconds() + "");
 
-          var date = new Date('2020-01-01 00:00:04');
-          function padLeft(n: any) {
-            return n = "00".substring(0, "00".length - n.length) + n;
+          if (seconds == '02') {
+            this.messageService.add({ severity: 'success', summary: "Bienvenido (a)", detail: `👋 ${res.data.user.full_name}` });
           }
-          var interval = setInterval(() => {
-            var minutes = padLeft(date.getMinutes() + "");
-            var seconds = padLeft(date.getSeconds() + "");
+          console.log(seconds);
 
-            if (seconds == '02') {
-              this.messageService.add({ severity: 'success', summary: "Notififación", detail: `👋  Bienvenido ${result.data.user.full_name}` });
-            }
-            date = new Date(date.getTime() - 1000);
-            if (result.ok && minutes == '00' && seconds == '01') {
-              // }
-              // if( minutes == '00' && seconds == '03' ) {
-              // this.router.navigateByUrl('/landing');
-              this.router.navigateByUrl('/inicio/datos-personales/actualizar-datos');
-              clearInterval(interval);
-            }
-          }, 1000)
-
-        }, async error => {
-          this.motrar = false
-          // console.log(error);
-
-          if (error != undefined) {
-            // if (error.error.data.non_field_errores[0]) {
-            //   this.messageService.add({ severity: 'error', summary: 'Error', detail: `Error. ${error}` });
-            // }
-            if (error.error.data.non_field_errors[0]) {
-              // this.messageService.add({ severity: 'error', summary: 'Error', detail: `Error. ${error}` });
-              this.messageService.add({ severity: 'error', summary: 'Error', detail: `Credenciales incorrectas` });
-            }
-
+          date = new Date(date.getTime() - 1000);
+          localStorage.setItem('token', access);
+          localStorage.setItem('user', JSON.stringify(user));
+          localStorage.setItem('menu', JSON.stringify(menu));
+          localStorage.setItem('fecha', JSON.stringify(date));
+          if (res.ok && minutes == '00' && seconds == '01') {
+            this.authService.login();
+            this.router.navigateByUrl('/inicio/datos-personales/actualizar-datos');
+            clearInterval(interval);
           }
-        })
-
+        }, 1000)
+      })
   }
 
 }

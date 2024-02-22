@@ -42,17 +42,17 @@
           <ng-template [ngIf]="motrar == false">
             <div fxLayout="row" class="titleCard ">
               <div class="grid mt-2">
-                <div class="col-12 md:col-12 lg:col-5">
+                <div class="col-12 md:col-12 lg:col-12">
                   <button pButton pRipple type="submit" icon="pi pi-check" label="Entrar" [disabled]="!form.valid"
                     style="width:auto;color:white;background-color:#f16357;border:1px solid #f16357; width:100%"
                     ></button>
 
                 </div>
-                <div class="col-12 md:col-12 lg:col-7">
+                <!-- <div class="col-12 md:col-12 lg:col-7">
                   <button pButton pRipple type="button" routerLink="/register" icon="pi pi-users"
                     styleClass="p-button-text" style="width:auto;color:#f16357;border:1px solid #f16357; width:100%"
                     label="Registrarse" class="p-button-outlined"></button>
-                </div>
+                </div> -->
               </div>
             </div>
           </ng-template>
