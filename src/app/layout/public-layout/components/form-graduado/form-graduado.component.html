@@ -1,39 +1,49 @@
 <!-- <div style="background-color: red;" class="grid m-0"> -->
 <div style="background-color: #fbf9f8;" class="grid m-0">
-    <div class="col-12 md:col-6 lg:col-6 p-5 p-0 m-0" style="height: 100vh;">
+    <div class="col-12 md:col-5 lg:col-5 p-5 p-0 m-0" style="height: 100vh;">
         <div class="w-full flex justify-content-center">
             <img src="assets/images/banner.png" alt="Banner Uniguajira" style="max-width: 300px;">
         </div>
         <form [formGroup]="form">
             <div class="flex flex-column gap-2 my-2">
                 <label class="mb-2 customText">Usuario</label>
-                <input style="height: 50px;" type="text" placeholder="Documento" formControlName="username" required
+                <input style="height: 50px;" type="text" placeholder="Documento" formControlName="username"
                     pInputText />
+                <div *ngIf="form.get('username')?.hasError('required') && form.get('username')?.touched"
+                    class="text-red-500">
+                    Ingresa tu Usuario
+                </div>
             </div>
+
             <div class="flex flex-column gap-2 my-2">
                 <label class="mb-2 customText">Contraseña</label>
-                <input style="height: 50px;" type="password" placeholder="Clave" formControlName="password" required
+                <input style="height: 50px;" type="password" placeholder="Clave" formControlName="password"
                     pInputText />
+                <div *ngIf="form.get('password')?.hasError('required') && form.get('password')?.touched"
+                    class="text-red-500">
+                    Ingresa tu Contraseña
+                </div>
             </div>
-            <div class="field-checkbox my-5">
-                <p-checkbox [binary]="true" inputId="binary" formControlName="pliciy"></p-checkbox>
-                <label for="binary">
-                    <a href="https://drive.google.com/file/d/1gBm2SaK_8v6Y5Wf2hVBDspoPpIFDfyUK/view" target="_blank"
-                        title="Ir a Ver">Terminos y Condiciones
-                    </a>
-                </label>
+            <div class="my-5 flex flex-column justify-content-start align-content-start">
+                <div class="flex gap-2">
+                    <p-checkbox [binary]="true" inputId="binary" formControlName="policy"></p-checkbox>
+                    <label for="binary">
+                        <a href="https://drive.google.com/file/d/1gBm2SaK_8v6Y5Wf2hVBDspoPpIFDfyUK/view" target="_blank"
+                            title="Ir a Ver">Terminos y Condiciones
+                        </a>
+                    </label>
+                </div>
+                <div *ngIf="form.get('policy')?.hasError('required') && form.get('policy')?.touched"
+                    class="text-red-500 my-1">
+                    Acepta nuestros terminos y condiciones
+                </div>
             </div>
             <div class="w-full flex justify-content-center">
-                <button type="submit" id="btn_submit">Ingresar</button>
+                <button type="submit" (click)="onSubmit()" id="btn_submit">Ingresar</button>
             </div>
         </form>
     </div>
-    <div class="col-12 hidden p-0 m-0  md:col-6 md:block lg:col-6 lg:block" style="height:100vh;">
-        <img src="assets/images/campus.jpeg" alt="Imagen" style="height: 98.9%" />
-        <!-- <p-carousel [value]="images" [numVisible]="1" [numScroll]="1" [circular]="true" [autoplayInterval]="1000">
-            <ng-template let-image pTemplate="item">
-                <img [src]="image" alt="Imagen" style="height: 90vh;" />
-            </ng-template>
-        </p-carousel> -->
+    <div class="col-12 hidden p-0 m-0  md:col-7 md:block lg:col-7 lg:block" style="height:100vh">
+        <img src="assets/images/graduado/portada_1.jpg" alt="Imagen" style="height:98.9%;width:100%;" />
     </div>
 </div>

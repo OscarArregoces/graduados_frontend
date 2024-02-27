@@ -8,10 +8,7 @@ import { InicioService } from 'src/app/core/services/main/inicio.service';
 import { PantallaService } from 'src/app/core/services/pantalla.service';
 import { formateDateInput, formateDateOutPut } from 'src/app/helpers/formateDate';
 import { environment } from 'src/environments/environment';
-
-interface pais {
-  name: string,
-}
+import { Ciudad, CondicionVulnerable, Departamento, Genero, InfoCarrera, Pais, Sede, TipoDocumento } from 'src/app/models/main/Inicio.interface';
 
 @Component({
   selector: 'app-actualizar-datos',
@@ -20,71 +17,40 @@ interface pais {
 })
 
 export class ActualizarDatosComponent implements OnInit, OnDestroy {
+  public API_URI = environment.API_URI;
+  public selectedCountry!: Pais;
+  public selectedDepartamento!: Departamento;
+  public selectedCiudad!: Ciudad;
+  public width!: string;
+  public subscription$!: Subscription;
+  public token!: string;
+  public paises: Pais[] = [];
+  public departamentos: Departamento[] = [];
+  public ciudades: Ciudad[] = [];
+  public sedes: Sede[] = [];
+  public condicionesVulnerables: CondicionVulnerable[] = [];
+  public generos: Genero[] = [];
+  public tiposDocumento: TipoDocumento[] = [];
+  public InfoCarrera: InfoCarrera[] = [];
 
-  API_URI = environment.API_URI;
-  selectedCountry!: pais;
-  selectedDepartamento!: { name: string };
-  selectedCiudad!: { name: string };
-  width!: string;
-  subscription$!: Subscription;
-  token!: string;
-
-  public paises: pais[] = [];
-  public departamentos: { name: string }[] = [
-    {
-      name: "LA GUAJIRA"
-    }
-  ];
-  public ciudades: { name: string }[] = [
-    {
-      name: "RIOHACHA"
-    }
-  ];
-  public sedes: { name: string }[] = [
-    {
-      name: "RIOHACHA"
-    },
-    {
-      name: "MAICAO"
-    },
-    {
-      name: "VILLANUEVA"
-    },
-  ];
-  public condicionesVulnerables: { name: string }[] = [];
-  public generos: any[] = [];
-  public tiposDocumento: any[] = [];
-  public infoUsuario: any[] = [];
-
-
-  public form = this.fb.group({
-    document_type: ['', Validators.required],
-    gender_type: [''],
-    name: ['', [Validators.required, Validators.maxLength(150)]],
-    surname: ['', [Validators.required, Validators.maxLength(150)]],
-    fullname: ['', [Validators.required, Validators.maxLength(150)]],
-    identification: ['', [Validators.required, Validators.maxLength(40)]],
-    address: ['', [Validators.required, Validators.maxLength(50)]],
-    nationality: ['', Validators.maxLength(100)],
-    date_of_birth: ['', Validators.required],
-    phone: ['', Validators.maxLength(13)],
-    email: [''],
-    email2: [''],
-    fecha_expedicion: [''],
-    condicion_vulnerable: [''],
-    municipio: [{ value: '', disabled: false }],
-    departamento: [{ value: '', disabled: false }],
-    saber_pro: [{ value: '', disabled: false }],
-    fecha_grado: [''],
-    periodo_grado: [{ value: '', disabled: false }],
-    numero_acta: [{ value: '', disabled: false }],
-    numero_folio: [{ value: '', disabled: false }],
-    modalidad_grado: [{ value: '', disabled: false }],
-    proyecto_grado: [{ value: '', disabled: false }],
-    sede: [{ value: '', disabled: false }],
-    programa: [{ value: '', disabled: false }],
-    direccion_intitucional: [{ value: '', disabled: false }],
+  public formPersona = this.fb.group({
+    document_type: ['', [Validators.minLength(5), Validators.maxLength(100)]],
+    gender_type: ['',],
+    fullname: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(100)]],
+    identification: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(50)]],
+    address: ['', [Validators.minLength(5), Validators.maxLength(100)]],
+    nationality: ['', [Validators.required]],
+    date_of_birth: ['',],
+    phone: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(50)]],
+    phone2: ['', [Validators.minLength(5), Validators.maxLength(50)]],
+    fecha_expedicion: ['',],
+    condicion_vulnerable: ['',],
+    municipio: ['', [Validators.required]],
+    departamento: ['', [Validators.required]],
+    email: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(50), Validators.email]],
+    email2: ['', [Validators.minLength(5), Validators.maxLength(50), Validators.email]],
   })
+
   constructor(
     private inicioService: InicioService,
     private pantallaService: PantallaService,
@@ -96,7 +62,7 @@ export class ActualizarDatosComponent implements OnInit, OnDestroy {
     this.token = localStorage.getItem('token')!;
     this.paises = Paises;
     this.condicionesVulnerables = CondicionesVulnerables;
-    // this.traerInfoUsuario();
+    this.traerInfoUsuario();
     this.traerGeneros();
     this.traerTiposDocumento();
 
@@ -108,67 +74,46 @@ export class ActualizarDatosComponent implements OnInit, OnDestroy {
     this.subscription$.unsubscribe();
   }
   onSubmit() {
-    this.messageService.add({ severity: 'success', summary: 'Notififación', detail: 'Datos Actualizados' });
+    const {
+      document_type,
+      gender_type,
+      fullname,
+      identification,
+      address,
+      nationality,
+      date_of_birth,
+      phone,
+      phone2,
+      fecha_expedicion,
+      condicion_vulnerable,
+      municipio,
+      departamento,
+      email,
+      email2,
+    } = this.formPersona.value;
 
-    // SOLO DEBE ACTUALIZAR LA INFORMACION DE "DATOS PERSONALES"
+    const fullDate = formateDateOutPut(date_of_birth);
 
-    // const {
-    //   document_type,
-    //   gender_type,
-    //   name,
-    //   surname,
-    //   identification,
-    //   address,
-    //   nationality,
-    //   date_of_birth,
-    //   phone,
-    //   email,
-    //   email2,
-    //   fecha_expedicion,
-    //   condicion_vulnerable,
-    //   municipio,
-    //   departamento,
-    //   saber_pro,
-    //   fecha_grado,
-    //   periodo_grado,
-    //   numero_acta,
-    //   numero_folio,
-    //   modalidad_grado,
-    //   proyecto_grado,
-    //   sede,
-    //   programa,
-    //   direccion_intitucional,
-    // } = this.form.value;
+    let body = {
+      document_type: document_type.id,
+      gender_type: gender_type.id,
+      fullname,
+      identification,
+      address,
+      nationality,
+      date_of_birth: fullDate,
+      phone,
+      phone2,
+      fecha_expedicion,
+      condicion_vulnerable,
+      municipio,
+      departamento,
+      email,
+      email2,
+    }
 
-    // const fullDate = formateDateOutPut(date_of_birth);
+    console.log(body);
 
-    // let body = {
-    //   document_type: document_type.id,
-    //   gender_type: gender_type.id,
-    //   name,
-    //   surname,
-    //   identification,
-    //   address,
-    //   nationality: nationality.name,
-    //   date_of_birth: fullDate,
-    //   phone: phone,
-    //   email,
-    //   email2,
-    //   fecha_expedicion,
-    //   condicion_vulnerable,
-    //   municipio,
-    //   departamento,
-    //   saber_pro,
-    //   fecha_grado,
-    //   periodo_grado,
-    //   numero_acta,
-    //   numero_folio,
-    //   modalidad_grado,
-    //   proyecto_grado,
-    //   sede,
-    //   programa,
-    //   direccion_intitucional,
-    // }
 
     // try {
     //   this.inicioService.put(`${this.API_URI}/persons/update/profile/`, body, this.token).subscribe(res => {
@@ -181,8 +126,7 @@ export class ActualizarDatosComponent implements OnInit, OnDestroy {
   }
 
   traerInfoUsuario() {
-    this.infoUsuario = [];
-    this.inicioService.get(`${this.API_URI}/persons`, this.token)
+    this.inicioService.get(`${this.API_URI}/persons/perfil`, this.token)
       .pipe(
         catchError(error => {
           this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error en consulta' });
@@ -190,71 +134,46 @@ export class ActualizarDatosComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe(res => {
-
-        this.infoUsuario = res.data;
         const {
+          persona: {
+            document_type,
+            gender_type,
+            fullname,
+            identification,
+            address,
+            nationality,
+            date_of_birth,
+            phone,
+            phone2,
+            fecha_expedicion,
+            condicion_vulnerable,
+            municipio,
+            departamento,
+            email,
+            email2
+          },
+          carreras } = res.data;
+        this.InfoCarrera = carreras;
+
+        let body = {
           document_type,
           gender_type,
-          name,
-          surname,
+          fullname,
           identification,
           address,
           nationality,
-          date_of_birth,
+          date_of_birth: date_of_birth && formateDateInput(date_of_birth),
           phone,
-          email,
-          email2,
-          fecha_expedicion,
+          phone2,
+          fecha_expedicion: fecha_expedicion && formateDateInput(fecha_expedicion),
           condicion_vulnerable,
           municipio,
           departamento,
-          saber_pro,
-          fecha_grado,
-          periodo_grado,
-          numero_acta,
-          numero_folio,
-          modalidad_grado,
-          proyecto_grado,
-          sede,
-          programa,
-          direccion_intitucional,
-        } = res.data;
-
-        let currentCountry: any = '';
-        let countryFound = Paises.find(country => country.name === nationality);
-        if (countryFound) {
-          currentCountry = countryFound;
-        }
-
-        let body = {
-          fullname: name + " " + surname,
-          document_type,
-          gender_type: gender_type,
-          name,
-          surname,
-          identification,
-          address,
-          nationality: currentCountry,
-          date_of_birth,
-          phone: phone.replace(/\s+/g, ''),
           email,
           email2,
-          fecha_expedicion,
-          condicion_vulnerable,
-          municipio,
-          departamento,
-          saber_pro,
-          fecha_grado,
-          periodo_grado,
-          numero_acta,
-          numero_folio,
-          modalidad_grado,
-          proyecto_grado,
-          sede,
-          programa,
-          direccion_intitucional,
         }
-        this.form.patchValue({ ...body, date_of_birth: formateDateInput(body.date_of_birth) })
+
+        this.formPersona.patchValue(body)
       })
   }
 
@@ -281,14 +200,6 @@ export class ActualizarDatosComponent implements OnInit, OnDestroy {
       .subscribe(res => {
         this.tiposDocumento = res.data;
       })
-  }
-
-  onConfirm() {
-    this.messageService.clear('c');
-  }
-
-  onReject() {
-    this.messageService.clear('c');
   }
 
 }

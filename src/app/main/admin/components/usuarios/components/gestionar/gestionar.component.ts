@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ConfirmationService, MessageService } from 'primeng/api';
-import { Subscription } from 'rxjs';
+import { FormControl, FormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
+import { MessageService } from 'primeng/api';
+import { Subscription, catchError } from 'rxjs';
 import { AdminService } from 'src/app/core/services/dashboard/admin.service';
 import { PantallaService } from 'src/app/core/services/pantalla.service';
+import { Graduado } from 'src/app/models/main/Inicio.interface';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -16,71 +17,80 @@ export class GestionarComponent implements OnInit {
   API_URI = environment.API_URI;
   width!: string;
   subscription$!: Subscription;
-  token!:string;
+  token!: string;
 
   public displayFormCreate: boolean = false;
   public displayFormEdit: boolean = false;
   public loading: boolean = false;
 
-  public usuariosSeleccionados: any[] = [];
-  public usuarios: any[] = [];
-  public usuariosVerificated: any[] = [];
+  public graduados: Graduado[] = [];
+  public graduadoFound: boolean = false;
+  public inforCardDescription: string = `
+  Nuestro Módulo de Graduados proporciona una plataforma centralizada para acceder de manera fácil y eficiente a la información detallada de nuestros graduados. Desde fechas de graduación hasta logros académicos, este módulo ofrece una visión completa de la trayectoria educativa de cada graduado. Facilita la gestión y actualización de perfiles, permitiendo un seguimiento preciso de los logros de los graduados a lo largo del tiempo. Con esta herramienta, mantenemos un vínculo continuo con nuestra comunidad de graduados, brindando una experiencia integral y facilitando la conexión entre los logros académicos y las oportunidades futuras.
+  `
+  public itemsBulkDelete: any[] = [];
 
-  public formCreate = new FormGroup({
-    tipo: new FormControl('', Validators.required)
+  public form = this.fb.group({
+    documento: ['']
   })
-  public formEdit = new FormGroup({
-    tipo: new FormControl('', Validators.required)
-  })
+
   constructor(
     private adminService: AdminService,
     private messageService: MessageService,
     private pantallaService: PantallaService,
-    private confirmationService: ConfirmationService
+    private fb: UntypedFormBuilder
   ) { }
 
   ngOnInit(): void {
     this.token = localStorage.getItem('token')!;
     const [width] = this.pantallaService.calcularEspacioPantalla();
     this.subscription$ = width.subscribe(width => this.width = width);
+    this.traerGraduados();
   }
 
   ngOnDestroy(): void { this.subscription$.unsubscribe(); }
 
-  onSubmit(){}
-  handleEdit(){}
-  deleteAll(){}
+  onSubmit() { }
+  handleEdit() { }
+  deleteAll() { }
 
-  changeDisplayFormCreate() { this.displayFormCreate = !this.displayFormCreate }
-  changeDisplayFormEdit(genero:any={}) { this.displayFormEdit = !this.displayFormEdit }
+  traerGraduados() {
+    this.form.reset();
+    this.graduadoFound = false;
+    this.adminService.get(`${this.API_URI}/users/graduados`, this.token)
+      .pipe(
+        catchError(error => {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Hubo un problema' });
+          throw error;
+        })
+      )
+      .subscribe(res => {
+        this.graduados = res.data;
+      })
+  }
+  traerGraduado() {
+    const { documento } = this.form.value;
+    if (documento === "") return this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Ingrese un No Documento' });
 
-  traerUsuarios() { }
+    this.graduadoFound = true;
+    this.adminService.get(`${this.API_URI}/users/graduados/${documento}`, this.token)
+      .pipe(
+        catchError(error => {
+          if (error?.error?.errors?.detail) {
+            this.graduados = [];
+          } else {
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Hubo un problema' });
+          }
+          throw error;
+        })
+      )
+      .subscribe(res => {
+        this.graduados = [res.data]
+      })
+  }
 
   getEventValue($event: any): string {
     return $event.target.value;
-  }
-
-  confirm(event: Event | any, id: any) {
-    console.log('Confir called')
-
-    this.confirmationService.confirm({
-      target: event.target,
-      message: '¿Seguro que desea eliminar este genero?',
-      icon: 'pi pi-exclamation-triangle',
-      accept: () => {
-        try {
-          this.adminService.delete(`${this.API_URI}/poll/momentos/delete/${id}/`, this.token).subscribe(respuesta => {
-            this.traerUsuarios();
-            return this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Eliminado correctamente !!!' })
-          });
-        } catch (error) {
-          console.log(error)
-        }
-      },
-      reject: () => {
-        //reject action
-      }
-    });
   }
 
 

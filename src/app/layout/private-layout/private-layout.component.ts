@@ -204,10 +204,13 @@ export class PrivateLayoutComponent implements OnInit, OnDestroy {
     this.displayMaximizable = true
   }
   cerrarSesion() {
-    // this.setLogin(false)
+    let lastLogin = localStorage.getItem('lastLogin');
     this.authService.logout()
-    // this.ngOnInit()
-    this.router.navigateByUrl('/graduado')
+    if (lastLogin) {
+      this.router.navigate([lastLogin]);
+    } else {
+      this.router.navigate(['/graduado']);
+    }
   }
 
   showConfirm() {

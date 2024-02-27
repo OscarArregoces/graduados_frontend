@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { Subscription } from 'rxjs';
+import { Subscription, catchError } from 'rxjs';
 import { AdminService } from 'src/app/core/services/dashboard/admin.service';
 import { PantallaService } from 'src/app/core/services/pantalla.service';
 import { Variant } from 'src/app/models/ui/CustomInfoCard';
@@ -32,12 +32,18 @@ export class GestionarComponent implements OnInit, OnDestroy {
   public inforCardDescription: string = `
   Nuestro módulo de Gestión de Tipos de Identificación ofrece una solución eficiente para administrar la variedad de documentos de identificación utilizados por nuestros usuarios al registrarse en la aplicación. Con esta funcionalidad, puedes crear, editar, eliminar y visualizar los diferentes tipos de identificación admitidos, como cédulas, pasaportes, licencias de conducir, entre otros. Proporciona una experiencia de usuario personalizada, permitiendo a los usuarios seleccionar con precisión el tipo de documento que desean asociar a su perfil. 
   `;
+  public inforCardDescriptionCreate: string = `
+  Simplifica el proceso de incorporar nuevos tipos de identificación a nuestra plataforma. Permite a los usuarios personalizar su perfil seleccionando con precisión el tipo de documento que desean asociar, brindando una experiencia de usuario eficiente y adaptada a sus necesidades.
+  `
+  public inforCardDescriptionEdit: string = `
+  Mantén tu información de identificación siempre actualizada con nuestra función de actualización de tipos de identificación. Ofrece a los usuarios la flexibilidad de editar y ajustar el tipo de documento asociado a su perfil, asegurando una gestión eficiente y una experiencia de usuario personalizada.
+  `
 
   public formCreate = this.fb.group({
-    name: ['', Validators.required]
+    name: ['', [Validators.required, Validators.minLength(5)]]
   })
   public formEdit = this.fb.group({
-    name: ['', Validators.required]
+    name: ['', [Validators.required, Validators.minLength(5)]]
   })
 
   constructor(
@@ -46,7 +52,7 @@ export class GestionarComponent implements OnInit, OnDestroy {
     private pantallaService: PantallaService,
     private confirmationService: ConfirmationService,
     private fb: UntypedFormBuilder
-  ) { 
+  ) {
     this.variantColor = Variant.Blue
   }
 
@@ -65,31 +71,37 @@ export class GestionarComponent implements OnInit, OnDestroy {
       return this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Ya existe' })
     }
 
-    try {
-      this.adminService.post(`${this.API_URI}/documents/create/`, this.formCreate.value, this.token).subscribe(res => {
+    this.adminService.post(`${this.API_URI}/documents/create/`, this.formCreate.value, this.token)
+      .pipe(
+        catchError(error => {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Hubo un problema' });
+          throw error;
+        })
+      )
+      .subscribe(res => {
         this.formCreate.reset();
         this.traerTiposIdentificacion();
         this.changeDisplayFormCreate();
-        this.messageService.add({ severity: 'success', summary: 'Service Message', detail: 'Creado correctamente' });
+        this.messageService.add({ severity: 'success', summary: 'Notififación', detail: 'Creado correctamente' });
       })
-    } catch (error) {
-      console.log('Error en consnulta', error)
-    }
   }
   handleEdit() {
     if (this.tiposIdentificacionVerificated.includes(this.formEdit.value.name.toLowerCase().replace(/\s+/g, ''))) {
       return this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Ya existe' })
     }
-    try {
-      this.adminService.put(`${this.API_URI}/documents/update/${this.idFormEdit}`, this.formEdit.value, this.token).subscribe(res => {
+    this.adminService.put(`${this.API_URI}/documents/update/${this.idFormEdit}/`, this.formEdit.value, this.token)
+      .pipe(
+        catchError(error => {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Hubo un problema' });
+          throw error;
+        })
+      )
+      .subscribe(res => {
         this.formEdit.reset();
         this.traerTiposIdentificacion();
         this.changeDisplayFormEdit();
-        this.messageService.add({ severity: 'success', summary: 'Service Message', detail: 'Editado correctamente' });
+        this.messageService.add({ severity: 'success', summary: 'Notififación', detail: 'Actualizado correctamente' });
       })
-    } catch (error) {
-      console.log('Error en consnulta', error)
-    }
   }
   deleteAll() {
     const itemsMaped = this.itemsBulkDelete.map((item: any) => item.id)
@@ -103,7 +115,7 @@ export class GestionarComponent implements OnInit, OnDestroy {
       this.adminService.delete(`${this.API_URI}/documents/delete/`, this.token, body).subscribe(res => {
         this.traerTiposIdentificacion();
         this.itemsBulkDelete = [];
-        this.messageService.add({ severity: 'success', summary: 'Service Message', detail: 'Eliminado correctamente' });
+        this.messageService.add({ severity: 'success', summary: 'Notififación', detail: 'Eliminado correctamente' });
       })
     } catch (error) {
       console.log('Error en consnulta', error)
@@ -111,24 +123,35 @@ export class GestionarComponent implements OnInit, OnDestroy {
   }
 
   changeDisplayFormCreate() { this.displayFormCreate = !this.displayFormCreate }
+  closeDisplayFormCreate() {
+    this.displayFormCreate = false;
+    this.formCreate.reset();
+  }
 
   changeDisplayFormEdit(genero: any = {}) {
     this.idFormEdit = genero.id;
     this.formEdit.patchValue(genero)
     this.displayFormEdit = !this.displayFormEdit
   }
+  closeDisplayFormEdit() {
+    this.displayFormEdit = false;
+    this.formEdit.reset();
+  }
 
   traerTiposIdentificacion() {
     this.tiposIdentificacion = [];
     this.tiposIdentificacionVerificated = [];
-    try {
-      this.adminService.get(`${this.API_URI}/documents`, this.token).subscribe(res => {
+    this.adminService.get(`${this.API_URI}/documents`, this.token)
+      .pipe(
+        catchError(error => {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Hubo un problema' });
+          throw error;
+        })
+      )
+      .subscribe(res => {
         this.tiposIdentificacion = res.data;
         res.data.map((identificacion: any) => this.tiposIdentificacionVerificated.push(identificacion.name))
       })
-    } catch (error) {
-      console.log('Error en consnulta', error)
-    }
   }
 
   getEventValue($event: any): string {
@@ -138,17 +161,20 @@ export class GestionarComponent implements OnInit, OnDestroy {
   confirm(event: Event | any, id: any) {
     this.confirmationService.confirm({
       target: event.target,
-      message: '¿Seguro que desea eliminar este tipo de identificación?',
+      message: '¿Seguro que desea eliminar este Tipo de Identificación?',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-        try {
-          this.adminService.delete(`${this.API_URI}/documents/delete/${id}/`, this.token).subscribe(respuesta => {
+        this.adminService.delete(`${this.API_URI}/documents/delete/${id}/`, this.token)
+          .pipe(
+            catchError(error => {
+              this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Hubo un problema' });
+              throw error;
+            })
+          )
+          .subscribe(respuesta => {
             this.traerTiposIdentificacion();
-            return this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Eliminado correctamente !!!' })
+            return this.messageService.add({ severity: 'success', summary: 'Notififación', detail: 'Eliminado correctamente !!!' })
           });
-        } catch (error) {
-          console.log(error)
-        }
       },
       reject: () => {
         //reject action

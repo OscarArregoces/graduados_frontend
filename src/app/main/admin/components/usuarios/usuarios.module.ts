@@ -19,7 +19,7 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { CheckboxModule } from 'primeng/checkbox';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { CardModule } from 'primeng/card';
-
+import { MessageModule } from 'primeng/message';
 
 @NgModule({
   declarations: [
@@ -34,7 +34,7 @@ import { CardModule } from 'primeng/card';
     UsuariosRoutingModule,
     SharedModule,
 
-    
+
     InputTextModule,
     ButtonModule,
     ToastModule,
@@ -46,6 +46,7 @@ import { CardModule } from 'primeng/card';
     CheckboxModule,
     RadioButtonModule,
     CardModule,
+    MessageModule
   ]
 })
 export class UsuariosModule { }

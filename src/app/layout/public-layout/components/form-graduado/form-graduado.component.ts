@@ -1,5 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { catchError } from 'rxjs';
+import { AuthService } from 'src/app/core/services/auth/auth.service';
+import { ValidForm } from 'src/app/helpers/validForms';
+import { UserLoginI } from 'src/app/models/authorization/usr_User';
+import { environment } from 'src/environments/environment';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-form-graduado',
@@ -11,13 +18,14 @@ export class FormGraduadoComponent implements OnInit {
   public form = this.fb.group({
     username: ['', Validators.required],
     password: ['', Validators.required],
-    pliciy: ['', Validators.required],
+    policy: [{ value: false }, Validators.requiredTrue],
   });
-  public images:string [] = [
+  public images: string[] = [
     'assets/images/campus.jpeg',
     'assets/images/campus.jpeg',
     'assets/images/campus.jpeg',
-  ]
+  ];
+  API_URI = environment.API_URI;
 
   public responsiveOptions = [
     {
@@ -38,10 +46,63 @@ export class FormGraduadoComponent implements OnInit {
   ];
 
   constructor(
-    private fb: UntypedFormBuilder
+    private fb: UntypedFormBuilder,
+    private authService: AuthService,
+    private router: Router,
   ) { }
 
-  ngOnInit(): void {
+  ngOnInit(): void { }
+
+  onSubmit() {
+    ValidForm(this.form);
+
+    if (this.form.valid) {
+      let form: UserLoginI = this.form.value;
+      this.authService.post(`${this.API_URI}/auth/login/`, form)
+        .pipe(
+          catchError(error => {
+            if (error.error?.errors?.non_field_errors[0] === "Incorrect Credentials Passed.") {
+              Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Credenciales Incorrectas",
+                timer: 1500,
+              });
+            } else {
+              Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Hubo un Problema",
+                timer: 1500,
+              });
+            }
+            this.authService.logout();
+            throw error;
+          })
+        )
+        .subscribe(res => {
+          var date = new Date('2020-01-01 00:00:04');
+          const { token: { access, refresh }, user, menu } = res.data;
+          Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: "Bienvenido(a)",
+            text: `👋 ${res.data.user.full_name}`,
+            showConfirmButton: false,
+            timer: 2500,
+            allowOutsideClick: false,
+          });
+          localStorage.setItem('token', access);
+          localStorage.setItem('user', JSON.stringify(user));
+          localStorage.setItem('menu', JSON.stringify(menu));
+          localStorage.setItem('fecha', JSON.stringify(date));
+          localStorage.setItem('lastLogin', this.router.url);
+          this.authService.login();
+          this.router.navigateByUrl('/inicio/datos-personales/actualizar-datos');
+        })
+    }
   }
 
 }
+
+

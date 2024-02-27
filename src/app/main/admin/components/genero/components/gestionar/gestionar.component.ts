@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { Subscription } from 'rxjs';
+import { Subscription, catchError } from 'rxjs';
 import { AdminService } from 'src/app/core/services/dashboard/admin.service';
 import { PantallaService } from 'src/app/core/services/pantalla.service';
 import { Variant } from 'src/app/models/ui/CustomInfoCard';
@@ -33,12 +33,18 @@ export class GestionarComponent implements OnInit, OnDestroy {
   public inforCardDescription: string = `
   Nuestro módulo de Gestión de Géneros es una herramienta esencial en nuestro software, diseñada para facilitar la administración de los tipos de géneros asociados al sexo de nuestros usuarios. Proporciona una experiencia de usuario inclusiva y personalizada, permitiendo a los usuarios seleccionar con precisión su identidad de género al registrarse en nuestra plataforma. Simplifica la gestión de esta información sensible, garantizando un ambiente respetuoso y acogedor para todos nuestros usuarios.
   `;
+  public inforCardDescriptionCreate: string = `
+  Facilita la incorporación de nuevos géneros a nuestra plataforma con facilidad. Permite a los usuarios definir su identidad de género de manera precisa durante el registro, contribuyendo así a una experiencia inclusiva y respetuosa.
+  `
+  public inforCardDescriptionEdit: string = `
+  Mantén tu información de género siempre actualizada con nuestra función de actualización de géneros. Proporciona a los usuarios la flexibilidad de ajustar su identidad de género según sea necesario, asegurando un entorno que refleje con precisión su identidad y que sea acogedor para todos.
+  `
 
   public formCreate = this.fb.group({
-    name: ['', Validators.required]
+    name: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(50)]]
   })
   public formEdit = this.fb.group({
-    name: ['', Validators.required]
+    name: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(50)]]
   })
   constructor(
     private adminService: AdminService,
@@ -63,30 +69,36 @@ export class GestionarComponent implements OnInit, OnDestroy {
     if (this.generosVerificated.includes(this.formEdit.value.name.toLowerCase().replace(/\s+/g, ''))) {
       return this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Ya existe' })
     }
-    try {
-      this.adminService.post(`${this.API_URI}/genders/create/`, this.formCreate.value, this.token).subscribe(res => {
+    this.adminService.post(`${this.API_URI}/genders/create/`, this.formCreate.value, this.token)
+      .pipe(
+        catchError(error => {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Hubo un problema' });
+          throw error;
+        })
+      )
+      .subscribe(res => {
         this.formCreate.reset();
         this.traerGeneros();
         this.changeDisplayFormCreate();
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Creado correctamente' })
+        this.messageService.add({ severity: 'success', summary: 'Notififación', detail: 'Creado correctamente' })
       })
-    } catch (error) {
-      console.log('Error en consulta', error)
-    }
   }
   handleEdit() {
     if (this.generosVerificated.includes(this.formEdit.value.name.toLowerCase().replace(/\s+/g, ''))) {
       return this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Ya existe' })
     }
-    try {
-      this.adminService.put(`${this.API_URI}/genders/update/${this.idFormEdit}/`, this.formEdit.value, this.token).subscribe(res => {
+    this.adminService.put(`${this.API_URI}/genders/update/${this.idFormEdit}/`, this.formEdit.value, this.token)
+      .pipe(
+        catchError(error => {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Hubo un problema' });
+          throw error;
+        })
+      )
+      .subscribe(res => {
         this.formEdit.reset();
         this.traerGeneros();
-        return this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Editado correctamente' })
+        return this.messageService.add({ severity: 'success', summary: 'Notififación', detail: 'Actualizado correctamente' })
       })
-    } catch (error) {
-      console.log('Error en consulta', error)
-    }
   }
   deleteAll() {
     const itemsMaped = this.itemsBulkDelete.map((item: any) => item.id)
@@ -96,23 +108,34 @@ export class GestionarComponent implements OnInit, OnDestroy {
       "ids": itemsMaped
     }
 
-    try {
-      this.adminService.delete(`${this.API_URI}/genders/delete/`, this.token, body).subscribe(res => {
+    this.adminService.delete(`${this.API_URI}/genders/delete/`, this.token, body)
+      .pipe(
+        catchError(error => {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Hubo un problema' });
+          throw error;
+        })
+      )
+      .subscribe(res => {
         this.traerGeneros();
         this.itemsBulkDelete = [];
-        this.messageService.add({ severity: 'success', summary: 'Service Message', detail: 'Eliminado correctamente' });
+        this.messageService.add({ severity: 'success', summary: 'Notififación', detail: 'Eliminado correctamente' });
       })
-    } catch (error) {
-      console.log('Error en consnulta', error)
-    }
   }
 
   changeDisplayFormCreate() { this.displayFormCreate = !this.displayFormCreate }
+  closeDisplayFormCreate() {
+    this.displayFormCreate = false;
+    this.formCreate.reset();
+  }
 
   changeDisplayFormEdit(genero: any = {},) {
     this.formEdit.patchValue(genero)
     this.displayFormEdit = !this.displayFormEdit;
     this.idFormEdit = genero.id;
+  }
+  closeDisplayFormEdit() {
+    this.displayFormEdit = false;
+    this.formEdit.reset();
   }
 
   traerGeneros() {
@@ -141,14 +164,17 @@ export class GestionarComponent implements OnInit, OnDestroy {
       message: '¿Seguro que desea eliminar este genero?',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-        try {
-          this.adminService.delete(`${this.API_URI}/poll/momentos/delete/${id}/`, this.token).subscribe(respuesta => {
+        this.adminService.delete(`${this.API_URI}/poll/momentos/delete/${id}/`, this.token)
+          .pipe(
+            catchError(error => {
+              this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Hubo un problema' });
+              throw error;
+            })
+          )
+          .subscribe(respuesta => {
             this.traerGeneros();
-            return this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Eliminado correctamente !!!' })
+            return this.messageService.add({ severity: 'success', summary: 'Notififación', detail: 'Eliminado correctamente !!!' })
           });
-        } catch (error) {
-          console.log(error)
-        }
       },
       reject: () => {
         //reject action

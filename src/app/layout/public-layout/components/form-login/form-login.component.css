@@ -10,22 +10,30 @@
     margin: 0;
 
   } */
+
+::ng-deep.swal2-container {
+  z-index: 1000000;
+}
+
 @media only screen and (max-width: 430px) {
   #campus_img {
     display: none;
   }
 }
+
 @media (min-width: 430px) and (max-width: 768px) {
-  #campus_img{
+  #campus_img {
     display: none;
   }
 }
+
 @media (min-width: 769px) and (max-width: 1024px) {
-  #campus_img{
-   height: 100%;
+  #campus_img {
+    height: 100%;
   }
-  #campus_img img{
-   height: 100%;
+
+  #campus_img img {
+    height: 100%;
   }
 }
 

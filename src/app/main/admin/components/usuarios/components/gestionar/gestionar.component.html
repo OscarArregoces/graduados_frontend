@@ -1,34 +1,41 @@
-<app-card titulo="Gestionar Usuarios">
+<app-card width="90%" titulo="Gestionar Graduados">
     <div card-body class="grid">
-
-        <div class="col-12 md:col-6 lg:col-6">
-            <div class="flex flex-column gap-2">
-                <button (click)="changeDisplayFormCreate()" [style]="{'width':'60%','max-width': '40rem','margin':'auto'}" pButton pRipple
-                    type="submit" label="Nuevo" class="p-button-success"></button>
+        <app-custom-info-card [description]="inforCardDescription"></app-custom-info-card>
+        <form [formGroup]="form">
+            <div class="grid">
+                <div class="col-6">
+                    <div class="p-inputgroup my-1">
+                        <span class="p-inputgroup-addon"><i class="pi pi-filter-fill"></i></span>
+                        <input type="number" placeholder="No Documento" formControlName="documento" pInputText />
+                    </div>
+                </div>
+                <div class="col-3 flex justify-content-center align-items-center">
+                    <button pButton pRipple type="button" icon="pi pi-search" label="Buscar"
+                        class="p-button-raised p-button" (click)="traerGraduado()"></button>
+                </div>
+                <div class="col-3 flex justify-content-center align-items-center">
+                    <button pButton pRipple type="button" icon="pi pi-refresh" label="Reiniciar"
+                        class="p-button-raised p-button-secondary" (click)="traerGraduados()"></button>
+                </div>
             </div>
-        </div>
-        <div class="col-12 md:col-6 lg:col-6">
-            <div class="flex flex-column gap-2">
-                <button [style]="{'width':'60%','max-width': '30rem','margin':'auto'}" pButton pRipple type="submit"
-                    label=" Eliminar seleccionados" class="p-button-danger" (click)="deleteAll()"
-                    [disabled]="usuariosSeleccionados.length <= 0"></button>
-            </div>
-        </div>
-        <div class="col-12 md:col-12 lg:col-12">
-            <div class="flex flex-column gap-2">
+        </form>
 
+        <div class="col-12 md:col-12 lg:col-12" *ngIf="graduados.length">
+            <div class="flex flex-column gap-2">
                 <p-card>
-                    <p-table #dt [value]="usuarios" [(selection)]="usuariosSeleccionados" dataKey="id"
-                        styleClass="p-datatable-customers" [rowHover]="true" [rows]="10"
-                        [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50]" [loading]="loading"
-                        responsiveLayout="scroll" [paginator]="true"
+                    <p-table #dt [value]="graduados" [(selection)]="itemsBulkDelete" dataKey="id"
+                        styleClass="p-datatable-customers" [rowHover]="true" [rows]="50" [showCurrentPageReport]="true"
+                        [rowsPerPageOptions]="[10,25,50]" [loading]="loading" responsiveLayout="scroll"
+                        [paginator]="true"
                         currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} elementos"
-                        [filterDelay]="0" [globalFilterFields]="['tipo']" responsiveLayout="scroll">
+                        [filterDelay]="0"
+                        [globalFilterFields]="['fullname','email','country','identification','gender_type.name']"
+                        responsiveLayout="scroll">
                         <ng-template pTemplate="caption">
                             <div class="table-header">
                                 <div class="grid" [style]="{'display': 'flex', 'justify-content': 'space-between'}">
                                     <div class="col-12 md:col-6 lg:col-6" [style]="{'font-size': '20px'}">
-                                        Lista de Usuarios
+                                        Lista de Graduados
                                     </div>
                                     <div class="col-12 md:col-6 lg:col-3">
                                         <span [style]="{'width':'100%'}" class="p-input-icon-left">
@@ -44,49 +51,81 @@
                         </ng-template>
                         <ng-template pTemplate="header">
                             <tr>
-                                <th style="width: 3rem">
-                                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-
-                                </th>
                                 <th style="width: 5rem">
                                     <p>Indice</p>
                                 </th>
-                                <th pSortableColumn="tipo">
+                                <th pSortableColumn="fullname">
                                     <div class="flex justify-content-between align-items-center">
                                         Nombre
-                                        <p-sortIcon field="tipo"></p-sortIcon>
-                                        <p-columnFilter type="text" field="tipo" display="menu"
+                                        <p-sortIcon field="fullname"></p-sortIcon>
+                                        <p-columnFilter type="text" field="fullname" display="menu"
+                                            class="ml-auto"></p-columnFilter>
+                                    </div>
+                                </th>
+                                <th pSortableColumn="email">
+                                    <div class="flex justify-content-between align-items-center">
+                                        Correo
+                                        <p-sortIcon field="email"></p-sortIcon>
+                                        <p-columnFilter type="text" field="email" display="menu"
+                                            class="ml-auto"></p-columnFilter>
+                                    </div>
+                                </th>
+                                <th pSortableColumn="country">
+                                    <div class="flex justify-content-between align-items-center">
+                                        Pais
+                                        <p-sortIcon field="country"></p-sortIcon>
+                                        <p-columnFilter type="text" field="country" display="menu"
+                                            class="ml-auto"></p-columnFilter>
+                                    </div>
+                                </th>
+                                <th pSortableColumn="identification">
+                                    <div class="flex justify-content-between align-items-center">
+                                        Identificación
+                                        <p-sortIcon field="identification"></p-sortIcon>
+                                        <p-columnFilter type="text" field="identification" display="menu"
+                                            class="ml-auto"></p-columnFilter>
+                                    </div>
+                                </th>
+                                <th pSortableColumn="gender_type.name">
+                                    <div class="flex justify-content-between align-items-center">
+                                        Genero
+                                        <p-sortIcon field="gender_type.name"></p-sortIcon>
+                                        <p-columnFilter type="text" field="gender_type.name" display="menu"
                                             class="ml-auto"></p-columnFilter>
                                     </div>
                                 </th>
                                 <th style="width: 8rem;text-align: center">
-                                    Editar
-                                </th>
-                                <th style="width: 8rem; text-align: center">
-                                    Eliminar
+                                    Acciones
                                 </th>
                             </tr>
                         </ng-template>
-                        <ng-template pTemplate="body" let-usuario let-rowIndex="rowIndex">
+                        <ng-template pTemplate="body" let-graduado let-rowIndex="rowIndex">
                             <tr class="p-selectable-row">
-                                <td>
-                                    <p-tableCheckbox [value]="usuario"></p-tableCheckbox>
-                                </td>
                                 <td>
                                     {{rowIndex + 1 }}
                                 </td>
                                 <td>
                                     <span class="p-column-title">Tipo</span>
-                                    {{usuario.name}}
+                                    {{graduado.fullname}}
+                                </td>
+                                <td>
+                                    <span class="p-column-title">Tipo</span>
+                                    {{graduado.email}}
+                                </td>
+                                <td>
+                                    <span class="p-column-title">Tipo</span>
+                                    {{graduado.nationality}}
+                                </td>
+                                <td>
+                                    <span class="p-column-title">Tipo</span>
+                                    {{graduado.identification}}
+                                </td>
+                                <td>
+                                    <span class="p-column-title">Tipo</span>
+                                    {{graduado.gender_type.name}}
                                 </td>
                                 <td style="text-align: center">
-                                    <button pButton type="button" icon="pi pi-pencil" class="p-button-warning"
-                                        (click)="changeDisplayFormEdit(usuario)"></button>
-                                </td>
-                                <td style="text-align: center">
-                                    <p-confirmPopup></p-confirmPopup>
-                                    <button pButton type="button" icon="pi pi-trash" class="p-button-danger "
-                                        (click)="confirm($event, usuario.id)"></button>
+                                    <button pButton type="button" icon="pi pi-eye" class="p-button-secondary"></button>
                                 </td>
                             </tr>
                         </ng-template>
@@ -97,60 +136,16 @@
                         </ng-template>
                     </p-table>
                 </p-card>
-
             </div>
+        </div>
+
+        <div *ngIf="graduadoFound === true && graduados.length === 0" class="mt-5 col-12 flex justify-content-center">
+            <p-message severity="warn" text="Graduado no Encontrado, verifica el No Documento."
+                styleClass="mr-2"></p-message>
         </div>
 
     </div>
 </app-card>
 
-<p-dialog [(visible)]="displayFormCreate" [style]="{width: width, 'text-aling': 'center'}" [showHeader]="false"
-    [modal]="true" [dismissableMask]="true">
-
-    <app-card-dialog titulo="Creando Usuario">
-        <form [formGroup]="formCreate">
-            <div class="grid">
-                <div class="col-12 md:col-12 lg:col-12">
-                    <div class="flex flex-column gap-2">
-                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Nombre </label>
-                        <input type="text" placeholder="Escribe aqui.." formControlName="tipo" pInputText />
-                    </div>
-                </div>
-
-                <div class="col-12 md:col-12 lg:col-12 flex justify-content-center">
-                    <button pButton pRipple type="button" label="Guardar" class="p-button-success m-3"
-                        [style]="{ width: '40%'}" (click)="onSubmit()" [disabled]="!formCreate.valid"></button>
-                    <button pButton pRipple type="button" label="Volver" class="p-button-raised p-button-secondary  m-3"
-                        [style]="{ width: '40%'}" (click)="changeDisplayFormCreate()"></button>
-                </div>
-            </div>
-        </form>
-    </app-card-dialog>
-
-</p-dialog>
-
-<p-dialog [(visible)]="displayFormEdit" [style]="{width: width, 'text-aling': 'center'}" [showHeader]="false"
-    [modal]="true" [dismissableMask]="true">
-
-    <app-card-dialog titulo="Editando Usuario">
-        <form [formGroup]="formEdit">
-            <div class="grid">
-                <div class="col-12 md:col-12 lg:col-12">
-                    <div class="flex flex-column gap-2">
-                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Nombre </label>
-                        <input type="text" placeholder="Escribe aqui.." formControlName="tipo" pInputText />
-                    </div>
-                </div>
-
-                <div class="col-12 md:col-12 lg:col-12 flex justify-content-center">
-                    <button pButton pRipple type="button" label="Editar" class="p-button-warning m-3"
-                        [style]="{ width: '40%'}" (click)="handleEdit()" [disabled]="!formEdit.valid"></button>
-                    <button pButton pRipple type="button" label="Volver" class="p-button-raised p-button-secondary  m-3"
-                        [style]="{ width: '40%'}" (click)="changeDisplayFormEdit()"></button>
-                </div>
-            </div>
-        </form>
-    </app-card-dialog>
-</p-dialog>
 
 <p-toast></p-toast>

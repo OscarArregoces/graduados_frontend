@@ -1,12 +1,13 @@
-<app-card width="95%" *ngIf="infoUsuario; else elseBlock" titulo="Actualizar Datos">
-    <form card-body [formGroup]="form">
-        <p-tabView>
-            <p-tabPanel header="Datos Personales">
+<app-card width="95%" titulo="Actualizar Datos">
+
+    <p-tabView card-body>
+        <p-tabPanel header="Datos Personales">
+            <form [formGroup]="formPersona">
                 <div class="grid">
                     <div class="col-12">
                         <div class="grid p-5 shadow-3" style="background-color:#fbf9f8;">
                             <div class="col-12">
-                                <span class="customText">Información Basica</span>
+                                <span class="customTitle">Información Basica</span>
                             </div>
                             <div class="col-12 md:col-4 lg:col-4">
                                 <div class="flex flex-column gap-2">
@@ -23,8 +24,7 @@
                                 <div class="flex flex-column gap-2">
                                     <label class="mb-2" [style]="{'font-weight': 'bold'}">Fecha de nacimiento </label>
                                     <div class="p-inputgroup my-1">
-                                        <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                                style="color:#f16357;"></i></span>
+                                        <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"></i></span>
                                         <p-calendar placeholder="Seleccione la fecha" [style]="{'width': '100%'}"
                                             formControlName="date_of_birth" dateFormat="mm-dd-yy"></p-calendar>
                                     </div>
@@ -45,7 +45,8 @@
                                 <div class="flex flex-column gap-2">
                                     <label class="mb-2" [style]="{'font-weight': 'bold'}">Pais </label>
                                     <div class="p-inputgroup my-1">
-                                        <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"></i></span>
+                                        <span class="p-inputgroup-addon" style="color:#f16357;"><i
+                                                class="pi pi-bookmark-fill"></i></span>
                                         <p-dropdown formControlName="nationality" [style]="{'width': '100%'}"
                                             [options]="paises" optionLabel="name" [filter]="true" filterBy="name"
                                             [showClear]="true" placeholder="Selecciona una opción" [maxlength]="100">
@@ -67,7 +68,8 @@
                                 <div class="flex flex-column gap-2">
                                     <label class="mb-2" [style]="{'font-weight': 'bold'}">Departamento </label>
                                     <div class="p-inputgroup my-1">
-                                        <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"></i></span>
+                                        <span class="p-inputgroup-addon" style="color:#f16357;"><i
+                                                class="pi pi-bookmark-fill"></i></span>
                                         <p-dropdown formControlName="nationality" [style]="{'width': '100%'}"
                                             [options]="departamentos" optionLabel="name" [filter]="true" filterBy="name"
                                             [showClear]="true" placeholder="Selecciona una opción" [maxlength]="100">
@@ -90,7 +92,8 @@
                                 <div class="flex flex-column gap-2">
                                     <label class="mb-2" [style]="{'font-weight': 'bold'}">Ciudad </label>
                                     <div class="p-inputgroup my-1">
-                                        <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"></i></span>
+                                        <span class="p-inputgroup-addon" style="color:#f16357;"><i
+                                                class="pi pi-bookmark-fill"></i></span>
                                         <p-dropdown formControlName="nationality" [style]="{'width': '100%'}"
                                             [options]="ciudades" optionLabel="name" [filter]="true" filterBy="name"
                                             [showClear]="true" placeholder="Selecciona una opción" [maxlength]="100">
@@ -112,8 +115,7 @@
                                 <div class="flex flex-column gap-2">
                                     <label class="mb-2" [style]="{'font-weight': 'bold'}">Tipo de documento </label>
                                     <div class="p-inputgroup my-1">
-                                        <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                                style="color:#f16357;"></i></span>
+                                        <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"></i></span>
                                         <p-dropdown [style]="{'width': '100%'}" placeholder="Selecciona una opcion"
                                             [options]="tiposDocumento" optionLabel="name"
                                             formControlName="document_type"></p-dropdown>
@@ -124,8 +126,7 @@
                                 <div class="flex flex-column gap-2">
                                     <label class="mb-2" [style]="{'font-weight': 'bold'}">Fecha de Expedición </label>
                                     <div class="p-inputgroup my-1">
-                                        <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                                style="color:#f16357;"></i></span>
+                                        <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"></i></span>
                                         <p-calendar placeholder="Seleccione la fecha" [style]="{'width': '100%'}"
                                             formControlName="fecha_expedicion" dateFormat="mm-dd-yy"></p-calendar>
                                     </div>
@@ -146,21 +147,10 @@
                                 <div class="flex flex-column gap-2">
                                     <label class="mb-2" [style]="{'font-weight': 'bold'}">Condición Vulnerable </label>
                                     <div class="p-inputgroup my-1">
-                                        <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                                style="color:#f16357;"></i></span>
+                                        <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"></i></span>
                                         <p-dropdown [style]="{'width': '100%'}" placeholder="Selecciona una opcion"
                                             [options]="condicionesVulnerables" optionLabel="name"
                                             formControlName="condicion_vulnerable"></p-dropdown>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 md:col-4 lg:col-4">
-                                <div class="flex flex-column gap-2">
-                                    <label class="mb-2" [style]="{'font-weight': 'bold'}">Saber Pro </label>
-                                    <div class="p-inputgroup my-1">
-                                        <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                                style="color:#f16357;"></i></span>
-                                        <input type="text" pInputText formControlName="saber_pro" [maxlength]="40" />
                                     </div>
                                 </div>
                             </div>
@@ -178,11 +168,11 @@
                     <div class="col-12">
                         <div class="grid p-5 shadow-3" style="background-color:#f5f5f58e;">
                             <div class="col-12">
-                                <span class="customText">Contacto</span>
+                                <span class="customTitle">Contacto</span>
                             </div>
                             <div class="col-12 md:col-6 lg:col-6">
                                 <div class="flex flex-column gap-2">
-                                    <label class="mb-2" [style]="{'font-weight': 'bold'}">Correo Institucional </label>
+                                    <label class="mb-2" [style]="{'font-weight': 'bold'}">Correo Principal </label>
                                     <div class="p-inputgroup my-1">
                                         <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
                                                 style="color:#f16357;"></i></span>
@@ -207,8 +197,7 @@
                                     <div class="p-inputgroup my-1">
                                         <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
                                                 style="color:#f16357;"></i></span>
-                                        <p-inputMask mask="999 999 9999" placeholder="300 200 1000"
-                                            formControlName="phone" [maxlength]="13"></p-inputMask>
+                                        <input type="number" pInputText formControlName="phone" [maxlength]="13" />
                                     </div>
                                 </div>
                             </div>
@@ -217,127 +206,102 @@
                                     <label class="mb-2" [style]="{'font-weight': 'bold'}">Telefono Secundario </label>
                                     <div class="p-inputgroup my-1">
                                         <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"></i></span>
-                                        <p-inputMask mask="999 999 9999" placeholder="300 200 1000"
-                                            formControlName="phone" [maxlength]="13"></p-inputMask>
+                                        <input type="number" pInputText formControlName="phone2" [maxlength]="13" />
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="col-12 md:col-12 lg:col-12 flex justify-content-center">
-                            <button pButton pRipple type="button" label="Actualizar" class="p-button-success my-5" icon="pi pi-user-edit"
-                                (click)="onSubmit()" [disabled]="!form.valid"></button>
+                            <button pButton pRipple type="button" label="Actualizar" class="p-button-success my-5"
+                                icon="pi pi-user-edit" (click)="onSubmit()" [disabled]="!formPersona.valid"></button>
                         </div>
                     </div>
                 </div>
-            </p-tabPanel>
-            <p-tabPanel header="Información Graduado">
-                <div class="grid">
-                    <div class="col-12">
-                        <div class="grid p-5 shadow-3" style="background-color:#f5f5f58e;">
-                            <div class="col-12">
-                                <span class="customText">Graduación</span>
-                            </div>
-                            <div class="col-12 md:col-6 lg:col-6">
-                                <div class="flex flex-column gap-2">
-                                    <label class="mb-2" [style]="{'font-weight': 'bold'}">Periodo de Grado </label>
-                                    <div class="p-inputgroup my-1">
-                                        <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                                style="color:#f16357;"></i></span>
-                                        <input type="text" pInputText formControlName="periodo_grado"
-                                            placeholder="@uniguajira.edu.co" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 md:col-6 lg:col-6">
-                                <div class="flex flex-column gap-2">
-                                    <label class="mb-2" [style]="{'font-weight': 'bold'}">Numero de Acta </label>
-                                    <div class="p-inputgroup my-1">
-                                        <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                                style="color:#f16357;"></i></span>
-                                        <input type="text" pInputText formControlName="numero_acta"
-                                            placeholder="@uniguajira.edu.co" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 md:col-6 lg:col-6">
-                                <div class="flex flex-column gap-2">
-                                    <label class="mb-2" [style]="{'font-weight': 'bold'}">Numero de Folio </label>
-                                    <div class="p-inputgroup my-1">
-                                        <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                                style="color:#f16357;"></i></span>
-                                        <input type="text" pInputText formControlName="numero_folio"
-                                            placeholder="@uniguajira.edu.co" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 md:col-6 lg:col-6">
-                                <div class="flex flex-column gap-2">
-                                    <label class="mb-2" [style]="{'font-weight': 'bold'}">Modalidad de Grado </label>
-                                    <div class="p-inputgroup my-1">
-                                        <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                                style="color:#f16357;"></i></span>
-                                        <input type="text" pInputText formControlName="modalidad_grado"
-                                            placeholder="@uniguajira.edu.co" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 md:col-6 lg:col-6">
-                                <div class="flex flex-column gap-2">
-                                    <label class="mb-2" [style]="{'font-weight': 'bold'}">Proyecto de Grado </label>
-                                    <div class="p-inputgroup my-1">
-                                        <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                                style="color:#f16357;"></i></span>
-                                        <input type="text" pInputText formControlName="proyecto_grado"
-                                            placeholder="@uniguajira.edu.co" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 md:col-6 lg:col-6">
-                                <div class="flex flex-column gap-2">
-                                    <label class="mb-2" [style]="{'font-weight': 'bold'}">Sede </label>
-                                    <div class="p-inputgroup my-1">
-                                        <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                                style="color:#f16357;"></i></span>
-                                        <input type="text" pInputText formControlName="sede" placeholder="" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 md:col-6 lg:col-6">
-                                <div class="flex flex-column gap-2">
-                                    <label class="mb-2" [style]="{'font-weight': 'bold'}">Programa </label>
-                                    <div class="p-inputgroup my-1">
-                                        <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                                style="color:#f16357;"></i></span>
-                                        <input type="text" pInputText formControlName="programa" placeholder="" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 md:col-6 lg:col-6">
-                                <div class="flex flex-column gap-2">
-                                    <label class="mb-2" [style]="{'font-weight': 'bold'}">Dirección Institucional
-                                    </label>
-                                    <div class="p-inputgroup my-1">
-                                        <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                                style="color:#f16357;"></i></span>
-                                        <input type="text" pInputText formControlName="direccion_intitucional"
-                                            placeholder="" />
-                                    </div>
-                                </div>
-                            </div>
+            </form>
+        </p-tabPanel>
+        <p-tabPanel header="Información Graduado" *ngIf="InfoCarrera.length">
+            <div *ngFor="let info of InfoCarrera; index as i;" class="grid mt-2">
+                <div class="col-12">
+                    <div class="grid p-5 shadow-3" style="background-color:#f5f5f58e;">
+                        <div class="col-12">
+                            <span class="customTitle">{{info.programa}}</span>
                         </div>
-                    </div>
-                </div>
-            </p-tabPanel>
-            <p-tabPanel header="Información Funcionario">
-                Content 3
-            </p-tabPanel>
-        </p-tabView>
 
-    </form>
+                        <div class="col-12">
+                            <label class="customText mb-2">Proyecto de Grado</label>
+                            <div class="p-inputgroup my-1">
+                                <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                        style="color:#f16357;"></i></span>
+                                <input [style]="{'width': '100%'}" type="text" pInputText
+                                    [value]="info.proyecto_grado" />
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="grid">
+                                <div class="col-12">
+                                    <label class="customText mb-2">Modalidad de Grado</label>
+                                    <div class="p-inputgroup my-1">
+                                        <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                                style="color:#f16357;"></i></span>
+                                        <input [style]="{'width': '100%'}" type="text" pInputText
+                                            [value]="info.modalidad_grado" />
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <label class="customText mb-2">Sede</label>
+                                    <div class="p-inputgroup my-1">
+                                        <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                                style="color:#f16357;"></i></span>
+                                        <input [style]="{'width': '100%'}" type="text" pInputText [value]="info.sede" />
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <label class="customText mb-2">Dirección
+                                        Institucional</label>
+                                    <div class="p-inputgroup my-1">
+                                        <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                                style="color:#f16357;"></i></span>
+                                        <input [style]="{'width': '100%'}" type="text" pInputText
+                                            [value]="info.direccion_intitucional" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="grid">
+                                <div class="col-12">
+                                    <label class="customText mb-2">Periodo de Grado</label>
+                                    <div class="p-inputgroup my-1">
+                                        <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                                style="color:#f16357;"></i></span>
+                                        <input [style]="{'width': '100%'}" type="text" pInputText
+                                            [value]="info.periodo_grado" />
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <label class="customText mb-2">Numero de Acta</label>
+                                    <div class="p-inputgroup my-1">
+                                        <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                                style="color:#f16357;"></i></span>
+                                        <input [style]="{'width': '100%'}" type="text" pInputText
+                                            [value]="info.numero_acta" />
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <label class="customText mb-2">Numero de Folio</label>
+                                    <div class="p-inputgroup my-1">
+                                        <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                                style="color:#f16357;"></i></span>
+                                        <input [style]="{'width': '100%'}" type="text" pInputText
+                                            [value]="info.numero_folio" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </p-tabPanel>
+    </p-tabView>
 </app-card>
-
-<ng-template #elseBlock>
-    <app-spinner></app-spinner>
-</ng-template>
-
-<!-- <p-toast></p-toast> -->
+<p-toast></p-toast>

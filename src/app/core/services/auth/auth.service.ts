@@ -17,16 +17,15 @@ export class AuthService {
   }
 
   login() {
-    // Simulación de lógica de autenticación (setear isAuthenticated a true)
     this.isAuthenticatedSubject.next(true);
   }
 
   logout() {
-    // Simulación de lógica de cierre de sesión (setear isAuthenticated a false)
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     localStorage.removeItem('menu');
     localStorage.removeItem('fecha');
+    localStorage.removeItem('lastLogin');
     this.isAuthenticatedSubject.next(false);
   }
 
