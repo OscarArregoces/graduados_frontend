@@ -1,0 +1,102 @@
+<app-card width="90%" titulo="Aprobación de Actividades">
+    <div card-body class="grid">
+        <app-custom-info-card [description]="inforCardDescription"></app-custom-info-card>
+        <div class="col-12 md:col-12 lg:col-12">
+            <div class="flex flex-column gap-2">
+                <p-card>
+                    <p-table #dt [value]="actividades" [(selection)]="itemsBulkDelete" dataKey="id"
+                        styleClass="p-datatable-customers" [rowHover]="true" [rows]="50" [showCurrentPageReport]="true"
+                        [loading]="loading" responsiveLayout="scroll" [paginator]="false"
+                        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} elementos"
+                        [filterDelay]="0"
+                        [globalFilterFields]="['nombre_actividad', 'tipo_actividad.name', 'responsable']"
+                        responsiveLayout="scroll">
+                        <ng-template pTemplate="caption">
+                            <div class="table-header">
+                                <div class="grid" [style]="{'display': 'flex', 'justify-content': 'space-between'}">
+                                    <div class="col-12 md:col-6 lg:col-6" [style]="{'font-size': '20px'}">
+                                        Lista de Actividades
+                                    </div>
+                                    <div class="col-12 md:col-6 lg:col-3">
+                                        <span [style]="{'width':'100%'}" class="p-input-icon-left">
+                                            <i class="pi pi-search"></i>
+                                            <input [style]="{'width':'100%'}" pInputText type="text"
+                                                (input)="dt.filterGlobal(getEventValue($event), 'contains')"
+                                                placeholder="Busqueda global" />
+                                        </span>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </ng-template>
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th style="width: 5rem">
+                                    <p>Indice</p>
+                                </th>
+                                <th pSortableColumn="nombre_actividad">
+                                    <div class="flex justify-content-between align-items-center">
+                                        Actividad
+                                        <p-sortIcon field="nombre_actividad"></p-sortIcon>
+                                        <p-columnFilter type="text" field="nombre_actividad" display="menu"
+                                            class="ml-auto"></p-columnFilter>
+                                    </div>
+                                </th>
+                                <th pSortableColumn="tipo_actividad.name">
+                                    <div class="flex justify-content-between align-items-center">
+                                        Tipo
+                                        <p-sortIcon field="tipo_actividad.name"></p-sortIcon>
+                                        <p-columnFilter type="text" field="tipo_actividad.name" display="menu"
+                                            class="ml-auto"></p-columnFilter>
+                                    </div>
+                                </th>
+
+                                <th pSortableColumn="responsable">
+                                    <div class="flex justify-content-between align-items-center">
+                                        Responsable
+                                        <p-sortIcon field="responsable"></p-sortIcon>
+                                        <p-columnFilter type="text" field="responsable" display="menu"
+                                            class="ml-auto"></p-columnFilter>
+                                    </div>
+                                </th>
+                                <th style="width: 8rem;text-align: center">
+                                    Acciones
+                                </th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-actividad let-rowIndex="rowIndex">
+                            <tr class="p-selectable-row">
+                                <td>
+                                    {{rowIndex + 1 }}
+                                </td>
+                                <td>
+                                    <span class="p-column-title">Nombre de la actividad</span>
+                                    {{actividad.nombre_actividad}}
+                                </td>
+                                <td>
+                                    <span class="p-column-title">Tipo de actividad</span>
+                                    {{actividad.tipo_actividad.name}}
+                                </td>
+                                <td>
+                                    <span class="p-column-title">Responsable</span>
+                                    {{actividad.responsable}}
+                                </td>
+
+                                <td style="text-align: center">
+                                    <button pButton type="button" icon="pi pi-check-circle" class="p-button-success"></button>
+                                </td>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="emptymessage">
+                            <tr>
+                                <td colspan="8">No hay datos que mostrar</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </p-card>
+
+            </div>
+        </div>
+
+    </div>
+</app-card>

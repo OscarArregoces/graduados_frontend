@@ -355,10 +355,6 @@ li {
   align-items: baseline;
 }
 
-/* span {
-  color: #777777;
-} */
-
 .mishoras {
   margin-left: 2px;
   font-weight: bold;
@@ -369,14 +365,12 @@ li {
   margin-left: 2px;
   margin-right: 2px;
   font-size: 0.9rem;
-  /* font-weight: 20; */
 }
 
 .segundos {
   width: 100%;
   text-align: right;
-  font-size: 0.8rem;
-  font-size: 100;
+  font-size: 0.9rem;
 }
 
 .titleCard1 {

@@ -26,6 +26,7 @@ import { CascadeSelectModule } from 'primeng/cascadeselect';
 import { CardModule } from 'primeng/card';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { ChipModule } from 'primeng/chip';
+import { AprobacionComponent } from './components/aprobacion/aprobacion.component';
 
 
 @NgModule({
@@ -35,7 +36,8 @@ import { ChipModule } from 'primeng/chip';
     CrearComponent,
     EditarComponent,
     EliminarComponent,
-    MisActividadesComponent
+    MisActividadesComponent,
+    AprobacionComponent
   ],
   imports: [
     CommonModule,

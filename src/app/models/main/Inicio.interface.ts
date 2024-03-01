@@ -11,12 +11,18 @@ export interface Sede {
     name: string;
 }
 export interface CondicionVulnerable {
+    id?: number;
     name: string;
 }
 export interface Genero {
+    id?: number;
     name: string;
 }
 export interface TipoDocumento {
+    name: string;
+}
+export interface Rol {
+    id: number;
     name: string;
 }
 export interface InfoCarrera {
@@ -40,4 +46,25 @@ export interface Graduado {
         id: number,
         name: string;
     };
+}
+
+export interface Persona {
+    id: number;
+    fullname: string;
+    email: string;
+    nationality: string;
+    identification: string;
+    gender_type: Genero;
+}
+
+export interface UserInternal {
+    id: number;
+    email: string;
+    persona: Persona;
+    groups: [{ name: string, id: number }]
+}
+
+export interface Funcionario {
+    persona: Persona;
+    roles: Rol[]
 }

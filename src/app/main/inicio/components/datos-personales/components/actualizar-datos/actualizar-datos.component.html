@@ -71,12 +71,12 @@
                                         <span class="p-inputgroup-addon" style="color:#f16357;"><i
                                                 class="pi pi-bookmark-fill"></i></span>
                                         <p-dropdown formControlName="nationality" [style]="{'width': '100%'}"
-                                            [options]="departamentos" optionLabel="name" [filter]="true" filterBy="name"
+                                            [options]="paises" optionLabel="name" [filter]="true" filterBy="name"
                                             [showClear]="true" placeholder="Selecciona una opción" [maxlength]="100">
-                                            <ng-template pTemplate="selectedDepartamento">
+                                            <ng-template pTemplate="selectedCountry">
                                                 <div class="country-item country-item-value"
-                                                    *ngIf="selectedDepartamento">
-                                                    <div>{{selectedDepartamento.name}}</div>
+                                                    *ngIf="selectedCountry">
+                                                    <div>{{selectedCountry.name}}</div>
                                                 </div>
                                             </ng-template>
                                             <ng-template let-country pTemplate="item">
@@ -95,11 +95,11 @@
                                         <span class="p-inputgroup-addon" style="color:#f16357;"><i
                                                 class="pi pi-bookmark-fill"></i></span>
                                         <p-dropdown formControlName="nationality" [style]="{'width': '100%'}"
-                                            [options]="ciudades" optionLabel="name" [filter]="true" filterBy="name"
+                                            [options]="paises" optionLabel="name" [filter]="true" filterBy="name"
                                             [showClear]="true" placeholder="Selecciona una opción" [maxlength]="100">
-                                            <ng-template pTemplate="selectedCiudad">
-                                                <div class="country-item country-item-value" *ngIf="selectedCiudad">
-                                                    <div>{{selectedCiudad.name}}</div>
+                                            <ng-template pTemplate="selectedCountry">
+                                                <div class="country-item country-item-value" *ngIf="selectedCountry">
+                                                    <div>{{selectedCountry.name}}</div>
                                                 </div>
                                             </ng-template>
                                             <ng-template let-country pTemplate="item">
@@ -177,7 +177,7 @@
                                         <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
                                                 style="color:#f16357;"></i></span>
                                         <input type="text" pInputText formControlName="email"
-                                            placeholder="@uniguajira.edu.co" />
+                                            placeholder="@gmail.com O @uniguajira.edu.co" />
                                     </div>
                                 </div>
                             </div>
@@ -187,7 +187,7 @@
                                     <div class="p-inputgroup my-1">
                                         <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"></i></span>
                                         <input type="text" pInputText formControlName="email2"
-                                            placeholder="@gmail.com" />
+                                            placeholder="@gmail.com O @uniguajira.edu.co" />
                                     </div>
                                 </div>
                             </div>
@@ -213,7 +213,7 @@
                         </div>
                         <div class="col-12 md:col-12 lg:col-12 flex justify-content-center">
                             <button pButton pRipple type="button" label="Actualizar" class="p-button-success my-5"
-                                icon="pi pi-user-edit" (click)="onSubmit()" [disabled]="!formPersona.valid"></button>
+                                icon="pi pi-user-edit" (click)="onSubmit()" ></button>
                         </div>
                     </div>
                 </div>
@@ -265,6 +265,14 @@
                                             [value]="info.direccion_intitucional" />
                                     </div>
                                 </div>
+                                <div class="col-12">
+                                    <label class="customText mb-2">Sede</label>
+                                    <div class="p-inputgroup my-1">
+                                        <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                                style="color:#f16357;"></i></span>
+                                        <input [style]="{'width': '100%'}" type="text" pInputText [value]="info.sede" />
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="col-6">
@@ -294,6 +302,15 @@
                                                 style="color:#f16357;"></i></span>
                                         <input [style]="{'width': '100%'}" type="text" pInputText
                                             [value]="info.numero_folio" />
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <label class="customText mb-2">Fecha de Grado </label>
+                                    <div class="p-inputgroup my-1">
+                                        <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                                style="color:#f16357;"></i></span>
+                                        <input [style]="{'width': '100%'}" type="text" pInputText
+                                            [value]="info.fecha_grado" />
                                     </div>
                                 </div>
                             </div>

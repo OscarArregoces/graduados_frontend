@@ -9,6 +9,7 @@ import { ValidForm } from 'src/app/helpers/validForms';
 import { UserLoginI } from 'src/app/models/authorization/usr_User';
 import { environment } from 'src/environments/environment';
 import Swal from 'sweetalert2';
+
 export interface datos {
   dato?: number;
 }
@@ -53,61 +54,73 @@ export class FormLoginComponent implements OnInit {
     let form: UserLoginI = this.form.value;
     ValidForm(this.form);
 
-    this.authService.post(`${this.API_URI}/auth/login/`, form)
-      .pipe(
-        catchError(error => {
-          if (error.error?.errors?.non_field_errors[0] === "Incorrect Credentials Passed.") {
-            Swal.fire({
-              icon: "error",
-              title: "Oops...",
-              text: "Credenciales Incorrectas",
-              timer: 1500,
-            });
-          } else {
-            Swal.fire({
-              icon: "error",
-              title: "Oops...",
-              text: "Hubo un Problema",
-              timer: 1500,
-            });
-          }
-          this.authService.logout();
-          throw error;
-        })
-      )
-      .subscribe(res => {
-        const { token: { access, refresh }, user, menu } = res.data;
-        this.motrar = true
-        var date = new Date('2020-01-01 00:00:02');
-        function padLeft(n: any) {
-          return n = "00".substring(0, "00".length - n.length) + n;
-        }
-        var interval = setInterval(() => {
-          var minutes = padLeft(date.getMinutes() + "");
-          var seconds = padLeft(date.getSeconds() + "");
+    if (this.form.valid) {
+      this.authService.post(`${this.API_URI}/auth/login/`, form)
+        .pipe(
+          catchError(error => {
+            console.log(error);
 
-          date = new Date(date.getTime() - 1000);
-          localStorage.setItem('token', access);
-          localStorage.setItem('user', JSON.stringify(user));
-          localStorage.setItem('menu', JSON.stringify(menu));
-          localStorage.setItem('fecha', JSON.stringify(date));
-          localStorage.setItem('lastLogin', this.router.url);
-          if (res.ok && minutes == '00' && seconds == '01') {
-            this.authService.login();
-            this.router.navigateByUrl('/inicio/datos-personales/actualizar-datos');
-            clearInterval(interval);
+            if (error.error?.errors?.error === "Unauthorized access for non-funcionario users.") {
+              Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Credenciales Incorrectas",
+                timer: 1500,
+              });
+            } else if (error.error?.errors?.non_field_errors[0] === "Incorrect Credentials Passed.") {
+              Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Credenciales Incorrectas",
+                timer: 1500,
+              });
+            } else {
+              Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Hubo un Problema",
+                timer: 1500,
+              });
+            }
+            this.authService.logout();
+            throw error;
+          })
+        )
+        .subscribe(res => {
+          const { token: { access, refresh }, user, menu } = res.data;
+          this.motrar = true
+          var date = new Date('2020-01-01 00:00:02');
+          function padLeft(n: any) {
+            return n = "00".substring(0, "00".length - n.length) + n;
           }
-        }, 1000)
-        Swal.fire({
-          position: "top-end",
-          icon: "success",
-          title: "Bienvenido(a)",
-          text: `👋 ${res.data.user.full_name}`,
-          showConfirmButton: false,
-          timer: 2500,
-          allowOutsideClick: false,
-        });
-      })
+          var interval = setInterval(() => {
+            var minutes = padLeft(date.getMinutes() + "");
+            var seconds = padLeft(date.getSeconds() + "");
+
+            date = new Date(date.getTime() - 1000);
+            localStorage.setItem('token', access);
+            localStorage.setItem('user', JSON.stringify(user));
+            localStorage.setItem('menu', JSON.stringify(menu));
+            localStorage.setItem('fecha', JSON.stringify(date));
+            localStorage.setItem('lastLogin', this.router.url);
+            if (res.ok && minutes == '00' && seconds == '01') {
+              this.authService.login();
+              this.router.navigateByUrl('/inicio/datos-personales/actualizar-datos');
+              clearInterval(interval);
+            }
+          }, 1000)
+          Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: "Bienvenido(a)",
+            text: `👋 ${res.data.user.full_name}`,
+            showConfirmButton: false,
+            timer: 2500,
+            allowOutsideClick: false,
+          });
+        })
+    }
+
   }
 
 }

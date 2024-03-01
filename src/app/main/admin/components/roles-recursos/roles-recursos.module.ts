@@ -23,6 +23,8 @@ import { CalendarModule } from 'primeng/calendar';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { ConfirmPopupModule } from 'primeng/confirmpopup';
 import { MessageModule } from 'primeng/message';
+import { TabViewModule } from 'primeng/tabview';
+
 //MY MODULES
 import { SharedModule } from 'src/app/shared/shared.module';
 
@@ -67,6 +69,7 @@ import { RecursosComponent } from './components/recursos/recursos.component';
     MultiSelectModule,
     ConfirmPopupModule,
     MessageModule,
+    TabViewModule
   ]
 })
 export class RolesRecursosModule { }

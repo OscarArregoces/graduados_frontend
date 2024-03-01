@@ -3,7 +3,6 @@ import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { Subscription, catchError } from 'rxjs';
 import { Paises } from 'src/app/consts/paises';
-import { CondicionesVulnerables } from 'src/app/consts/CondicionesVulnerables';
 import { InicioService } from 'src/app/core/services/main/inicio.service';
 import { PantallaService } from 'src/app/core/services/pantalla.service';
 import { formateDateInput, formateDateOutPut } from 'src/app/helpers/formateDate';
@@ -61,9 +60,9 @@ export class ActualizarDatosComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.token = localStorage.getItem('token')!;
     this.paises = Paises;
-    this.condicionesVulnerables = CondicionesVulnerables;
     this.traerInfoUsuario();
     this.traerGeneros();
+    this.traerCondiciones();
     this.traerTiposDocumento();
 
     const [width] = this.pantallaService.calcularEspacioPantalla();
@@ -92,28 +91,33 @@ export class ActualizarDatosComponent implements OnInit, OnDestroy {
       email2,
     } = this.formPersona.value;
 
-    const fullDate = formateDateOutPut(date_of_birth);
-
-    let body = {
-      document_type: document_type.id,
-      gender_type: gender_type.id,
-      fullname,
-      identification,
-      address,
-      nationality,
-      date_of_birth: fullDate,
-      phone,
-      phone2,
-      fecha_expedicion,
-      condicion_vulnerable,
-      municipio,
-      departamento,
-      email,
-      email2,
+    if (email && ( !email.trim().toLowerCase().endsWith('uniguajira.edu.co') && !email.trim().toLowerCase().endsWith('gmail.com') )) {
+      this.messageService.add({ severity: 'warn', summary: 'Notificación', detail: 'El Correo debe ser Institucional o Gmail' });
+    }
+    if (email2 && ( !email2.trim().toLowerCase().endsWith('uniguajira.edu.co') && !email2.trim().toLowerCase().endsWith('gmail.com') )) {
+      this.messageService.add({ severity: 'warn', summary: 'Notificación', detail: 'El Correo debe ser Institucional o Gmail' });
     }
 
-    console.log(body);
 
+    // const fullDate = formateDateOutPut(date_of_birth);
+
+    // let body = {
+    //   document_type: document_type.id,
+    //   gender_type: gender_type.id,
+    //   fullname,
+    //   identification,
+    //   address,
+    //   nationality,
+    //   date_of_birth: fullDate,
+    //   phone,
+    //   phone2,
+    //   fecha_expedicion,
+    //   condicion_vulnerable,
+    //   municipio,
+    //   departamento,
+    //   email,
+    //   email2,
+    // }
 
     // try {
     //   this.inicioService.put(`${this.API_URI}/persons/update/profile/`, body, this.token).subscribe(res => {
@@ -173,6 +177,8 @@ export class ActualizarDatosComponent implements OnInit, OnDestroy {
           email2,
         }
 
+        console.log(res.data);
+
         this.formPersona.patchValue(body)
       })
   }
@@ -201,5 +207,16 @@ export class ActualizarDatosComponent implements OnInit, OnDestroy {
         this.tiposDocumento = res.data;
       })
   }
-
+  traerCondiciones() {
+    this.inicioService.get(`${this.API_URI}/condiciones`, this.token)
+      .pipe(
+        catchError(error => {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error en consulta' });
+          throw error;
+        })
+      )
+      .subscribe(res => {
+        this.condicionesVulnerables = res.data;
+      })
+  }
 }

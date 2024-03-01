@@ -1,4 +1,4 @@
-<app-card titulo="Roles y Usuarios">
+<app-card width="95%" titulo="Roles y Usuarios">
     <div class="grid" card-body>
         <div class="col-12">
             <app-custom-info-card [description]="inforCardDescription" [variant]="variantColor"></app-custom-info-card>
@@ -7,17 +7,16 @@
                     class="p-button-success mx-2" (click)="changeDisplayFormCreate()"></button>
                 <button pButton pRipple type="button" label="Asignar roles" icon="pi pi-user-plus"
                     class="p-button-primary mx-2" (click)="changeDisplayFormAssing()"></button>
-                <button pButton pRipple type="button" label="Eliminar seleccionados" icon="pi pi-trash"
-                    class="p-button-danger mx-2" (click)="deleteAll()"></button>
             </div>
         </div>
         <div class="col-12">
             <p-card>
-                <p-table #dt [value]="users" [(selection)]="itemsBulkDelete" dataKey="id"
+                <p-table #dt [value]="funcionarios" [(selection)]="itemsBulkDelete" dataKey="id"
                     styleClass="p-datatable-customers" [rowHover]="true" [rows]="10" [showCurrentPageReport]="true"
                     [rowsPerPageOptions]="[10,25,50]" [loading]="loading" responsiveLayout="scroll" [paginator]="true"
                     currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} elementos" [filterDelay]="0"
-                    [globalFilterFields]="['name','surname','email']" responsiveLayout="scroll">
+                    [globalFilterFields]="['fullname','email','nationality','identification','gender_type']"
+                    responsiveLayout="scroll">
                     <ng-template pTemplate="caption">
                         <div class="table-header">
                             <div class="grid" [style]="{'display': 'flex', 'justify-content': 'space-between'}">
@@ -38,34 +37,46 @@
                     </ng-template>
                     <ng-template pTemplate="header">
                         <tr>
-                            <th style="width: 3rem">
-                                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-
-                            </th>
                             <th style="width: 5rem">
                                 <p>Indice</p>
                             </th>
-                            <th pSortableColumn="name">
+                            <th pSortableColumn="fullname">
                                 <div class="flex justify-content-between align-items-center">
                                     Nombres
-                                    <p-sortIcon field="name"></p-sortIcon>
-                                    <p-columnFilter type="text" field="name" display="menu"
-                                        class="ml-auto"></p-columnFilter>
-                                </div>
-                            </th>
-                            <th pSortableColumn="surname">
-                                <div class="flex justify-content-between align-items-center">
-                                    Apelliddos
-                                    <p-sortIcon field="surname"></p-sortIcon>
-                                    <p-columnFilter type="text" field="surname" display="menu"
+                                    <p-sortIcon field="fullname"></p-sortIcon>
+                                    <p-columnFilter type="text" field="fullname" display="menu"
                                         class="ml-auto"></p-columnFilter>
                                 </div>
                             </th>
                             <th pSortableColumn="email">
                                 <div class="flex justify-content-between align-items-center">
-                                    Correo electronico
+                                    Correo
                                     <p-sortIcon field="email"></p-sortIcon>
                                     <p-columnFilter type="text" field="email" display="menu"
+                                        class="ml-auto"></p-columnFilter>
+                                </div>
+                            </th>
+                            <th pSortableColumn="nationality">
+                                <div class="flex justify-content-between align-items-center">
+                                    Pais
+                                    <p-sortIcon field="nationality"></p-sortIcon>
+                                    <p-columnFilter type="text" field="nationality" display="menu"
+                                        class="ml-auto"></p-columnFilter>
+                                </div>
+                            </th>
+                            <th pSortableColumn="identification">
+                                <div class="flex justify-content-between align-items-center">
+                                    Identificación
+                                    <p-sortIcon field="identification"></p-sortIcon>
+                                    <p-columnFilter type="text" field="identification" display="menu"
+                                        class="ml-auto"></p-columnFilter>
+                                </div>
+                            </th>
+                            <th pSortableColumn="gender_type">
+                                <div class="flex justify-content-between align-items-center">
+                                    Genero
+                                    <p-sortIcon field="gender_type"></p-sortIcon>
+                                    <p-columnFilter type="text" field="gender_type" display="menu"
                                         class="ml-auto"></p-columnFilter>
                                 </div>
                             </th>
@@ -74,33 +85,34 @@
                             </th>
                         </tr>
                     </ng-template>
-                    <ng-template pTemplate="body" let-rol let-rowIndex="rowIndex">
+                    <ng-template pTemplate="body" let-funcionario let-rowIndex="rowIndex">
                         <tr class="p-selectable-row">
-                            <td>
-                                <p-tableCheckbox [value]="rol"></p-tableCheckbox>
-                            </td>
                             <td>
                                 {{rowIndex + 1 }}
                             </td>
                             <td>
                                 <span class="p-column-title">Nombre</span>
-                                {{rol.persona.name}}
+                                {{funcionario.fullname}}
                             </td>
                             <td>
-                                <span class="p-column-title">Nombre</span>
-                                {{rol.persona.surname}}
+                                <span class="p-column-title">Correo</span>
+                                {{funcionario.email}}
                             </td>
                             <td>
-                                <span class="p-column-title">Nombre</span>
-                                {{rol.email}}
+                                <span class="p-column-title">Pais</span>
+                                {{funcionario.nationality}}
+                            </td>
+                            <td>
+                                <span class="p-column-title">Identififación</span>
+                                {{funcionario.identification}}
+                            </td>
+                            <td>
+                                <span class="p-column-title">Genero</span>
+                                {{funcionario?.gender_type?.name ? funcionario?.gender_type?.name : 'NP' }}
                             </td>
                             <td style="text-align: center" class="flex justify-content-center align-items-center">
                                 <button pButton type="button" icon="pi pi-eye" class="p-button-secondary m-1"
-                                    title="Detalles" (click)="changeDisplayFormDetail(rol)"></button>
-                                <button pButton type=" button" icon="pi pi-pencil" class="p-button-warning m-1"
-                                    title="Editar" (click)="changeDisplayFormUpdate(rol)"></button>
-                                <button pButton type=" button" icon="pi pi-trash" class="p-button-danger m-1"
-                                    title="Eliminar"></button>
+                                    (click)="changeDisplayFormDetail(funcionario.identification)"></button>
                             </td>
                         </tr>
                     </ng-template>
@@ -115,70 +127,49 @@
     </div>
 </app-card>
 
-<p-dialog header="Creando Usuario" [(visible)]="displayFormCreate" [style]="{width: width,'text-aling': 'center'}"
+<p-dialog header="Creando Usuario" [(visible)]="displayFormCreate" [style]="{width: '95%','text-aling': 'center'}"
     [showHeader]="true" [modal]="true" [dismissableMask]="false" (onHide)="handleCloseFormCreateDialog()">
     <app-custom-info-card [description]="inforCardDescriptionDialogUser"></app-custom-info-card>
     <form [formGroup]="formCreate">
         <div class="col-12">
-            <div class="grid p-5 shadow-3" style="background-color:#f5f5f58e;">
+            <div class="grid mt-2 p-5 shadow-3" style="background-color:#f5f5f58c;">
                 <div class="col-12">
-                    <span class="customText">Credenciales de Acceso</span>
+                    <span class="customTitle">Datos Personales</span>
                 </div>
-                <div class="col-12 md:col-6 lg:col-6">
+                <div class="col-12 md:col-12 lg:col-8">
                     <div class="flex flex-column gap-2">
-                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Correo electronico </label>
+                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Nombre Completo</label>
                         <div class="p-inputgroup my-1">
                             <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
                                     style="color:#f16357;"></i></span>
-                            <input type="email" placeholder="Usuario@ejemplo.com" [maxlength]="50"
-                                formControlName="email" pInputText />
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 md:col-6 lg:col-6">
-                    <div class="flex flex-column gap-2">
-                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Contraseña </label>
-                        <div class="p-inputgroup my-1">
-                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                    style="color:#f16357;"></i></span>
-                            <input type="password" placeholder="********" [maxlength]="50" formControlName="password"
+                            <input type="text" placeholder="Nombres y Apellidos" formControlName="fullname"
                                 pInputText />
                         </div>
-                    </div>
-                </div>
-            </div>
-            <div class="grid mt-5 p-5 shadow-3" style="background-color:#f5f5f58c;">
-                <div class="col-12">
-                    <span class="customText">Datos Personales</span>
-                </div>
-                <div class="col-12 md:col-6 lg:col-4">
-                    <div class="flex flex-column gap-2">
-                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Nombres </label>
-                        <div class="p-inputgroup my-1">
-                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                    style="color:#f16357;"></i></span>
-                            <input type="text" [maxlength]="100" formControlName="name" pInputText />
+                        <div *ngIf="formCreate.get('fullname')?.hasError('required') && formCreate.get('fullname')?.touched"
+                            class="text-red-500">
+                            Este campo es obligatorio
                         </div>
                     </div>
                 </div>
                 <div class="col-12 md:col-6 lg:col-4">
                     <div class="flex flex-column gap-2">
-                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Apellidos </label>
+                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Condición Vulnerable </label>
                         <div class="p-inputgroup my-1">
-                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                    style="color:#f16357;"></i></span>
-                            <input type="text" [maxlength]="100" formControlName="surname" pInputText />
+                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"></i></span>
+                            <p-dropdown [style]="{'width':'100%'}" [options]="condiciones"
+                                placeholder="Selecciona una opción" formControlName="condicion_vulnerable"
+                                optionLabel="name"></p-dropdown>
                         </div>
                     </div>
                 </div>
+
                 <div class="col-12 md:col-6 lg:col-4">
                     <div class="flex flex-column gap-2">
                         <label class="mb-2" [style]="{'font-weight': 'bold'}">Tipo de Identificaión </label>
                         <div class="p-inputgroup my-1">
-                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                    style="color:#f16357;"></i></span>
+                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"></i></span>
                             <p-dropdown [style]="{'width':'100%'}" [options]="document_type"
-                                placeholder="Selecciona una opcion" formControlName="document_type"
+                                placeholder="Selecciona una opción" formControlName="document_type"
                                 optionLabel="name"></p-dropdown>
                         </div>
                     </div>
@@ -189,28 +180,36 @@
                         <div class="p-inputgroup my-1">
                             <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
                                     style="color:#f16357;"></i></span>
-                            <input type="number" [maxlength]="30" formControlName="identification" pInputText />
+                            <input type="number" placeholder="No Identififación" formControlName="identification"
+                                pInputText />
+                        </div>
+                        <div *ngIf="formCreate.get('identification')?.hasError('required') && formCreate.get('identification')?.touched"
+                            class="text-red-500">
+                            Este campo es obligatorio
                         </div>
                     </div>
                 </div>
                 <div class="col-12 md:col-6 lg:col-4">
                     <div class="flex flex-column gap-2">
-                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Dirección </label>
-                        <div class="p-inputgroup my-1">
-                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                    style="color:#f16357;"></i></span>
-                            <input type="text" [maxlength]="40" formControlName="address" pInputText />
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 md:col-6 lg:col-4">
-                    <div class="flex flex-column gap-2">
-                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Nacionalidad </label>
+                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Fecha de Expedición </label>
                         <div class="p-inputgroup my-1">
                             <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"></i></span>
+                            <p-calendar [style]="{'width':'100%'}" placeholder="Seleccione una fecha"
+                                formControlName="fecha_expedicion" dateFormat="mm-dd-yy"
+                                inputId="dateformat"></p-calendar>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 md:col-6 lg:col-4">
+                    <div class="flex flex-column gap-2">
+                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Pais </label>
+                        <div class="p-inputgroup my-1">
+                            <span class="p-inputgroup-addon" style="color:#f16357;"><i
+                                    class="pi pi-bookmark-fill"></i></span>
                             <p-dropdown formControlName="nationality" [style]="{'width': '100%'}" [options]="paises"
                                 optionLabel="name" [filter]="true" filterBy="name" [showClear]="true"
-                                placeholder="Selecciona un pais" [maxlength]="100">
+                                placeholder="Selecciona una opción">
                                 <ng-template pTemplate="selectedCountry">
                                     <div class="country-item country-item-value" *ngIf="selectedCountry">
                                         <div>{{selectedCountry.name}}</div>
@@ -223,28 +222,63 @@
                                 </ng-template>
                             </p-dropdown>
                         </div>
-                    </div>
-                </div>
-
-                <div class="col-12 md:col-6 lg:col-4">
-                    <div class="flex flex-column gap-2">
-                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Fecha de Nacimiento </label>
-                        <div class="p-inputgroup my-1">
-                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                    style="color:#f16357;"></i></span>
-                            <p-calendar [style]="{'width':'100%'}" placeholder="Seleccione la fecha"
-                                formControlName="date_of_birth" dateFormat="mm-dd-yy" inputId="dateformat"></p-calendar>
+                        <div *ngIf="formCreate.get('nationality')?.hasError('required') && formCreate.get('nationality')?.touched"
+                            class="text-red-500">
+                            Este campo es obligatorio
                         </div>
                     </div>
                 </div>
                 <div class="col-12 md:col-6 lg:col-4">
                     <div class="flex flex-column gap-2">
-                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Telefono </label>
+                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Departamento </label>
                         <div class="p-inputgroup my-1">
-                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                    style="color:#f16357;"></i></span>
-                            <input type="number" placeholder="(000)000-0000" [maxlength]="11" formControlName="phone"
-                                pInputText />
+                            <span class="p-inputgroup-addon" style="color:#f16357;"><i
+                                    class="pi pi-bookmark-fill"></i></span>
+                            <p-dropdown formControlName="departamento" [style]="{'width': '100%'}" [options]="paises"
+                                optionLabel="name" [filter]="true" filterBy="name" [showClear]="true"
+                                placeholder="Selecciona una opción">
+                                <ng-template pTemplate="selectedCountry">
+                                    <div class="country-item country-item-value" *ngIf="selectedCountry">
+                                        <div>{{selectedCountry.name}}</div>
+                                    </div>
+                                </ng-template>
+                                <ng-template let-country pTemplate="item">
+                                    <div class="country-item">
+                                        <div>{{country.name}}</div>
+                                    </div>
+                                </ng-template>
+                            </p-dropdown>
+                        </div>
+                        <div *ngIf="formCreate.get('departamento')?.hasError('required') && formCreate.get('departamento')?.touched"
+                            class="text-red-500">
+                            Este campo es obligatorio
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 md:col-6 lg:col-4">
+                    <div class="flex flex-column gap-2">
+                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Ciudad </label>
+                        <div class="p-inputgroup my-1">
+                            <span class="p-inputgroup-addon" style="color:#f16357;"><i
+                                    class="pi pi-bookmark-fill"></i></span>
+                            <p-dropdown formControlName="municipio" [style]="{'width': '100%'}" [options]="paises"
+                                optionLabel="name" [filter]="true" filterBy="name" [showClear]="true"
+                                placeholder="Selecciona una opción">
+                                <ng-template pTemplate="selectedCountry">
+                                    <div class="country-item country-item-value" *ngIf="selectedCountry">
+                                        <div>{{selectedCountry.name}}</div>
+                                    </div>
+                                </ng-template>
+                                <ng-template let-country pTemplate="item">
+                                    <div class="country-item">
+                                        <div>{{country.name}}</div>
+                                    </div>
+                                </ng-template>
+                            </p-dropdown>
+                        </div>
+                        <div *ngIf="formCreate.get('municipio')?.hasError('required') && formCreate.get('municipio')?.touched"
+                            class="text-red-500">
+                            Este campo es obligatorio
                         </div>
                     </div>
                 </div>
@@ -252,387 +286,487 @@
                     <div class="flex flex-column gap-2">
                         <label class="mb-2" [style]="{'font-weight': 'bold'}">Genero </label>
                         <div class="p-inputgroup my-1">
-                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                    style="color:#f16357;"></i></span>
+                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"></i></span>
                             <p-dropdown [style]="{'width':'100%'}" [options]="gender_type"
-                                placeholder="Selecciona una opcion" formControlName="gender_type"
+                                placeholder="Selecciona una opción" formControlName="gender_type"
                                 optionLabel="name"></p-dropdown>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 md:col-6 lg:col-4">
+                    <div class="flex flex-column gap-2">
+                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Dirección </label>
+                        <div class="p-inputgroup my-1">
+                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"></i></span>
+                            <input type="text" formControlName="address" placeholder="Tu ubicación" pInputText />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 md:col-6 lg:col-4">
+                    <div class="flex flex-column gap-2">
+                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Fecha de Nacimiento </label>
+                        <div class="p-inputgroup my-1">
+                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"></i></span>
+                            <p-calendar [style]="{'width':'100%'}" placeholder="Seleccione una fecha"
+                                formControlName="date_of_birth" dateFormat="mm-dd-yy" inputId="dateformat"></p-calendar>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
+        <div class="col-12">
+            <div class="grid mt-2 p-5 shadow-3" style="background-color:#f5f5f58c;">
+                <div class="col-12">
+                    <span class="customTitle">Contacto</span>
+                </div>
+                <div class="col-12 md:col-6 lg:col-6">
+                    <div class="flex flex-column gap-2">
+                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Correo Principal </label>
+                        <div class="p-inputgroup my-1">
+                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                    style="color:#f16357;"></i></span>
+                            <input type="text" placeholder="Usuario@ejemplo.com" formControlName="email" pInputText />
+                        </div>
+                        <div *ngIf="formCreate.get('email')?.hasError('required') && formCreate.get('email')?.touched"
+                            class="text-red-500">
+                            Este campo es obligatorio
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 md:col-6 lg:col-6">
+                    <div class="flex flex-column gap-2">
+                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Correo Secundario </label>
+                        <div class="p-inputgroup my-1">
+                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"></i></span>
+                            <input type="text" placeholder="Usuario@ejemplo.com" formControlName="email2" pInputText />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 md:col-6 lg:col-6">
+                    <div class="flex flex-column gap-2">
+                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Telefono Principal </label>
+                        <div class="p-inputgroup my-1">
+                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                    style="color:#f16357;"></i></span>
+                            <input type="number" placeholder="(000)000-0000" formControlName="phone" pInputText />
+                        </div>
+                        <div *ngIf="formCreate.get('phone')?.hasError('required') && formCreate.get('phone')?.touched"
+                            class="text-red-500">
+                            Este campo es obligatorio
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 md:col-6 lg:col-6">
+                    <div class="flex flex-column gap-2">
+                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Telefono Secundario </label>
+                        <div class="p-inputgroup my-1">
+                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"></i></span>
+                            <input type="number" placeholder="(000)000-0000" formControlName="phone2" pInputText />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="col-12 flex justify-content-center align-items-center">
             <button pButton pRipple type="submit" label="Guardar" icon="pi pi-save" class="p-button-success mx-5"
-                (click)="onSubmitFormCreate()" [disabled]="!formCreate.valid"></button>
+                (click)="onSubmitFormCreate()"></button>
             <button pButton pRipple type="button" label="Cancelar" class="p-button-outlined p-button-danger mx-5"
                 (click)="handleCloseFormCreateDialog()"></button>
         </div>
     </form>
 </p-dialog>
 
-<p-dialog header="Asignando Roles" [(visible)]="displayFormAssign" [style]="{width: width,'text-aling': 'center'}"
-    [showHeader]="true" [modal]="true" [dismissableMask]="false" (onHide)="handleCloseFormAssingDialog()">
+<p-dialog header="Asignando Roles" [(visible)]="displayFormAssign"
+    [style]="{width: width,'text-aling': 'center', 'min-height':'90vh'}" [showHeader]="true" [modal]="true"
+    [dismissableMask]="false" (onHide)="handleCloseFormAssingDialog()">
     <app-custom-info-card [description]="inforCardDescriptionDialogAssing"></app-custom-info-card>
+
     <form [formGroup]="formAssing">
-        <div class="col-12">
-
-            <div class="grid p-5 shadow-3" style="background-color:#f5f5f58e;">
-                <div class="col-12">
-                    <span class="customText">Asignación de Roles</span>
-
+        <div class="grid p-5 shadow-3" style="background-color:#f5f5f58e;">
+            <div class="col-12">
+                <span class="customTitle">Busqueda de Funcionario</span>
+            </div>
+            <div class="col-12 md:col-6 lg:col-6 flex align-items-center">
+                <div class="p-inputgroup my-1">
+                    <span class="p-inputgroup-addon"><i class="pi pi-filter-fill"></i></span>
+                    <input type="number" placeholder="No Documento" formControlName="documento" pInputText />
                 </div>
-                <div class="col-12 md:col-6 lg:col-6">
-                    <div class="flex flex-column gap-2">
-                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Usuario</label>
-                        <div class="p-inputgroup my-1">
-                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                    style="color:#f16357;"></i></span>
-                            <p-dropdown [options]="users" formControlName="user" [style]="{'width':'100%'}"
-                                placeholder="Selecciona una opción" optionLabel="persona.name"
-                                (onChange)="onChangeUsers($event.value)"></p-dropdown>
+            </div>
+            <div class="col-12 md:col-3 lg:col-3 flex align-items-center">
+                <button pButton pRipple type="button" icon="pi pi-search" label="Buscar"
+                    class="p-button-raised p-button" (click)="traerGraduado()"></button>
+            </div>
+            <div class="col-12 md:col-3 lg:col-3 flex align-items-center">
+                <button pButton pRipple type="button" icon="pi pi-refresh" label="Reiniciar"
+                    class="p-button-raised p-button-secondary" (click)="resetSearch()"></button>
+            </div>
+            <div class="col-12 my-5" *ngIf="funcionario">
+                <div class="grid">
+                    <div class="col-12">
+                        <span class="customTitle">Asignación de Roles</span>
+                    </div>
+                    <div class="col-12 md:col-6 lg:col-6 shadow-3 border-round-sm p-0 bg-white">
+                        <div>
+                            <div class="w-full px-1 border-round-top" style="background-color: #f16357;">
+                                <label class="labelFormAssing">Nombre</label>
+                            </div>
+                            <p class="px-1 text-gray-700">{{funcionario.persona.fullname}}</p>
                         </div>
                     </div>
-                </div>
-                <div class="col-12 md:col-6 lg:col-6">
-                    <div class="flex flex-column gap-2">
-                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Roles </label>
-                        <div class="p-inputgroup my-1">
-                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                    style="color:#f16357;"></i></span>
-                            <p-multiSelect [style]="{'width': '100%'}" [options]="roles" formControlName="roles"
-                                optionLabel="name" placeholder="Selecciona una opción"></p-multiSelect>
+                    <div class="col-12 md:col-6 lg:col-6">
+                        <div class="flex flex-column gap-2">
+                            <label class="mb-2" [style]="{'font-weight': 'bold'}">Roles </label>
+                            <div class="p-inputgroup my-1">
+                                <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                        style="color:#f16357;"></i></span>
+                                <p-dropdown [style]="{'width': '100%'}" placeholder="Selecciona una opcion"
+                                    [options]="roles" optionLabel="name"
+                                    formControlName="roles"></p-dropdown>
+                            </div>
                         </div>
                     </div>
+                    <!-- <div class="col-12 md:col-6 lg:col-6">
+                        <div class="flex flex-column gap-2">
+                            <label class="mb-2" [style]="{'font-weight': 'bold'}">Roles </label>
+                            <div class="p-inputgroup my-1">
+                                <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                        style="color:#f16357;"></i></span>
+                                <p-multiSelect [style]="{'width': '100%'}" [options]="roles" optionLabel="name"
+                                    placeholder="Selecciona una opción" formControlName="roles"></p-multiSelect>
+                            </div>
+                        </div>
+                    </div> -->
                 </div>
             </div>
         </div>
-
-        <div class="col-12 flex justify-content-center align-items-center">
+        <div class="col-12 mt-3 flex justify-content-center align-items-center">
             <button pButton pRipple type="submit" label="Guardar" icon="pi pi-save" class="p-button-success mx-5"
-                (click)="onSubmitFormAssing()" [disabled]="!formAssing.valid"></button>
+                (click)="onSubmitFormAssing()"></button>
             <button pButton pRipple type="button" label="Cancelar" class="p-button-outlined p-button-danger mx-5"
                 (click)="handleCloseFormAssingDialog()"></button>
         </div>
     </form>
 </p-dialog>
 
-<p-dialog header="Detalles Usuario" [(visible)]="displayFormDetail" [style]="{width: width,'text-aling': 'center'}"
-    [showHeader]="true" [modal]="true" [dismissableMask]="false">
-    <app-custom-info-card [description]="inforCardDescriptionDialogUser"></app-custom-info-card>
+<p-dialog header="Información Usuario" [(visible)]="displayFormDetail" [style]="{width: width,'text-aling': 'center'}"
+    [showHeader]="true" [modal]="true" [dismissableMask]="false" (onHide)="closeDisplayFormDetail()">
     <form [formGroup]="formDetail">
-        <div class="col-12">
-            <div class="grid p-5 shadow-3" style="background-color:#f5f5f58e;">
-                <div class="col-12">
-                    <span class="customText">Credenciales de Acceso</span>
-
-                </div>
-                <div class="col-12 md:col-6 lg:col-6">
-                    <div class="flex flex-column gap-2">
-                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Correo electronico </label>
-                        <div class="p-inputgroup my-1">
-                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                    style="color:#f16357;"></i></span>
-                            <input type="email" placeholder="Usuario@ejemplo.com" [maxlength]="50"
-                                formControlName="email" pInputText />
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 md:col-6 lg:col-6">
-                    <div class="flex flex-column gap-2">
-                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Contraseña </label>
-                        <div class="p-inputgroup my-1">
-                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                    style="color:#f16357;"></i></span>
-                            <input type="password" placeholder="********" [maxlength]="50" formControlName="password"
-                                pInputText />
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="grid mt-5 p-5 shadow-3" style="background-color:#f5f5f58c;">
-                <div class="col-12">
-                    <span class="customText">Datos Personales</span>
-                </div>
-                <div class="col-12 md:col-6 lg:col-4">
-                    <div class="flex flex-column gap-2">
-                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Nombres </label>
-                        <div class="p-inputgroup my-1">
-                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                    style="color:#f16357;"></i></span>
-                            <input type="text" [maxlength]="100" formControlName="name" pInputText />
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 md:col-6 lg:col-4">
-                    <div class="flex flex-column gap-2">
-                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Apellidos </label>
-                        <div class="p-inputgroup my-1">
-                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                    style="color:#f16357;"></i></span>
-                            <input type="text" [maxlength]="100" formControlName="surname" pInputText />
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 md:col-6 lg:col-4">
-                    <div class="flex flex-column gap-2">
-                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Tipo de Identificaión </label>
-                        <div class="p-inputgroup my-1">
-                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                    style="color:#f16357;"></i></span>
-                            <p-dropdown [style]="{'width':'100%'}" [options]="document_type"
-                                placeholder="Selecciona una opcion" formControlName="document_type"
-                                optionLabel="name"></p-dropdown>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 md:col-6 lg:col-4">
-                    <div class="flex flex-column gap-2">
-                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Número de Identificación </label>
-                        <div class="p-inputgroup my-1">
-                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                    style="color:#f16357;"></i></span>
-                            <input type="number" [maxlength]="30" formControlName="identification" pInputText />
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 md:col-6 lg:col-4">
-                    <div class="flex flex-column gap-2">
-                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Dirección </label>
-                        <div class="p-inputgroup my-1">
-                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                    style="color:#f16357;"></i></span>
-                            <input type="text" [maxlength]="40" formControlName="address" pInputText />
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 md:col-6 lg:col-4">
-                    <div class="flex flex-column gap-2">
-                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Nacionalidad </label>
-                        <div class="p-inputgroup my-1">
-                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"></i></span>
-                            <p-dropdown formControlName="nationality" [style]="{'width': '100%'}" [options]="paises"
-                                optionLabel="name" [filter]="true" filterBy="name" [showClear]="true"
-                                placeholder="Selecciona un pais" [maxlength]="100">
-                                <ng-template pTemplate="selectedCountry">
-                                    <div class="country-item country-item-value" *ngIf="selectedCountry">
-                                        <div>{{selectedCountry.name}}</div>
+        <p-tabView card-body>
+            <p-tabPanel header="Datos Personales">
+                <form [formGroup]="formDetail">
+                    <div class="grid">
+                        <div class="col-12">
+                            <div class="grid p-5 shadow-3" style="background-color:#fbf9f8;">
+                                <div class="col-12">
+                                    <span class="customTitle">Información Basica</span>
+                                </div>
+                                <div class="col-12 md:col-4 lg:col-4">
+                                    <div class="flex flex-column gap-2">
+                                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Nombre Completo </label>
+                                        <div class="p-inputgroup my-1">
+                                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                                    style="color:#f16357;"></i></span>
+                                            <input [style]="{'width': '100%'}" type="text" pInputText
+                                                formControlName="fullname" [maxlength]="150">
+                                        </div>
                                     </div>
-                                </ng-template>
-                                <ng-template let-country pTemplate="item">
-                                    <div class="country-item">
-                                        <div>{{country.name}}</div>
+                                </div>
+                                <div class="col-12 md:col-4 lg:col-4">
+                                    <div class="flex flex-column gap-2">
+                                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Fecha de nacimiento
+                                        </label>
+                                        <div class="p-inputgroup my-1">
+                                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"></i></span>
+                                            <p-calendar placeholder="Seleccione la fecha" [style]="{'width': '100%'}"
+                                                formControlName="date_of_birth" dateFormat="mm-dd-yy"></p-calendar>
+                                        </div>
                                     </div>
-                                </ng-template>
-                            </p-dropdown>
+                                </div>
+                                <div class="col-12 md:col-4 lg:col-4">
+                                    <div class="flex flex-column gap-2">
+                                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Sexo </label>
+                                        <div class="p-inputgroup my-1">
+                                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"></i></span>
+                                            <p-dropdown [style]="{'width': '100%'}" placeholder="Selecciona una opcion"
+                                                [options]="gender_type" optionLabel="name"
+                                                formControlName="gender_type"></p-dropdown>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-4 lg:col-4">
+                                    <div class="flex flex-column gap-2">
+                                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Pais </label>
+                                        <div class="p-inputgroup my-1">
+                                            <span class="p-inputgroup-addon" style="color:#f16357;"><i
+                                                    class="pi pi-bookmark-fill"></i></span>
+                                            <p-dropdown formControlName="nationality" [style]="{'width': '100%'}"
+                                                [options]="paises" optionLabel="name" [filter]="true" filterBy="name"
+                                                [showClear]="true" placeholder="Selecciona una opción"
+                                                [maxlength]="100">
+                                                <ng-template pTemplate="selectedCountry">
+                                                    <div class="country-item country-item-value"
+                                                        *ngIf="selectedCountry">
+                                                        <div>{{selectedCountry.name}}</div>
+                                                    </div>
+                                                </ng-template>
+                                                <ng-template let-country pTemplate="item">
+                                                    <div class="country-item">
+                                                        <div>{{country.name}}</div>
+                                                    </div>
+                                                </ng-template>
+                                            </p-dropdown>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-4 lg:col-4">
+                                    <div class="flex flex-column gap-2">
+                                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Departamento </label>
+                                        <div class="p-inputgroup my-1">
+                                            <span class="p-inputgroup-addon" style="color:#f16357;"><i
+                                                    class="pi pi-bookmark-fill"></i></span>
+                                            <p-dropdown formControlName="nationality" [style]="{'width': '100%'}"
+                                                [options]="paises" optionLabel="name" [filter]="true" filterBy="name"
+                                                [showClear]="true" placeholder="Selecciona una opción"
+                                                [maxlength]="100">
+                                                <ng-template pTemplate="selectedDepartamento">
+                                                    <div class="country-item country-item-value"
+                                                        *ngIf="selectedCountry">
+                                                        <div>{{selectedCountry.name}}</div>
+                                                    </div>
+                                                </ng-template>
+                                                <ng-template let-country pTemplate="item">
+                                                    <div class="country-item">
+                                                        <div>{{country.name}}</div>
+                                                    </div>
+                                                </ng-template>
+                                            </p-dropdown>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-4 lg:col-4">
+                                    <div class="flex flex-column gap-2">
+                                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Ciudad </label>
+                                        <div class="p-inputgroup my-1">
+                                            <span class="p-inputgroup-addon" style="color:#f16357;"><i
+                                                    class="pi pi-bookmark-fill"></i></span>
+                                            <p-dropdown formControlName="nationality" [style]="{'width': '100%'}"
+                                                [options]="paises" optionLabel="name" [filter]="true" filterBy="name"
+                                                [showClear]="true" placeholder="Selecciona una opción"
+                                                [maxlength]="100">
+                                                <ng-template pTemplate="selectedCiudad">
+                                                    <div class="country-item country-item-value"
+                                                        *ngIf="selectedCountry">
+                                                        <div>{{selectedCountry.name}}</div>
+                                                    </div>
+                                                </ng-template>
+                                                <ng-template let-country pTemplate="item">
+                                                    <div class="country-item">
+                                                        <div>{{country.name}}</div>
+                                                    </div>
+                                                </ng-template>
+                                            </p-dropdown>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-4 lg:col-4">
+                                    <div class="flex flex-column gap-2">
+                                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Tipo de documento </label>
+                                        <div class="p-inputgroup my-1">
+                                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"></i></span>
+                                            <p-dropdown [style]="{'width': '100%'}" placeholder="Selecciona una opcion"
+                                                [options]="document_type" optionLabel="name"
+                                                formControlName="document_type"></p-dropdown>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-4 lg:col-4">
+                                    <div class="flex flex-column gap-2">
+                                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Fecha de Expedición
+                                        </label>
+                                        <div class="p-inputgroup my-1">
+                                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"></i></span>
+                                            <p-calendar placeholder="Seleccione la fecha" [style]="{'width': '100%'}"
+                                                formControlName="fecha_expedicion" dateFormat="mm-dd-yy"></p-calendar>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-4 lg:col-4">
+                                    <div class="flex flex-column gap-2">
+                                        <label class="mb-2" [style]="{'font-weight': 'bold'}">No. Documento </label>
+                                        <div class="p-inputgroup my-1">
+                                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                                    style="color:#f16357;"></i></span>
+                                            <input type="text" pInputText formControlName="identification"
+                                                [maxlength]="40" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-4 lg:col-4">
+                                    <div class="flex flex-column gap-2">
+                                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Condición Vulnerable
+                                        </label>
+                                        <div class="p-inputgroup my-1">
+                                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"></i></span>
+                                            <p-dropdown [style]="{'width': '100%'}" placeholder="Selecciona una opcion"
+                                                [options]="condiciones" optionLabel="name"
+                                                formControlName="condicion_vulnerable"></p-dropdown>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-4 lg:col-4">
+                                    <div class="flex flex-column gap-2">
+                                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Dirección </label>
+                                        <div class="p-inputgroup my-1">
+                                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"></i></span>
+                                            <input type="text" pInputText formControlName="address" [maxlength]="50" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="grid p-5 shadow-3" style="background-color:#f5f5f58e;">
+                                <div class="col-12">
+                                    <span class="customTitle">Contacto</span>
+                                </div>
+                                <div class="col-12 md:col-6 lg:col-6">
+                                    <div class="flex flex-column gap-2">
+                                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Correo Principal </label>
+                                        <div class="p-inputgroup my-1">
+                                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                                    style="color:#f16357;"></i></span>
+                                            <input type="text" pInputText formControlName="email"
+                                                placeholder="@uniguajira.edu.co" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-6 lg:col-6">
+                                    <div class="flex flex-column gap-2">
+                                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Correo Secundario </label>
+                                        <div class="p-inputgroup my-1">
+                                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"></i></span>
+                                            <input type="text" pInputText formControlName="email2"
+                                                placeholder="@gmail.com" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-6 lg:col-6">
+                                    <div class="flex flex-column gap-2">
+                                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Telefono Principal
+                                        </label>
+                                        <div class="p-inputgroup my-1">
+                                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                                    style="color:#f16357;"></i></span>
+                                            <input type="number" pInputText formControlName="phone" [maxlength]="13" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-6 lg:col-6">
+                                    <div class="flex flex-column gap-2">
+                                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Telefono Secundario
+                                        </label>
+                                        <div class="p-inputgroup my-1">
+                                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"></i></span>
+                                            <input type="number" pInputText formControlName="phone2" [maxlength]="13" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </form>
+            </p-tabPanel>
+            <p-tabPanel header="Información Graduado" *ngIf="InfoCarrera.length">
+                <div *ngFor="let info of InfoCarrera; index as i;" class="grid mt-2">
+                    <div class="col-12">
+                        <div class="grid p-5 shadow-3" style="background-color:#f5f5f58e;">
+                            <div class="col-12">
+                                <span class="customTitle">{{info.programa}}</span>
+                            </div>
 
-                <div class="col-12 md:col-6 lg:col-4">
-                    <div class="flex flex-column gap-2">
-                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Fecha de Nacimiento </label>
-                        <div class="p-inputgroup my-1">
-                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                    style="color:#f16357;"></i></span>
-                            <p-calendar [style]="{'width':'100%'}" placeholder="Seleccione la fecha"
-                                formControlName="date_of_birth" dateFormat="mm-dd-yy" inputId="dateformat"></p-calendar>
+                            <div class="col-12">
+                                <label class="customText mb-2">Proyecto de Grado</label>
+                                <div class="p-inputgroup my-1">
+                                    <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                            style="color:#f16357;"></i></span>
+                                    <input [style]="{'width': '100%'}" type="text" pInputText
+                                        [value]="info.proyecto_grado" />
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="grid">
+                                    <div class="col-12">
+                                        <label class="customText mb-2">Modalidad de Grado</label>
+                                        <div class="p-inputgroup my-1">
+                                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                                    style="color:#f16357;"></i></span>
+                                            <input [style]="{'width': '100%'}" type="text" pInputText
+                                                [value]="info.modalidad_grado" />
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="customText mb-2">Sede</label>
+                                        <div class="p-inputgroup my-1">
+                                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                                    style="color:#f16357;"></i></span>
+                                            <input [style]="{'width': '100%'}" type="text" pInputText
+                                                [value]="info.sede" />
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="customText mb-2">Dirección
+                                            Institucional</label>
+                                        <div class="p-inputgroup my-1">
+                                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                                    style="color:#f16357;"></i></span>
+                                            <input [style]="{'width': '100%'}" type="text" pInputText
+                                                [value]="info.direccion_intitucional" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="grid">
+                                    <div class="col-12">
+                                        <label class="customText mb-2">Periodo de Grado</label>
+                                        <div class="p-inputgroup my-1">
+                                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                                    style="color:#f16357;"></i></span>
+                                            <input [style]="{'width': '100%'}" type="text" pInputText
+                                                [value]="info.periodo_grado" />
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="customText mb-2">Numero de Acta</label>
+                                        <div class="p-inputgroup my-1">
+                                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                                    style="color:#f16357;"></i></span>
+                                            <input [style]="{'width': '100%'}" type="text" pInputText
+                                                [value]="info.numero_acta" />
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="customText mb-2">Numero de Folio</label>
+                                        <div class="p-inputgroup my-1">
+                                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                                    style="color:#f16357;"></i></span>
+                                            <input [style]="{'width': '100%'}" type="text" pInputText
+                                                [value]="info.numero_folio" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-12 md:col-6 lg:col-4">
-                    <div class="flex flex-column gap-2">
-                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Telefono </label>
-                        <div class="p-inputgroup my-1">
-                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                    style="color:#f16357;"></i></span>
-                            <input type="number" placeholder="(000)000-0000" [maxlength]="11" formControlName="phone"
-                                pInputText />
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 md:col-6 lg:col-4">
-                    <div class="flex flex-column gap-2">
-                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Genero </label>
-                        <div class="p-inputgroup my-1">
-                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                    style="color:#f16357;"></i></span>
-                            <p-dropdown [style]="{'width':'100%'}" [options]="gender_type"
-                                placeholder="Selecciona una opcion" formControlName="gender_type"
-                                optionLabel="name"></p-dropdown>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
+            </p-tabPanel>
+        </p-tabView>
         <div class="col-12 flex justify-content-center align-items-center">
             <button pButton pRipple type="button" label="Cancelar" class="p-button-outlined p-button-danger mx-5"
-                (click)="changeDisplayFormDetail(null)"></button>
+                (click)="closeDisplayFormDetail()"></button>
         </div>
     </form>
 </p-dialog>
-
-<p-dialog header="Editando Usuario" [(visible)]="displayFormUpdate" [style]="{width: width,'text-aling': 'center'}"
-    [showHeader]="true" [modal]="true" [dismissableMask]="false">
-    <app-custom-info-card [description]="inforCardDescriptionDialogUser"></app-custom-info-card>
-    <form [formGroup]="formUpdate">
-        <div class="col-12">
-            <div class="grid p-5 shadow-3" style="background-color:#f5f5f58e;">
-                <div class="col-12">
-                    <span class="customText">Credenciales de Acceso</span>
-
-                </div>
-                <div class="col-12 md:col-6 lg:col-6">
-                    <div class="flex flex-column gap-2">
-                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Correo electronico </label>
-                        <div class="p-inputgroup my-1">
-                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                    style="color:#f16357;"></i></span>
-                            <input type="email" placeholder="Usuario@ejemplo.com" [maxlength]="50"
-                                formControlName="email" pInputText />
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 md:col-6 lg:col-6">
-                    <div class="flex flex-column gap-2">
-                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Contraseña </label>
-                        <div class="p-inputgroup my-1">
-                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                    style="color:#f16357;"></i></span>
-                            <input type="password" placeholder="********" [maxlength]="50" formControlName="password"
-                                pInputText />
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="grid mt-5 p-5 shadow-3" style="background-color:#f5f5f58c;">
-                <div class="col-12">
-                    <span class="customText">Datos Personales</span>
-                </div>
-                <div class="col-12 md:col-6 lg:col-4">
-                    <div class="flex flex-column gap-2">
-                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Nombres </label>
-                        <div class="p-inputgroup my-1">
-                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                    style="color:#f16357;"></i></span>
-                            <input type="text" [maxlength]="100" formControlName="name" pInputText />
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 md:col-6 lg:col-4">
-                    <div class="flex flex-column gap-2">
-                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Apellidos </label>
-                        <div class="p-inputgroup my-1">
-                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                    style="color:#f16357;"></i></span>
-                            <input type="text" [maxlength]="100" formControlName="surname" pInputText />
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 md:col-6 lg:col-4">
-                    <div class="flex flex-column gap-2">
-                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Tipo de Identificaión </label>
-                        <div class="p-inputgroup my-1">
-                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                    style="color:#f16357;"></i></span>
-                            <p-dropdown [style]="{'width':'100%'}" [options]="document_type"
-                                placeholder="Selecciona una opcion" formControlName="document_type"
-                                optionLabel="name"></p-dropdown>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 md:col-6 lg:col-4">
-                    <div class="flex flex-column gap-2">
-                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Número de Identificación </label>
-                        <div class="p-inputgroup my-1">
-                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                    style="color:#f16357;"></i></span>
-                            <input type="number" [maxlength]="30" formControlName="identification" pInputText />
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 md:col-6 lg:col-4">
-                    <div class="flex flex-column gap-2">
-                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Dirección </label>
-                        <div class="p-inputgroup my-1">
-                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                    style="color:#f16357;"></i></span>
-                            <input type="text" [maxlength]="40" formControlName="address" pInputText />
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 md:col-6 lg:col-4">
-                    <div class="flex flex-column gap-2">
-                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Nacionalidad </label>
-                        <div class="p-inputgroup my-1">
-                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"></i></span>
-                            <p-dropdown formControlName="nationality" [style]="{'width': '100%'}" [options]="paises"
-                                optionLabel="name" [filter]="true" filterBy="name" [showClear]="true"
-                                placeholder="Selecciona un pais" [maxlength]="100">
-                                <ng-template pTemplate="selectedCountry">
-                                    <div class="country-item country-item-value" *ngIf="selectedCountry">
-                                        <div>{{selectedCountry.name}}</div>
-                                    </div>
-                                </ng-template>
-                                <ng-template let-country pTemplate="item">
-                                    <div class="country-item">
-                                        <div>{{country.name}}</div>
-                                    </div>
-                                </ng-template>
-                            </p-dropdown>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-12 md:col-6 lg:col-4">
-                    <div class="flex flex-column gap-2">
-                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Fecha de Nacimiento </label>
-                        <div class="p-inputgroup my-1">
-                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                    style="color:#f16357;"></i></span>
-                            <p-calendar [style]="{'width':'100%'}" placeholder="Seleccione la fecha"
-                                formControlName="date_of_birth" dateFormat="mm-dd-yy" inputId="dateformat"></p-calendar>
-
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 md:col-6 lg:col-4">
-                    <div class="flex flex-column gap-2">
-                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Telefono </label>
-                        <div class="p-inputgroup my-1">
-                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                    style="color:#f16357;"></i></span>
-                            <input type="number" placeholder="(000)000-0000" [maxlength]="11" formControlName="phone"
-                                pInputText />
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 md:col-6 lg:col-4">
-                    <div class="flex flex-column gap-2">
-                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Genero </label>
-                        <div class="p-inputgroup my-1">
-                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                    style="color:#f16357;"></i></span>
-                            <p-dropdown [style]="{'width':'100%'}" [options]="gender_type"
-                                placeholder="Selecciona una opcion" formControlName="gender_type"
-                                optionLabel="name"></p-dropdown>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-12 flex justify-content-center align-items-center">
-            <button pButton pRipple type="button" label="Actualizar" class="p-button p-button-warning mx-5"
-                (click)="onSubmitFormUpdadte()"></button>
-            <button pButton pRipple type="button" label="Cancelar" class="p-button-outlined p-button-danger mx-5"
-                (click)="changeDisplayFormDetail(null)"></button>
-        </div>
-    </form>
-</p-dialog>
-
 
 
 <p-toast></p-toast>

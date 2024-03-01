@@ -2,42 +2,18 @@ import { JsonPipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
-import { Subscription } from 'rxjs';
+import { Subscription, catchError } from 'rxjs';
 import { Paises } from 'src/app/consts/paises';
 import { AdminService } from 'src/app/core/services/dashboard/admin.service';
 import { PantallaService } from 'src/app/core/services/pantalla.service';
+import { formateDateInput, formateDateOutPut } from 'src/app/helpers/formateDate';
+import { ValidForm } from 'src/app/helpers/validForms';
+import { CondicionVulnerable, Funcionario, Genero, Graduado, InfoCarrera, Pais, Rol, TipoDocumento, UserInternal } from 'src/app/models/main/Inicio.interface';
 import { Variant } from 'src/app/models/ui/CustomInfoCard';
 import { environment } from 'src/environments/environment';
+import Swal from 'sweetalert2';
 
-interface Persona {
-  name: string;
-  surname: string;
-  identification: string;
-  address: string;
-  nationality: string;
-  phone: string;
-  gender: number;
-  document: number;
-  date_of_birth: string;
-}
 
-interface UserInternal {
-  id: number;
-  email: string;
-  persona: Persona;
-  groups: [{ name: string, id: number }]
-}
-interface DocumentType {
-  id: number;
-  name: string;
-}
-interface GenderType {
-  id: number;
-  name: string;
-}
-interface pais {
-  name: string,
-}
 @Component({
   selector: 'app-usuarios',
   templateUrl: './usuarios.component.html',
@@ -48,22 +24,25 @@ export class UsuariosComponent implements OnInit {
   API_URI = environment.API_URI;
   public subscription$!: Subscription;
   public width: string = '';
-  selectedCountry!: pais;
+  selectedCountry!: Pais;
   public itemsBulkDelete: any[] = [];
-  public paises: pais[] = [];
+  public paises: Pais[] = [];
   public modules: any[] = [];
   public loading: boolean = false;
   public idUserEdit: number | null = null;
   public displayFormCreate: boolean = false;
-  public displayFormUpdate: boolean = false;
   public displayFormDetail: boolean = false;
   public displayFormAssign: boolean = false;
   public displayTest: boolean = false;
   public token!: string;
-  public gender_type: GenderType[] = [];
-  public document_type: DocumentType[] = [];
-  public users: any[] = [];
-  public roles: any[] = [];
+  public gender_type: Genero[] = [];
+  public document_type: TipoDocumento[] = [];
+  public condiciones: CondicionVulnerable[] = [];
+  public InfoCarrera: InfoCarrera[] = [];
+  public funcionario!: Funcionario | null;
+  public funcionarios: Graduado[] = [];
+  public roles: Rol[] = [];
+  // public rolesSelected: Rol[] = [];
   public inforCardDescription: string = `
     ¡Te damos la bienvenida a nuestro destacado módulo de gestión de roles y usuarios! En este espacio
     especializado, podrás crear roles a medida, incorporar nuevos usuarios y asignar roles de manera
@@ -84,47 +63,44 @@ export class UsuariosComponent implements OnInit {
   public variantColor!: Variant;
 
   public formCreate = this.fb.group({
-    password: ['', [Validators.required, Validators.maxLength(50)]],
-    email: ['', [Validators.required, Validators.maxLength(50), Validators.email]],
-    name: ['', [Validators.required, Validators.maxLength(100)]],
-    surname: ['', [Validators.required, Validators.maxLength(100)]],
-    identification: ['', Validators.maxLength(30)],
-    address: ['', Validators.maxLength(40)],
-    nationality: [''],
-    date_of_birth: [''],
-    phone: ['', Validators.maxLength(11)],
+    fullname: ['', [Validators.required]],
+    condicion_vulnerable: [''],
     document_type: [''],
+    identification: ['', [Validators.required]],
+    fecha_expedicion: [''],
+    nationality: ['COLOMBIA', [Validators.required]],
+    departamento: ['LA GUAJIRA', [Validators.required]],
+    municipio: ['RIOHACHA', [Validators.required]],
     gender_type: [''],
-  })
-  public formUpdate = this.fb.group({
-    password: ['', [Validators.required, Validators.maxLength(50)]],
-    email: ['', [Validators.required, Validators.maxLength(50), Validators.email]],
-    name: ['', [Validators.required, Validators.maxLength(100)]],
-    surname: ['', [Validators.required, Validators.maxLength(100)]],
-    identification: ['', Validators.maxLength(30)],
-    address: ['', Validators.maxLength(40)],
-    nationality: [''],
+    address: [''],
     date_of_birth: [''],
-    phone: ['', Validators.maxLength(11)],
-    document_type: [''],
-    gender_type: [''],
+    email: ['', [Validators.required]],
+    email2: [''],
+    phone: ['', [Validators.required]],
+    phone2: [''],
+    graduado: [{ value: true }, [Validators.required]],
+    funcionario: [{ value: true }, [Validators.required]],
   })
   public formDetail = this.fb.group({
-    password: [{ value: '', disabled: true }],
-    email: [{ value: '', disabled: true }],
-    name: [{ value: '', disabled: true }],
-    surname: [{ value: '', disabled: true }],
-    identification: [{ value: '', disabled: true }],
-    address: [{ value: '', disabled: true }],
-    nationality: [{ value: '', disabled: true }],
-    date_of_birth: [{ value: '', disabled: true }],
-    phone: [{ value: '', disabled: true }],
-    document_type: [{ value: '', disabled: true }],
-    gender_type: [{ value: '', disabled: true }],
+    document_type: ['', [Validators.minLength(5), Validators.maxLength(100)]],
+    gender_type: ['',],
+    fullname: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(100)]],
+    identification: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(50)]],
+    address: ['', [Validators.minLength(5), Validators.maxLength(100)]],
+    nationality: ['', [Validators.required]],
+    date_of_birth: ['',],
+    phone: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(50)]],
+    phone2: ['', [Validators.minLength(5), Validators.maxLength(50)]],
+    fecha_expedicion: ['',],
+    condicion_vulnerable: ['',],
+    municipio: ['', [Validators.required]],
+    departamento: ['', [Validators.required]],
+    email: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(50), Validators.email]],
+    email2: ['', [Validators.minLength(5), Validators.maxLength(50), Validators.email]],
   })
   public formAssing = this.fb.group({
-    user: ['', [Validators.required, Validators.maxLength(50)]],
-    roles: ['', [Validators.required, Validators.maxLength(50)]],
+    documento: ['', Validators.required],
+    roles: ['', Validators.required]
   })
 
   constructor(
@@ -143,7 +119,8 @@ export class UsuariosComponent implements OnInit {
     this.token = localStorage.getItem('token')!;
     this.getGendersType();
     this.getDocumentsType();
-    this.getUsers();
+    this.getFuncionarios();
+    this.getCondiciones();
     this.getRoles();
   }
 
@@ -152,54 +129,56 @@ export class UsuariosComponent implements OnInit {
   }
 
   changeDisplayFormCreate() {
-    this.displayFormCreate = !this.displayFormCreate
+    this.displayFormCreate = !this.displayFormCreate;
   }
-  changeDisplayFormUpdate(user: UserInternal | null) {
-    if (user !== null) {
-      this.idUserEdit = user.id;
-      const { email, persona } = user;
-      const { name, surname, identification, address, nationality, phone, gender, document, date_of_birth } = persona;
-      let fullDate = new Date(`${date_of_birth}T00:00:00`);
+
+  changeDisplayFormDetail(documento: string) {
+    this.displayFormDetail = !this.displayFormDetail;
+    this.adminService.get(`${this.API_URI}/users/graduados/Detail/${documento}`, this.token).subscribe(res => {
+      const {
+        persona: {
+          document_type,
+          gender_type,
+          fullname,
+          identification,
+          address,
+          nationality,
+          date_of_birth,
+          phone,
+          phone2,
+          fecha_expedicion,
+          condicion_vulnerable,
+          municipio,
+          departamento,
+          email,
+          email2
+        },
+        carreras } = res.data;
+      this.InfoCarrera = carreras;
 
       let body = {
-        email,
-        name,
-        surname,
+        document_type,
+        gender_type,
+        fullname,
         identification,
         address,
-        nationality: JSON.parse(nationality),
-        date_of_birth: fullDate,
+        nationality,
+        date_of_birth: date_of_birth && formateDateInput(date_of_birth),
         phone,
-        gender_type: gender,
-        document_type: document
-      }
-      console.log(body);
-
-      this.formUpdate.patchValue(body);
-    }
-    this.displayFormUpdate = !this.displayFormUpdate
-  }
-  changeDisplayFormDetail(user: UserInternal | null) {
-    if (user !== null) {
-      const { email, persona } = user;
-      const { name, surname, identification, address, nationality, phone, gender, document, date_of_birth } = persona;
-      let fullDate = new Date(`${date_of_birth}T00:00:00`);
-
-      let body = {
+        phone2,
+        fecha_expedicion: fecha_expedicion && formateDateInput(fecha_expedicion),
+        condicion_vulnerable,
+        municipio,
+        departamento,
         email,
-        name,
-        surname,
-        identification,
-        address,
-        nationality: JSON.parse(nationality),
-        date_of_birth: fullDate,
-        phone,
-        gender_type: gender,
-        document_type: document
+        email2,
       }
       this.formDetail.patchValue(body);
-    }
-    this.displayFormDetail = !this.displayFormDetail
+    })
+  }
+  closeDisplayFormDetail() {
+    this.displayFormCreate = false;
+    this.formDetail.reset();
   }
   changeDisplayFormAssing() {
     this.displayFormAssign = !this.displayFormAssign
@@ -210,19 +189,24 @@ export class UsuariosComponent implements OnInit {
       this.gender_type = res.data
     })
   }
+  getCondiciones() {
+    this.adminService.get(`${this.API_URI}/condiciones`, this.token).subscribe(res => {
+      this.condiciones = res.data
+    })
+  }
   getDocumentsType() {
     this.adminService.get(`${this.API_URI}/documents/`, this.token).subscribe(res => {
       this.document_type = res.data
     })
   }
-  getUsers() {
-    this.adminService.get(`${this.API_URI}/users/internal/`, this.token).subscribe(res => {
-      this.users = res.data
+  getFuncionarios() {
+    this.adminService.get(`${this.API_URI}/users/funcionarios`, this.token).subscribe(res => {
+      this.funcionarios = res.data
     })
   }
   getRoles() {
     this.adminService.get(`${this.API_URI}/roles/`, this.token).subscribe(res => {
-      this.roles = res.data
+      this.roles = res.data;
     })
   }
   handleCloseFormCreateDialog() {
@@ -231,132 +215,121 @@ export class UsuariosComponent implements OnInit {
   }
   handleCloseFormAssingDialog() {
     this.displayFormAssign = false;
+    this.formAssing.reset();
+    this.funcionario = null;
   }
-  deleteAll() {
-    const itemsMaped = this.itemsBulkDelete.map((item: any) => item.id)
 
-    if (itemsMaped.length === 0) return this.messageService.add({ severity: 'error', summary: 'Notififación', detail: 'Debes seleccionar al menos un registro' });
-    let body = {
-      "ids": itemsMaped
-    }
-    console.log(body);
-    this.itemsBulkDelete = [];
-  }
   onSubmitFormCreate() {
-    const { password, email, name, surname, identification, address, date_of_birth, phone, document_type, gender_type, nationality } = this.formCreate.value;
-    let fullDate = '';
-    if (date_of_birth.length !== 0) {
-      const day = date_of_birth.getDate();
-      const moth = date_of_birth.getMonth() + 1;
-      const year = date_of_birth.getFullYear();
-      fullDate = `${year}-${moth}-${day}`;
-    }
-    let body = {
-      username: email.split('@').shift(),
-      password,
-      email,
-      persona: {
-        name,
-        surname,
+    ValidForm(this.formCreate);
+    if (this.formCreate.valid) {
+      const {
+        fullname,
+        condicion_vulnerable,
+        document_type,
         identification,
+        fecha_expedicion,
+        nationality,
+        departamento,
+        municipio,
+        gender_type,
         address,
-        nationality: JSON.stringify(nationality),
-        date_of_birth: fullDate,
+        date_of_birth,
+        email,
+        email2,
         phone,
-        document_type: document_type.id,
-        gender_type: gender_type.id,
-      }
-    }
+        phone2,
+        funcionario,
+        graduado
+      } = this.formCreate.value;
 
-    try {
-      this.adminService.post(`${this.API_URI}/auth/register/`, body, this.token).subscribe(res => {
-        this.messageService.add({ severity: 'success', summary: 'Notificación', detail: 'Creado correctamente' });
-        this.getUsers();
-        this.formCreate.reset();
-        this.displayFormCreate = false;
-      })
-    } catch (error) {
-      console.log(error);
+      let body = {
+        fullname,
+        condicion_vulnerable: parseInt(condicion_vulnerable?.id),
+        document_type: parseInt(document_type?.id),
+        identification,
+        fecha_expedicion: fecha_expedicion && formateDateOutPut(fecha_expedicion),
+        nationality: nationality.name,
+        departamento: departamento.name,
+        municipio: municipio.name,
+        gender_type: parseInt(gender_type?.id),
+        address,
+        date_of_birth: date_of_birth && formateDateOutPut(date_of_birth),
+        email,
+        email2,
+        phone,
+        phone2,
+        funcionario: funcionario.value,
+        graduado: graduado.value
+      }
+
+      this.adminService.post(`${this.API_URI}/users/funcionarios`, body, this.token)
+        .pipe(
+          catchError(error => {
+            console.log(error.error.errors.error);
+            throw error;
+          })
+        )
+        .subscribe(res => {
+          this.formCreate.reset();
+          this.closeDisplayFormDetail();
+          this.getFuncionarios();
+          this.messageService.add({ severity: 'success', summary: 'Notificación', detail: 'Creado Correctamente' });
+        })
 
     }
   }
+
   onSubmitFormAssing() {
-    const { user, roles } = this.formAssing.value;
-    const rolesMaped = roles.map((rol: any) => rol.id)
 
+    const { roles } = this.formAssing.value;
+    if (!this.funcionario) return this.messageService.add({ severity: 'warn', summary: 'Warning', detail: 'Selecciona un funcionario' });
+    if (!roles) return this.messageService.add({ severity: 'warn', summary: 'Warning', detail: 'Selecciona un Rol' });
 
     let body = {
-      user: user.id,
-      roles: rolesMaped
+      user: this.funcionario.persona.id,
+      roles: [roles.id]
     }
-    try {
-      this.adminService.post(`${this.API_URI}/security/create/roles/user/`, body, this.token).subscribe(res => {
+    this.adminService.post(`${this.API_URI}/security/create/roles/user/`, body, this.token)
+      .pipe(
+        catchError(error => {
+          if (error?.error?.errors?.detail) {
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Funcionario no encontrado' });
+          } else {
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Hubo un problema' });
+          }
+          throw error;
+        })
+      )
+      .subscribe(res => {
         this.messageService.add({ severity: 'success', summary: 'Notificación', detail: 'Asignado correctamente' });
-        this.getUsers();
+        this.getFuncionarios();
         this.getRoles();
-        this.formAssing.reset();
-        this.displayFormAssign = false;
+        this.handleCloseFormAssingDialog();
       })
-    } catch (error) {
-      console.log(error);
-
-    }
   }
 
-  onChangeUsers(event: any) {
-    this.formAssing.patchValue({ roles: event.groups })
+  resetSearch() {
+    this.formAssing.reset();
+    this.funcionario = null;
   }
 
-  onSubmitFormUpdadte() {
-    const { password, email, name, surname, identification, address, date_of_birth, phone, document_type, gender_type, nationality } = this.formUpdate.value;
-    let fullDate = '';
-    if (date_of_birth.length !== 0) {
-      const day = date_of_birth.getDate();
-      const moth = date_of_birth.getMonth() + 1;
-      const year = date_of_birth.getFullYear();
-      fullDate = `${year}-${moth}-${day}`;
-    }
-    let body = {
-      username: email.split('@').shift(),
-      password,
-      email,
-      persona: {
-        name,
-        surname,
-        identification,
-        address,
-        nationality: JSON.stringify(nationality),
-        date_of_birth: fullDate,
-        phone,
-        document_type: document_type.id,
-        gender_type: gender_type.id,
-      }
-    }
-
-    try {
-      this.adminService.put(`${this.API_URI}/users/update/${this.idUserEdit}`, body, this.token).subscribe(res => {
-        this.messageService.add({ severity: 'success', summary: 'Notificación', detail: 'Actualizado correctamente' });
-        this.getUsers();
-        this.formUpdate.reset();
-        this.displayFormUpdate = false;
+  traerGraduado() {
+    const { documento } = this.formAssing.value;
+    if (!documento) return this.messageService.add({ severity: 'warn', summary: 'Notificación', detail: 'Ingrese un No. Documento' });
+    this.adminService.get(`${this.API_URI}/users/funcionarios/${documento}`, this.token)
+      .pipe(
+        catchError(error => {
+          if (error?.error?.errors.error === "El usuario asociado al funcionario no existe.") {
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Funcionario no encontrado' });
+          } else {
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Hubo un problema' });
+          }
+          throw error;
+        })
+      )
+      .subscribe(res => {
+        this.funcionario = res.data;
+        this.formAssing.patchValue({ roles: res.data.roles[0] })
       })
-    } catch (error) {
-      console.log(error);
-
-    }
-
   }
 }
-
-
-
-// return this.messageService.add({ severity: 'error', summary: 'Notificación', detail: 'El campo nombre es obligatorio' });
-
-// this.form.patchValue({...actividad, fecha: new Date(`${actividad.fecha}T00:00:00`)})
-
-// onSubmit() {
-
-//   const day = this.form.value.fecha.getDate();
-//   const moth = this.form.value.fecha.getMonth() + 1;
-//   const year = this.form.value.fecha.getFullYear();
-//   let fullDate = `${year}-${moth}-${day}`;

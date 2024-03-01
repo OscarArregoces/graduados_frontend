@@ -13,11 +13,10 @@ export class ValidateGuard implements CanActivate, CanLoad {
 
   API_URI = environment.API_URI;
 
-  constructor(private authService: AuthService, private router: Router, private mainServie: MainService) {}
+  constructor(private authService: AuthService, private router: Router, private mainServie: MainService) { }
   canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
-      console.log('Can Activate');
     return this.checkAuthentication();
   }
   canLoad(route: Route, segments: import("@angular/router").UrlSegment[]): Observable<boolean> | Promise<boolean> | boolean {
@@ -28,14 +27,12 @@ export class ValidateGuard implements CanActivate, CanLoad {
     const user = localStorage.getItem('user');
     const menu = localStorage.getItem('menu');
     const fecha = localStorage.getItem('fecha');
-    
+
     if (this.authService.isAuthenticated() && token && user && menu && fecha) {
       this.validToken(token);
-      console.log("SI PUEDE");
       return true;
     } else {
-      this.authService.logout(); // Asegúrate de cerrar sesión en caso de credenciales no válidas
-      console.log("NO PUEDE");
+      this.authService.logout();
       this.router.navigate(['/graduado']);
       return false;
     }
@@ -54,4 +51,3 @@ export class ValidateGuard implements CanActivate, CanLoad {
   }
 }
 
- 

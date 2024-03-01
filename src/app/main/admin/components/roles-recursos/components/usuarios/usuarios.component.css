@@ -3,7 +3,23 @@
     border: 1px solid #f16357;
 }
 
-.customText {
+
+:host ::ng-deep .p-dropdown-filter-container {
+    .p-dropdown-filter {
+        width: 100%;
+    }
+}
+
+:host ::ng-deep p-inputmask {
+    width: 100%;
+
+    .p-inputmask.p-element {
+        width: 100%;
+    }
+}
+
+
+.customTitle {
     line-height: 1.625;
     font-weight: 400;
     font-size: 1.5rem;
@@ -11,20 +27,34 @@
     color: #616161;
 }
 
-/* :host ::ng-deep .p-dialog-header {
-    background-color: white;
-    border-bottom: 1px solid lightgray;
-    color: black;
-    font-size: 30px;
+.customText {
+    line-height: 1.625;
+    font-weight: 400;
+    font-size: 1rem;
+    font-family: Roboto, sans-serif;
+    color: #616161;
 }
 
-:host ::ng-deep .p-dialog-content {
-    justify-content: center;
+.custom-P {
+    line-height: 1.625;
+    font-weight: 400;
+    font-size: 1rem;
+    font-family: Roboto, sans-serif;
+    color: #000000;
 }
 
-:host ::ng-deep .p-dialog .p-dialog-footer {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-} */
+:host ::ng-deep .p-tabview {
+    .p-tabview-nav li.p-highlight .p-tabview-nav-link {
+        background: #a25952;
+        border-color: #a25952;
+        color: white;
+    }
+}
+
+.labelFormAssing{
+    line-height: 1.625;
+    font-weight: 400;
+    font-size: 1.1rem;
+    font-family: Roboto, sans-serif;
+    color: white;
+}

@@ -14,10 +14,9 @@
             class="segundos">{{segundos}}</span></span><span class="ampm">{{ampm}}</span>]
       </div>
     </button>
-
-    <button type="button" pButton pRipple class="p-button-rounded p-button-text ml-5" icon="pi pi-plus"
+    <button type="button" pButton pRipple class="p-button-rounded p-button-text ml-5 bg-gray-600" icon="pi pi-plus"
       (click)="menu.toggle($event)">
-      <p-avatar image="{{image3}}" styleClass="ml-3" size="large" shape="circle"></p-avatar>
+      <p-avatar image="assets/images/avatar/avatar_1.png" styleClass="ml-3" size="large" shape="circle"></p-avatar>
     </button>
 
     <p-menu #menu [popup]="true" [model]="items" [style]="{'width':'200px','margin-top':'5px'}"></p-menu>
@@ -149,9 +148,9 @@
   </app-card>
 </p-dialog>
 
-<p-dialog [(visible)]="displayCuentaForm" [style]="{'width': width, 'min-height':'50vh'}" [resizable]="false" zindex="10000"
-  [showHeader]="true"  [modal]="true" [dismissableMask]="false"
-  header="Actualizar Contraseña" (onHide)="closeDisplayCuentaForm()">
+<p-dialog [(visible)]="displayCuentaForm" [style]="{'width': width, 'min-height':'50vh'}" [resizable]="false"
+  zindex="10000" [showHeader]="true" [modal]="true" [dismissableMask]="false" header="Actualizar Contraseña"
+  (onHide)="closeDisplayCuentaForm()">
   <form card-body [formGroup]="formCuenta">
     <div class="grid">
       <app-custom-info-card [description]="descriptionCustomInfoCard"></app-custom-info-card>
@@ -163,7 +162,7 @@
               <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill" style="color:#f16357;"></i></span>
               <p-password formControlName="original_password" [style]="{'width':'100%'}"
                 promptLabel="Escribe tu contraseña" weakLabel="Muy debil" mediumLabel="Aceptable"
-                strongLabel="Segura" ></p-password>
+                strongLabel="Segura"></p-password>
             </div>
           </div>
           <div class="flex flex-column gap-2 mx-2">

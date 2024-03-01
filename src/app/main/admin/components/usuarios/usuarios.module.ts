@@ -20,6 +20,8 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { CardModule } from 'primeng/card';
 import { MessageModule } from 'primeng/message';
+import { TabViewModule } from 'primeng/tabview';
+import { CalendarModule } from 'primeng/calendar';
 
 @NgModule({
   declarations: [
@@ -46,7 +48,9 @@ import { MessageModule } from 'primeng/message';
     CheckboxModule,
     RadioButtonModule,
     CardModule,
-    MessageModule
+    MessageModule,
+    TabViewModule,
+    CalendarModule
   ]
 })
 export class UsuariosModule { }

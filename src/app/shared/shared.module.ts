@@ -16,6 +16,9 @@ import { PieGraphicComponent } from './components/graphics/pie-graphic/pie-graph
 import { BarGraphicComponent } from './components/graphics/bar-graphic/bar-graphic.component';
 import { ReportEncuestaComponent } from './components/reports/report-encuesta/report-encuesta.component';
 import { ReportGraduadosComponent } from './components/reports/report-graduados/report-graduados.component';
+import { CustomInfoCardComponent } from './components/custom-info-card/custom-info-card.component';
+import { CustomDialogComponent } from './components/custom-dialog/custom-dialog.component';
+import { CustomPaginatorComponent } from './components/custom-paginator/custom-paginator.component';
 
 import { ImgErrorDirective } from './directives/img-error.directive';
 
@@ -40,8 +43,7 @@ import { RoleDirective } from './directives/role.directive';
 import { ScannerPipe } from './pipes/scanner.pipe';
 import { FormatPermissionNamePipe } from './pipes/format-permission-name.pipe';
 
-import { CustomInfoCardComponent } from './components/custom-info-card/custom-info-card.component';
-import { CustomDialogComponent } from './components/custom-dialog/custom-dialog.component';
+
 
 
 @NgModule({
@@ -66,6 +68,7 @@ import { CustomDialogComponent } from './components/custom-dialog/custom-dialog.
     FormatPermissionNamePipe,
     CustomInfoCardComponent,
     CustomDialogComponent,
+    CustomPaginatorComponent,
 
   ],
   exports: [
@@ -83,6 +86,7 @@ import { CustomDialogComponent } from './components/custom-dialog/custom-dialog.
     ReportGraduadosComponent,
     CustomInfoCardComponent,
     CustomDialogComponent,
+    CustomPaginatorComponent,
 
     ImgErrorDirective,
     RoleDirective,

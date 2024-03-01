@@ -58,10 +58,19 @@ export class FormGraduadoComponent implements OnInit {
 
     if (this.form.valid) {
       let form: UserLoginI = this.form.value;
-      this.authService.post(`${this.API_URI}/auth/login/`, form)
+      this.authService.post(`${this.API_URI}/auth/login/graduado`, form)
         .pipe(
           catchError(error => {
-            if (error.error?.errors?.non_field_errors[0] === "Incorrect Credentials Passed.") {
+            console.log(error);
+            
+            if (error.error?.errors?.error === "Unauthorized access for non-graduado users.") {
+              Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Credenciales Incorrectas",
+                timer: 1500,
+              });
+            } else if (error.error?.errors?.non_field_errors[0] === "Incorrect Credentials Passed.") {
               Swal.fire({
                 icon: "error",
                 title: "Oops...",
