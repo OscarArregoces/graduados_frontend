@@ -34,14 +34,18 @@ export class UsuariosComponent implements OnInit {
   public displayFormDetail: boolean = false;
   public displayFormAssign: boolean = false;
   public displayTest: boolean = false;
+  public funcionarioFound: boolean = false;
   public token!: string;
   public gender_type: Genero[] = [];
   public document_type: TipoDocumento[] = [];
   public condiciones: CondicionVulnerable[] = [];
   public InfoCarrera: InfoCarrera[] = [];
   public funcionario!: Funcionario | null;
+  public funcionarioSearch!: Funcionario | null;
   public funcionarios: Graduado[] = [];
   public roles: Rol[] = [];
+  public next: null | string = ""
+  public previous: null | string = ""
   // public rolesSelected: Rol[] = [];
   public inforCardDescription: string = `
     ¡Te damos la bienvenida a nuestro destacado módulo de gestión de roles y usuarios! En este espacio
@@ -97,6 +101,10 @@ export class UsuariosComponent implements OnInit {
     departamento: ['', [Validators.required]],
     email: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(50), Validators.email]],
     email2: ['', [Validators.minLength(5), Validators.maxLength(50), Validators.email]],
+  })
+
+  public formSearch = this.fb.group({
+    documento: ['']
   })
   public formAssing = this.fb.group({
     documento: ['', Validators.required],
@@ -195,11 +203,22 @@ export class UsuariosComponent implements OnInit {
     })
   }
   getDocumentsType() {
-    this.adminService.get(`${this.API_URI}/documents/`, this.token).subscribe(res => {
-      this.document_type = res.data
+    this.adminService.get(`${this.API_URI}/documents/`, this.token)
+    .pipe(
+      catchError(error => {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Hubo un problema' });
+        throw error;
+      })
+    )
+    .subscribe(res => {
+      this.document_type = res.data;
+      this.next = res.next;
+      this.previous = res.previous;
     })
   }
   getFuncionarios() {
+    this.formSearch.reset();
+    this.funcionarioFound = false;
     this.adminService.get(`${this.API_URI}/users/funcionarios`, this.token).subscribe(res => {
       this.funcionarios = res.data
     })
@@ -280,11 +299,9 @@ export class UsuariosComponent implements OnInit {
   }
 
   onSubmitFormAssing() {
-
     const { roles } = this.formAssing.value;
     if (!this.funcionario) return this.messageService.add({ severity: 'warn', summary: 'Warning', detail: 'Selecciona un funcionario' });
     if (!roles) return this.messageService.add({ severity: 'warn', summary: 'Warning', detail: 'Selecciona un Rol' });
-
     let body = {
       user: this.funcionario.persona.id,
       roles: [roles.id]
@@ -313,7 +330,7 @@ export class UsuariosComponent implements OnInit {
     this.funcionario = null;
   }
 
-  traerGraduado() {
+  traerFuncionarioFormAssing() {
     const { documento } = this.formAssing.value;
     if (!documento) return this.messageService.add({ severity: 'warn', summary: 'Notificación', detail: 'Ingrese un No. Documento' });
     this.adminService.get(`${this.API_URI}/users/funcionarios/${documento}`, this.token)
@@ -330,6 +347,58 @@ export class UsuariosComponent implements OnInit {
       .subscribe(res => {
         this.funcionario = res.data;
         this.formAssing.patchValue({ roles: res.data.roles[0] })
+      })
+  }
+  traerFuncionarioFormSearch() {
+    const { documento } = this.formSearch.value;
+    if (!documento) return this.messageService.add({ severity: 'warn', summary: 'Notificación', detail: 'Ingrese un No. Documento' });
+    this.adminService.get(`${this.API_URI}/users/funcionarios/${documento}`, this.token)
+      .pipe(
+        catchError(error => {
+          if (error?.error?.errors.error === "El usuario asociado al funcionario no existe.") {
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Funcionario no encontrado' });
+          } else {
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Hubo un problema' });
+          }
+          throw error;
+        })
+      )
+      .subscribe(res => {
+        this.funcionarios = [res.data.persona];
+      })
+  }
+
+
+  nextPaginator() {
+    this.formSearch.reset();
+    this.funcionarioFound = false;
+    this.adminService.get(this.next!, this.token)
+      .pipe(
+        catchError(error => {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Hubo un problema' });
+          throw error;
+        })
+      )
+      .subscribe(res => {
+        this.funcionarios = res.data;
+        this.next = res.next;
+        this.previous = res.previous;
+      })
+  }
+  previousPaginator() {
+    this.formSearch.reset();
+    this.funcionarioFound = false;
+    this.adminService.get(this.previous!, this.token)
+      .pipe(
+        catchError(error => {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Hubo un problema' });
+          throw error;
+        })
+      )
+      .subscribe(res => {
+        this.funcionarios = res.data;
+        this.next = res.next;
+        this.previous = res.previous;
       })
   }
 }
