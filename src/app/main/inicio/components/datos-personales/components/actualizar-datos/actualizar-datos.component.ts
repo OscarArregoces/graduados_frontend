@@ -8,6 +8,7 @@ import { PantallaService } from 'src/app/core/services/pantalla.service';
 import { formateDateInput, formateDateOutPut } from 'src/app/helpers/formateDate';
 import { environment } from 'src/environments/environment';
 import { Ciudad, CondicionVulnerable, Departamento, Genero, InfoCarrera, Pais, Sede, TipoDocumento } from 'src/app/models/main/Inicio.interface';
+import { DataFetchingService } from 'src/app/core/services/main/data-fetching.service';
 
 @Component({
   selector: 'app-actualizar-datos',
@@ -54,19 +55,19 @@ export class ActualizarDatosComponent implements OnInit, OnDestroy {
     private inicioService: InicioService,
     private pantallaService: PantallaService,
     private fb: UntypedFormBuilder,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private dataFetchingService: DataFetchingService
   ) { }
 
   ngOnInit(): void {
     this.token = localStorage.getItem('token')!;
     this.paises = Paises;
     this.traerInfoUsuario();
-    this.traerGeneros();
-    this.traerCondiciones();
-    this.traerTiposDocumento();
-
     const [width] = this.pantallaService.calcularEspacioPantalla();
     this.subscription$ = width.subscribe(width => this.width = width);
+    this.dataFetchingService.getGeneros().subscribe(res => this.generos = res.data);
+    this.dataFetchingService.getTiposDocumento().subscribe(res => this.tiposDocumento = res.data);
+    this.dataFetchingService.getCondiciones().subscribe(res => this.condicionesVulnerables = res.data);
   }
 
   ngOnDestroy(): void {
@@ -91,10 +92,10 @@ export class ActualizarDatosComponent implements OnInit, OnDestroy {
       email2,
     } = this.formPersona.value;
 
-    if (email && ( !email.trim().toLowerCase().endsWith('uniguajira.edu.co') && !email.trim().toLowerCase().endsWith('gmail.com') )) {
+    if (email && (!email.trim().toLowerCase().endsWith('uniguajira.edu.co') && !email.trim().toLowerCase().endsWith('gmail.com'))) {
       this.messageService.add({ severity: 'warn', summary: 'Notificación', detail: 'El Correo debe ser Institucional o Gmail' });
     }
-    if (email2 && ( !email2.trim().toLowerCase().endsWith('uniguajira.edu.co') && !email2.trim().toLowerCase().endsWith('gmail.com') )) {
+    if (email2 && (!email2.trim().toLowerCase().endsWith('uniguajira.edu.co') && !email2.trim().toLowerCase().endsWith('gmail.com'))) {
       this.messageService.add({ severity: 'warn', summary: 'Notificación', detail: 'El Correo debe ser Institucional o Gmail' });
     }
 
@@ -176,47 +177,7 @@ export class ActualizarDatosComponent implements OnInit, OnDestroy {
           email,
           email2,
         }
-
-        console.log(res.data);
-
         this.formPersona.patchValue(body)
-      })
-  }
-
-  traerGeneros() {
-    this.inicioService.get(`${this.API_URI}/genders`, this.token)
-      .pipe(
-        catchError(error => {
-          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error en consulta' });
-          throw error;
-        })
-      )
-      .subscribe(res => {
-        this.generos = res.data;
-      })
-  }
-  traerTiposDocumento() {
-    this.inicioService.get(`${this.API_URI}/documents`, this.token)
-      .pipe(
-        catchError(error => {
-          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error en consulta' });
-          throw error;
-        })
-      )
-      .subscribe(res => {
-        this.tiposDocumento = res.data;
-      })
-  }
-  traerCondiciones() {
-    this.inicioService.get(`${this.API_URI}/condiciones`, this.token)
-      .pipe(
-        catchError(error => {
-          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error en consulta' });
-          throw error;
-        })
-      )
-      .subscribe(res => {
-        this.condicionesVulnerables = res.data;
       })
   }
 }

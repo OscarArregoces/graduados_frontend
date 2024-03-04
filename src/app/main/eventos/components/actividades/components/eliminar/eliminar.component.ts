@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { EventosService } from 'src/app/core/services/dashboard/eventos.service';
+import { DataFetchingService } from 'src/app/core/services/main/data-fetching.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -24,32 +25,22 @@ export class EliminarComponent implements OnInit {
   constructor(
     private eventosService: EventosService,
     private messageService: MessageService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private dataFetchingService: DataFetchingService
   ) { }
 
   ngOnInit(): void {
     this.token = localStorage.getItem('token');
-    this.traerActividades();
+    this.dataFetchingService.getActividades().subscribe(res => this.actividades = res.data);
   }
 
   getEventValue($event: any): string {
     return $event.target.value;
   }
 
-  traerActividades() {
-    this.actividades = [];
-    try {
-      this.eventosService.get(`${this.API_URI}/eventos/`, this.token).subscribe(respuesta => this.actividades = respuesta.data)
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
   showDetalles(actividad: any) {
     this.display = true;
     this.actividad = actividad;
-
-    // console.log(this.actividad)
   }
 
   closeDetalles() {
@@ -64,7 +55,7 @@ export class EliminarComponent implements OnInit {
       accept: () => {
         try {
           this.eventosService.delete(`${this.API_URI}/eventos/delete/${id}/`, this.token).subscribe(respuesta => {
-            this.traerActividades();
+            this.dataFetchingService.getActividades().subscribe(res => this.actividades = res.data);
             return this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Eliminado correctamente !!!' });
           });
         } catch (error) {
@@ -87,7 +78,7 @@ export class EliminarComponent implements OnInit {
     }
     try {
       this.eventosService.delete(`${this.API_URI}/eventos/delete/`, this.token, body).subscribe(respuesta => {
-        this.traerActividades();
+        this.dataFetchingService.getActividades().subscribe(res => this.actividades = res.data);
         return this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Eliminado correctamente !!!' })
       });
     } catch (error) {

@@ -3,6 +3,7 @@ import { UntypedFormBuilder } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
 import { PqrsService } from 'src/app/core/services/dashboard/pqrs.service';
+import { DataFetchingService } from 'src/app/core/services/main/data-fetching.service';
 import { PantallaService } from 'src/app/core/services/pantalla.service';
 import { formateDateOutPut } from 'src/app/helpers/formateDate';
 import { environment } from 'src/environments/environment';
@@ -38,7 +39,6 @@ export class VerComponent implements OnInit, OnDestroy {
     finalDate: [''],
   })
 
-
   public token: any;
   public solicitudes: any[] = [];
   public solicitudesSeleccionadas: any[] = [];
@@ -53,35 +53,21 @@ export class VerComponent implements OnInit, OnDestroy {
     private pqrsService: PqrsService,
     private pantallaService: PantallaService,
     private fb: UntypedFormBuilder,
-    private messageService: MessageService
+    private dataFetchingService: DataFetchingService
   ) { }
 
   ngOnInit(): void {
     this.token = localStorage.getItem('token');
-    this.traerSolicitudes();
-
     const [width] = this.pantallaService.calcularEspacioPantalla();
     this.subscription$ = width.subscribe(width => this.width = width);
+    this.dataFetchingService.getSolicitudes().subscribe(res => this.solicitudes = res.data);
   }
   ngOnDestroy(): void {
     this.subscription$.unsubscribe();
   }
-
   getEventValue($event: any): string {
     return $event.target.value;
   }
-
-  traerSolicitudes() {
-    try {
-      this.pqrsService.get(`${this.API_URI}/pqrs`, this.token).subscribe(respuesta => {
-        console.log(respuesta.data)
-        this.solicitudes = respuesta.data;
-      })
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
   showDetalles(id: number) {
     this.visible = true;
     this.solicitud = this.solicitudes.filter((solicitud: any) => solicitud.id === id)
@@ -89,28 +75,23 @@ export class VerComponent implements OnInit, OnDestroy {
   closeDetalles() {
     this.visible = false;
   }
-
   onChangeSelectedFilter(event: any) {
     this.optionsSelectedFilter = event.value
   }
-
   onChangeSelectedStatus(event: any) {
     if (event.value === null) {
       return this.form.value.optionsSelectedStatus = ''
     }
     return this.form.value.optionsSelectedStatus = event.value
   }
-
   onChangeSelectedOrder(event: any) {
     if (event.value === null) {
       return this.form.value.optionsSelectedOrder = ''
     }
     return this.form.value.optionsSelectedOrder = event.value
   }
-
   onChangeInitialDate(event: any) {
     console.log(event)
-
   }
   onChangeFinalDate(event: any) {
     console.log(event)

@@ -3,6 +3,7 @@ import { UntypedFormBuilder, UntypedFormControl, Validators } from '@angular/for
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
 import { ClasificadosService } from 'src/app/core/services/dashboard/clasificados.service';
+import { DataFetchingService } from 'src/app/core/services/main/data-fetching.service';
 import { PantallaService } from 'src/app/core/services/pantalla.service';
 import { environment } from 'src/environments/environment';
 
@@ -71,15 +72,15 @@ export class MisEmprendimientosComponent implements OnInit, OnDestroy {
     private fb: UntypedFormBuilder,
     private messageService: MessageService,
     private pantallaService: PantallaService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private dataFetchingService: DataFetchingService,
   ) { }
 
   ngOnInit(): void {
     this.token = localStorage.getItem('token')!;
     this.traerEmprendimientos();
-    this.traerCategorias();
-    this.traerCapacitaciones();
-
+    this.dataFetchingService.getCapacitaciones().subscribe(res => this.capacitaciones = res.data);
+    this.dataFetchingService.getCategorias().subscribe(res => this.categorias = res.data);
     const [width] = this.pantallaService.calcularEspacioPantalla();
     this.subscription$ = width.subscribe(width => this.width = width);
   }
@@ -87,7 +88,6 @@ export class MisEmprendimientosComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.subscription$.unsubscribe();
   }
-
   traerEmprendimientos() {
     try {
       this.clasificadosService.get(`${this.API_URI}/advertisements/mine/`, this.token).subscribe(res => {
@@ -119,8 +119,6 @@ export class MisEmprendimientosComponent implements OnInit, OnDestroy {
   closeDisplay() {
     this.display = !this.display
   }
-
-
   onSubmit() {
 
     const {
@@ -207,27 +205,6 @@ export class MisEmprendimientosComponent implements OnInit, OnDestroy {
     });
   }
 
-
-  traerCategorias() {
-    try {
-      this.clasificadosService.get(`${this.API_URI}/advertisements/category/`, this.token).subscribe(res => {
-        this.categorias = res.data;
-      })
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  traerCapacitaciones() {
-    try {
-      this.clasificadosService.get(`${this.API_URI}/advertisements/capacitaciones/`, this.token).subscribe(res => {
-        this.capacitaciones = res.data;
-      })
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
   onChangeCategorias(event: any) {
 
     this.form.controls['subCategoria'].disable()
@@ -257,7 +234,7 @@ export class MisEmprendimientosComponent implements OnInit, OnDestroy {
   }
 
   paginate(event: any) {
-    this.data =  this.emprendimientos.splice( this.pageCount ,event.pageCount); 
+    this.data = this.emprendimientos.splice(this.pageCount, event.pageCount);
     this.pageCount = event.pageCount;
   }
 

@@ -5,13 +5,13 @@ import { MessageService } from 'primeng/api';
 import { Subscription, catchError } from 'rxjs';
 import { Paises } from 'src/app/consts/paises';
 import { AdminService } from 'src/app/core/services/dashboard/admin.service';
+import { DataFetchingService } from 'src/app/core/services/main/data-fetching.service';
 import { PantallaService } from 'src/app/core/services/pantalla.service';
 import { formateDateInput, formateDateOutPut } from 'src/app/helpers/formateDate';
 import { ValidForm } from 'src/app/helpers/validForms';
-import { CondicionVulnerable, Funcionario, Genero, Graduado, InfoCarrera, Pais, Rol, TipoDocumento, UserInternal } from 'src/app/models/main/Inicio.interface';
+import { CondicionVulnerable, Funcionario, Genero, Graduado, InfoCarrera, Pais, Rol, TipoDocumento } from 'src/app/models/main/Inicio.interface';
 import { Variant } from 'src/app/models/ui/CustomInfoCard';
 import { environment } from 'src/environments/environment';
-import Swal from 'sweetalert2';
 
 
 @Component({
@@ -46,7 +46,6 @@ export class UsuariosComponent implements OnInit {
   public roles: Rol[] = [];
   public next: null | string = ""
   public previous: null | string = ""
-  // public rolesSelected: Rol[] = [];
   public inforCardDescription: string = `
     ¡Te damos la bienvenida a nuestro destacado módulo de gestión de roles y usuarios! En este espacio
     especializado, podrás crear roles a medida, incorporar nuevos usuarios y asignar roles de manera
@@ -115,7 +114,8 @@ export class UsuariosComponent implements OnInit {
     private fb: UntypedFormBuilder,
     private adminService: AdminService,
     private pantallaService: PantallaService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private dataFetchingService: DataFetchingService
   ) {
     this.variantColor = Variant.Blue;
     this.paises = Paises;
@@ -125,11 +125,11 @@ export class UsuariosComponent implements OnInit {
     const [width] = this.pantallaService.calcularEspacioPantalla();
     this.subscription$ = width.subscribe(width => this.width = width);
     this.token = localStorage.getItem('token')!;
-    this.getGendersType();
-    this.getDocumentsType();
     this.getFuncionarios();
-    this.getCondiciones();
-    this.getRoles();
+    this.dataFetchingService.getGeneros().subscribe(res => this.gender_type = res.data);
+    this.dataFetchingService.getTiposDocumento().subscribe(res => this.document_type = res.data);
+    this.dataFetchingService.getCondiciones().subscribe(res => this.condiciones = res.data);
+    this.dataFetchingService.getRoles().subscribe(res => this.roles = res.data);
   }
 
   getEventValue($event: any): string {
@@ -142,7 +142,7 @@ export class UsuariosComponent implements OnInit {
 
   changeDisplayFormDetail(documento: string) {
     this.displayFormDetail = !this.displayFormDetail;
-    this.adminService.get(`${this.API_URI}/users/graduados/Detail/${documento}`, this.token).subscribe(res => {
+    this.adminService.get(`${this.API_URI}/users/detail/${documento}`, this.token).subscribe(res => {
       const {
         persona: {
           document_type,
@@ -191,31 +191,6 @@ export class UsuariosComponent implements OnInit {
   changeDisplayFormAssing() {
     this.displayFormAssign = !this.displayFormAssign
   }
-
-  getGendersType() {
-    this.adminService.get(`${this.API_URI}/genders`, this.token).subscribe(res => {
-      this.gender_type = res.data
-    })
-  }
-  getCondiciones() {
-    this.adminService.get(`${this.API_URI}/condiciones`, this.token).subscribe(res => {
-      this.condiciones = res.data
-    })
-  }
-  getDocumentsType() {
-    this.adminService.get(`${this.API_URI}/documents/`, this.token)
-    .pipe(
-      catchError(error => {
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Hubo un problema' });
-        throw error;
-      })
-    )
-    .subscribe(res => {
-      this.document_type = res.data;
-      this.next = res.next;
-      this.previous = res.previous;
-    })
-  }
   getFuncionarios() {
     this.formSearch.reset();
     this.funcionarioFound = false;
@@ -223,11 +198,7 @@ export class UsuariosComponent implements OnInit {
       this.funcionarios = res.data
     })
   }
-  getRoles() {
-    this.adminService.get(`${this.API_URI}/roles/`, this.token).subscribe(res => {
-      this.roles = res.data;
-    })
-  }
+
   handleCloseFormCreateDialog() {
     this.displayFormCreate = false;
     this.formCreate.reset();
@@ -263,16 +234,16 @@ export class UsuariosComponent implements OnInit {
 
       let body = {
         fullname,
-        condicion_vulnerable: parseInt(condicion_vulnerable?.id),
-        document_type: parseInt(document_type?.id),
+        condicion_vulnerable: condicion_vulnerable?.id ? condicion_vulnerable.id : "",
+        document_type: document_type?.id ? document_type.id : null,
         identification,
-        fecha_expedicion: fecha_expedicion && formateDateOutPut(fecha_expedicion),
+        fecha_expedicion: fecha_expedicion ? formateDateOutPut(fecha_expedicion) : null,
         nationality: nationality.name,
         departamento: departamento.name,
         municipio: municipio.name,
-        gender_type: parseInt(gender_type?.id),
+        gender_type: gender_type?.id ? gender_type.id : null,
         address,
-        date_of_birth: date_of_birth && formateDateOutPut(date_of_birth),
+        date_of_birth: date_of_birth ? formateDateOutPut(date_of_birth) : null,
         email,
         email2,
         phone,
@@ -294,7 +265,6 @@ export class UsuariosComponent implements OnInit {
           this.getFuncionarios();
           this.messageService.add({ severity: 'success', summary: 'Notificación', detail: 'Creado Correctamente' });
         })
-
     }
   }
 
@@ -320,7 +290,7 @@ export class UsuariosComponent implements OnInit {
       .subscribe(res => {
         this.messageService.add({ severity: 'success', summary: 'Notificación', detail: 'Asignado correctamente' });
         this.getFuncionarios();
-        this.getRoles();
+        this.dataFetchingService.getRoles().subscribe(res => this.roles = res.data);
         this.handleCloseFormAssingDialog();
       })
   }
@@ -333,7 +303,7 @@ export class UsuariosComponent implements OnInit {
   traerFuncionarioFormAssing() {
     const { documento } = this.formAssing.value;
     if (!documento) return this.messageService.add({ severity: 'warn', summary: 'Notificación', detail: 'Ingrese un No. Documento' });
-    this.adminService.get(`${this.API_URI}/users/funcionarios/${documento}`, this.token)
+    this.adminService.get(`${this.API_URI}/users/funcionarios/roles/${documento}`, this.token)
       .pipe(
         catchError(error => {
           if (error?.error?.errors.error === "El usuario asociado al funcionario no existe.") {
@@ -355,16 +325,15 @@ export class UsuariosComponent implements OnInit {
     this.adminService.get(`${this.API_URI}/users/funcionarios/${documento}`, this.token)
       .pipe(
         catchError(error => {
-          if (error?.error?.errors.error === "El usuario asociado al funcionario no existe.") {
-            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Funcionario no encontrado' });
-          } else {
-            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Hubo un problema' });
-          }
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Hubo un problema' });
           throw error;
         })
       )
       .subscribe(res => {
-        this.funcionarios = [res.data.persona];
+        if (res.data.length === 0) {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Funcionario no encontrado' });
+        }
+        this.funcionarios = res.data;
       })
   }
 

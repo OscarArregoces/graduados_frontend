@@ -38,7 +38,6 @@ export class SolicitudesComponent implements OnInit {
   traerSolicitudes() {
     try {
       this.pqrsService.get(`${this.API_URI}/pqrs/asignacion/solicitudes/`, this.token).subscribe(respuesta => {
-        // console.log(respuesta.data)
         this.solicitudes = respuesta.data;
       })
     } catch (error) {

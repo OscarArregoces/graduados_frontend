@@ -3,6 +3,7 @@ import { UntypedFormBuilder, UntypedFormControl, Validators } from '@angular/for
 import { MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
 import { ClasificadosService } from 'src/app/core/services/dashboard/clasificados.service';
+import { DataFetchingService } from 'src/app/core/services/main/data-fetching.service';
 import { PantallaService } from 'src/app/core/services/pantalla.service';
 import { environment } from 'src/environments/environment';
 
@@ -51,23 +52,33 @@ export class EditarComponent implements OnInit, OnDestroy {
     Instagram: [''],
     PaginaWeb: [''],
     redes: [''],
-
   })
 
   constructor(
     private fb: UntypedFormBuilder,
     private clasificadosService: ClasificadosService,
     private messageService: MessageService,
-    private pantallaService: PantallaService
+    private pantallaService: PantallaService,
+    private dataFetchingService: DataFetchingService,
   ) { }
 
   ngOnInit(): void {
     this.token = localStorage.getItem('token');
-    this.traerEmprendimientos();
-    this.traerCategorias();
-    this.traerCapacitaciones();
     const [width] = this.pantallaService.calcularEspacioPantalla();
     this.subscription$ = width.subscribe(width => this.width = width);
+    this.dataFetchingService.getEmprendimientos().subscribe(res => {
+      this.emprendimientos = [];
+      this.emprendimientosVerificated = [];
+      this.emprendimientos = res.data;
+      res.data.map((emprendimiento: any) => this.emprendimientosVerificated.push(emprendimiento.nombre_emprendimiento.trim().toLowerCase()));
+    })
+    this.dataFetchingService.getCategorias().subscribe(res => {
+      this.categorias = res.data;
+    })
+    this.dataFetchingService.getCapacitaciones().subscribe(res => {
+      this.capacitaciones = res.data;
+    })
+
   }
   ngOnDestroy(): void {
     this.subscription$.unsubscribe()
@@ -98,16 +109,16 @@ export class EditarComponent implements OnInit, OnDestroy {
 
   onSubmit() {
 
-    const { 
-      nombre_emprendimiento, 
-      descripcion, 
-      telefono_emprendimiento, 
+    const {
+      nombre_emprendimiento,
+      descripcion,
+      telefono_emprendimiento,
       correo_emprendimiento,
-      corregimiento, 
+      corregimiento,
       municipio,
       direccion,
       subCategoria,
-     } = this.form.value;
+    } = this.form.value;
 
     let tipoCapacitacion: any[] = this.tipo_capacitacion.value;
     let capacitacionesId: any[] = [];
@@ -153,40 +164,12 @@ export class EditarComponent implements OnInit, OnDestroy {
         this.formas_pago.reset()
         this.closeDisplay();
         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Editado correctamente' })
-        return this.traerEmprendimientos()
-      })
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  traerEmprendimientos() {
-    this.emprendimientos = [];
-    this.emprendimientosVerificated = [];
-    try {
-      this.clasificadosService.get(`${this.API_URI}/advertisements/`, this.token).subscribe(r => {
-        this.emprendimientos = r.data;
-        r.data.map((emprendimiento: any) => this.emprendimientosVerificated.push(emprendimiento.nombre_emprendimiento.trim().toLowerCase()));
-      })
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  traerCategorias() {
-    try {
-      this.clasificadosService.get(`${this.API_URI}/advertisements/category/`, this.token).subscribe(res => {
-        this.categorias = res.data;
-      })
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  traerCapacitaciones() {
-    try {
-      this.clasificadosService.get(`${this.API_URI}/advertisements/capacitaciones/`, this.token).subscribe(res => {
-        this.capacitaciones = res.data;
+        this.dataFetchingService.getEmprendimientos().subscribe(res => {
+          this.emprendimientos = [];
+          this.emprendimientosVerificated = [];
+          this.emprendimientos = res.data;
+          res.data.map((emprendimiento: any) => this.emprendimientosVerificated.push(emprendimiento.nombre_emprendimiento.trim().toLowerCase()));
+        })
       })
     } catch (error) {
       console.log(error)

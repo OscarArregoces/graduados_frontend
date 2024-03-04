@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
 import { PqrsService } from 'src/app/core/services/dashboard/pqrs.service';
+import { DataFetchingService } from 'src/app/core/services/main/data-fetching.service';
 import { PantallaService } from 'src/app/core/services/pantalla.service';
 import { environment } from 'src/environments/environment';
 
@@ -32,30 +33,21 @@ export class EliminarComponent implements OnInit, OnDestroy {
     private pqrsService: PqrsService,
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
-    private pantallaService: PantallaService
+    private pantallaService: PantallaService,
+    private dataFetchingService: DataFetchingService
   ) { }
 
   ngOnInit(): void {
     this.token = localStorage.getItem('token');
-    this.traerSolicitudes();
-
     const [width] = this.pantallaService.calcularEspacioPantalla();
     this.subscription$ = width.subscribe(width => this.width = width);
+    this.dataFetchingService.getSolicitudes().subscribe(res => this.solicitud = res.data);
   }
 
   ngOnDestroy(): void {
     this.subscription$.unsubscribe();
   }
 
-
-  traerSolicitudes() {
-    this.solicitudes = [];
-    try {
-      this.pqrsService.get(`${this.API_URI}/pqrs/`, this.token).subscribe(respuesta => this.solicitudes = respuesta.data)
-    } catch (error) {
-      console.log(error)
-    }
-  }
 
   getEventValue($event: any): string {
     return $event.target.value;
@@ -78,7 +70,7 @@ export class EliminarComponent implements OnInit, OnDestroy {
       accept: () => {
         try {
           this.pqrsService.delete(`${this.API_URI}/pqrs/delete/${id}/`, this.token).subscribe(respuesta => {
-            this.traerSolicitudes();
+            this.dataFetchingService.getSolicitudes().subscribe(res => this.solicitud = res.data);
             return this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Eliminado correctamente !!!' });
           });
         } catch (error) {
@@ -101,7 +93,7 @@ export class EliminarComponent implements OnInit, OnDestroy {
     }
     try {
       this.pqrsService.delete(`${this.API_URI}/pqrs/delete/`, this.token, body).subscribe(respuesta => {
-        this.traerSolicitudes();
+        this.dataFetchingService.getSolicitudes().subscribe(res => this.solicitud = res.data);
         this.itemsBulkDelete = [];
         return this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Eliminado correctamente !!!' })
       });

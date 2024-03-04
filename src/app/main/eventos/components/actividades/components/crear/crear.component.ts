@@ -3,9 +3,11 @@ import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
 import { EventosService } from 'src/app/core/services/dashboard/eventos.service';
+import { DataFetchingService } from 'src/app/core/services/main/data-fetching.service';
 import { PantallaService } from 'src/app/core/services/pantalla.service';
 import { formateDateOutPut } from 'src/app/helpers/formateDate';
 import { formateHours12 } from 'src/app/helpers/formateHours';
+import { ValidForm } from 'src/app/helpers/validForms';
 import { verifyDate } from 'src/app/helpers/verifyDate';
 import { environment } from 'src/environments/environment';
 
@@ -20,20 +22,56 @@ export class CrearComponent implements OnInit, OnDestroy {
   public subscription$!: Subscription;
   public width: string = '';
   public programas: any[] = [];
-  public customEmails: any[] = [];
+  public modalidades: any[] = [
+    { id: 1, name: 'PRESENCIAL' },
+    { id: 2, name: 'VIRTUAL' },
+  ];
+  public sedes: any[] = [
+    { id: 1, name: 'RIOHACHA' },
+    { id: 2, name: 'MAICAO' },
+    { id: 3, name: 'FONSECA' },
+  ];
+  public dependencias: any[] = [
+    { id: 1, name: 'FACEYA' },
+    { id: 2, name: 'FACED' },
+    { id: 3, name: 'FCSYH' },
+    { id: 4, name: 'FIUG' },
+    { id: 5, name: 'FCBYA y Dependencias' },
+  ];
+  public servicios: any[] = [
+    { id: 1, name: ' Comunicaciones (Publicidad)' },
+    { id: 2, name: ' Ori (Ponente)' },
+    { id: 3, name: ' Bienestar Universitario' },
+    { id: 4, name: ' Protocolo' },
+    { id: 5, name: ' Recursos Fisicos' },
+    { id: 5, name: ' Talento Humano' },
+  ];
+  public roles: any[] = [
+    { id: 1, name: 'Organizador' },
+    { id: 2, name: 'Ponente' },
+    { id: 3, name: 'Ponente Magistral' },
+    { id: 4, name: 'Moderador' },
+    { id: 5, name: 'Asistente' },
+  ];
+  public tipoVinculacion: any[] = [
+    { id: 1, name: 'Docente catedrático' },
+    { id: 2, name: 'Docente ocasional y/o planta' },
+    { id: 3, name: 'Estudiante' },
+    { id: 4, name: 'Administrativo' },
+    { id: 5, name: 'Graduado' },
+    { id: 6, name: 'Directivo' },
+    { id: 7, name: 'Invitado externo' },
+  ];
+  public responsables: any[] = [];
+
   public token: any;
   public areas: any[] = [];
   public areasVerificated: any[] = [];
   public subareas: any[] = [];
   public tipo_actividades: any[] = [];
   public tipoActividadesVerificated: any[] = [];
-  public displayBtnAddSubArea: boolean = true;
-  public banderaSubAreas: boolean = true;
-  public DisplayTipoActividadesForm: boolean = false;
-  public DisplayAreasForm: boolean = false;
-  public DisplaySubAreasForm: boolean = false;
-  public DisplayFormCustomEmails: boolean = false;
-  public permisoAddArea: string = 'eventos.add_eventosarea';
+  public ponentes: any[] = [];
+  public displayFormPonentes: boolean = false;
   public inforCardDescription: string = `
   En la sección de Correos Electrónicos Personalizados, tienes la opción de agregar direcciones de correo manualmente para invitar a personas específicas a tu actividad. Esto te brinda la flexibilidad de extender invitaciones personalizadas a individuos fuera de las listas de facultades o programas predefinidos.
   ¡Aprovecha esta herramienta para garantizar que todos aquellos a quienes deseas incluir en tu evento reciban una invitación personalizada y completa!
@@ -51,10 +89,17 @@ export class CrearComponent implements OnInit, OnDestroy {
     hora: ['', [Validators.required, Validators.maxLength(10)]],
     fecha: ['', Validators.required],
     publico: ['', Validators.required],
-  })
-  public formCustomEmails = this.fb.group({
-    // email: ['', [Validators.required, Validators.maxLength(40)]]
-    email: ['', [Validators.required, Validators.email, Validators.maxLength(40)]]
+    modalidad: ['', Validators.required],
+  });
+
+  public formPonentes = this.fb.group({
+    fullname: ['', Validators.required],
+    document: ['', Validators.required],
+    email: ['', [Validators.required, Validators.email]],
+    phone: ['', Validators.required],
+    vinculacion: ['', Validators.required],
+    rol: ['', Validators.required],
+    dedicacion: ['', Validators.required],
   })
 
   public dimensiones = {
@@ -93,27 +138,38 @@ export class CrearComponent implements OnInit, OnDestroy {
     private eventosService: EventosService,
     private fb: UntypedFormBuilder,
     private messageService: MessageService,
-    private pantallaService: PantallaService
+    private pantallaService: PantallaService,
+    private dataFechingService: DataFetchingService
   ) { }
 
   ngOnInit(): void {
     const [width] = this.pantallaService.calcularEspacioPantallaPersonalized(this.dimensiones);
     this.subscription$ = width.subscribe(width => this.width = width);
     this.token = localStorage.getItem('token');
-    this.traerAreas();
-    this.traerTipoEventos();
-    this.traerProgramas();
+    this.dataFechingService.getProgramas().subscribe(res => this.programas = res.data);
+    this.dataFechingService.getAreas().subscribe(res => {
+      this.areas = []
+      this.areasVerificated = []
+      this.areas = res.data;
+      res.data.map((area: any) => this.areasVerificated.push(area.name.toLowerCase().replace(/\s+/g, '')))
+      this.form.controls['subArea'].disable()
+    });
+    this.dataFechingService.getTipoActividades().subscribe(res => {
+      this.tipoActividadesVerificated = []
+      this.tipo_actividades = []
+      this.tipo_actividades = res.data;
+      res.data.map((tipo: any) => this.tipoActividadesVerificated.push(tipo.name.toLowerCase().replace(/\s+/g, '')))
+    });
   }
+
   ngOnDestroy(): void {
     this.subscription$.unsubscribe();
   }
 
   onSubmit() {
     const { area, subArea, nombre_actividad, tipo_actividad, responsable, lugar, cupos, descripcion, objectivo, fecha, hora, publico } = this.form.value;
-
     const fullHour12 = formateHours12(hora);
     const fullDate = formateDateOutPut(fecha);
-
     if (verifyDate(fullDate, fullHour12)) {
       return this.messageService.add({ severity: 'warn', summary: 'Notificación', detail: 'No puedes colocar una fecha anterior a la fecha actual' })
     }
@@ -131,16 +187,11 @@ export class CrearComponent implements OnInit, OnDestroy {
       "fecha": fullDate,
       "hora": fullHour12,
       publico,
-      "custom_email": this.customEmails.map(email => email.email)
     }
-    console.log(body);
-
     try {
       this.eventosService.post(`${this.API_URI}/eventos/create/`, body, this.token).subscribe(r => {
         this.form.reset();
-        this.clearAll();
         this.messageService.add({ severity: 'success', summary: 'Notificación', detail: 'Creado correctamente' })
-
       })
     } catch (error) {
       return this.messageService.add({ severity: 'error', summary: 'Notificación', detail: 'Hubo un problema en la petición' })
@@ -163,78 +214,31 @@ export class CrearComponent implements OnInit, OnDestroy {
         console.log(error)
       }
       this.form.controls['subArea'].enable()
-      this.displayBtnAddSubArea = !this.displayBtnAddSubArea;
     }
   }
 
-  traerAreas() {
-    this.areas = []
-    this.areasVerificated = []
-    try {
-      this.eventosService.get(`${this.API_URI}/eventos/areas`, this.token).subscribe(respuesta => {
-        this.areas = respuesta.data;
-        respuesta.data.map((area: any) => this.areasVerificated.push(area.name.toLowerCase().replace(/\s+/g, '')))
-        this.form.controls['subArea'].disable()
-      })
-    } catch (error) {
-      console.log(error)
+  changeDisplayFormPonentes() {
+    this.displayFormPonentes = !this.displayFormPonentes;
+  }
+  closeDisplayFormPonentes() {
+    this.displayFormPonentes = false;
+    this.formPonentes.reset();
+  }
+
+  onSubmitFormPonentes() {
+    ValidForm(this.form);
+    if (this.formPonentes.valid) {
+      this.responsables.push({
+        fullname: this.formPonentes.value.fullname,
+        document: this.formPonentes.value.document,
+        email: this.formPonentes.value.email,
+        phone: this.formPonentes.value.phone,
+        vinculacion: this.formPonentes.value.vinculacion.name,
+        rol: this.formPonentes.value.rol.name,
+        dedicacion: this.formPonentes.value.dedicacion,
+      });
+      this.closeDisplayFormPonentes();
     }
-  }
 
-  traerTipoEventos() {
-    this.tipoActividadesVerificated = []
-    this.tipo_actividades = []
-    try {
-      this.eventosService.get(`${this.API_URI}/eventos/tipos/`, this.token).subscribe(respuesta => {
-        this.tipo_actividades = respuesta.data;
-        respuesta.data.map((tipo: any) => this.tipoActividadesVerificated.push(tipo.name.toLowerCase().replace(/\s+/g, '')))
-      })
-    } catch (error) {
-      console.log(error)
-    }
   }
-  traerProgramas() {
-    this.programas = []
-    try {
-      this.eventosService.get(`${this.API_URI}/university/programa/`, this.token).subscribe(respuesta => {
-        this.programas = respuesta.data;
-      })
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  changeDisplayCustomEmails() {
-    this.DisplayFormCustomEmails = !this.DisplayFormCustomEmails
-  }
-  closeDisplayCustomEmails() {
-    this.customEmails = [];
-    this.formCustomEmails.reset();
-    this.DisplayFormCustomEmails = false;
-  }
-
-  addCustomEmail() {
-    const { email } = this.formCustomEmails.value;
-    let emailExist = this.customEmails.find((email: any) => email.email === email);
-    if (emailExist) return this.messageService.add({ severity: 'warn', summary: 'Notificación', detail: 'Este correo ya fue ingresado' });
-    this.customEmails.push({
-      email: email
-    })
-    this.formCustomEmails.reset();
-  }
-
-  removeCustomEmail(emailToDelete: string) {
-    this.customEmails = this.customEmails.filter((email: any) => email.email !== emailToDelete);
-    this.formCustomEmails.reset();
-  }
-
-  clearAll() {
-    this.customEmails = [];
-    this.formCustomEmails.reset();
-  }
-
-  saveCustomEmails() {
-    console.log(this.customEmails.map(email => email.email));
-  }
-
 }

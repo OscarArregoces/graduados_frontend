@@ -6,6 +6,7 @@ import { FileUpload } from 'primeng/fileupload';
 import { Subscription } from 'rxjs';
 import { Municipios } from 'src/app/consts/Municipios';
 import { ClasificadosService } from 'src/app/core/services/dashboard/clasificados.service';
+import { DataFetchingService } from 'src/app/core/services/main/data-fetching.service';
 import { PantallaService } from 'src/app/core/services/pantalla.service';
 import { Variant } from 'src/app/models/ui/CustomInfoCard';
 
@@ -75,6 +76,7 @@ export class CrearComponent implements OnInit, DoCheck, OnDestroy {
     private clasificadosService: ClasificadosService,
     private messageService: MessageService,
     private pantalla: PantallaService,
+    private dataFetchingService: DataFetchingService
   ) {
     this.municipios = Municipios;
   }
@@ -87,11 +89,20 @@ export class CrearComponent implements OnInit, DoCheck, OnDestroy {
 
   ngOnInit(): void {
     this.token = localStorage.getItem('token')!;
-    this.traerCategorias();
-    this.traerSubcategorias();
-    this.traerCapacitaciones()
     const [width] = this.pantalla.calcularEspacioPantalla();
     this.subscription$ = width.subscribe(width => this.width = width);
+    this.dataFetchingService.getCategorias().subscribe(res => {
+      this.loading = false
+      this.categorias = res.data;
+    })
+    this.dataFetchingService.getSubCategorias().subscribe(res => {
+      this.loading = false
+      this.subCategoriasVerify = res.data;
+    })
+    this.dataFetchingService.getCapacitaciones().subscribe(res => {
+      this.loading = false
+      this.capacitaciones = res.data;
+    })
   }
 
   ngOnDestroy(): void {
@@ -170,7 +181,10 @@ export class CrearComponent implements OnInit, DoCheck, OnDestroy {
         this.tipo_capacitacion.reset();
         this.formas_pago.reset();
         this.fileUpload.clear();
-        this.traerCategorias()
+        this.dataFetchingService.getCategorias().subscribe(res => {
+          this.loading = false
+          this.categorias = res.data;
+        })
         return this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Creado correctamente' })
       })
     } catch (error) {
@@ -202,44 +216,4 @@ export class CrearComponent implements OnInit, DoCheck, OnDestroy {
       console.log(error)
     }
   }
-
-  traerCategorias() {
-    this.loading = true;
-    this.categorias = [];
-    try {
-      this.clasificadosService.get(`${this.API_URI}/advertisements/category/`, this.token).subscribe(respuesta => {
-        this.loading = false
-        this.categorias = respuesta.data;
-      })
-    } catch (error) {
-      console.log('Error en consulta', error)
-    }
-  }
-
-  traerSubcategorias() {
-    this.loading = true;
-    this.subCategoriasVerify = [];
-    try {
-      this.clasificadosService.get(`${this.API_URI}/advertisements/sub/category/`, this.token).subscribe(respuesta => {
-        this.loading = false
-        this.subCategoriasVerify = respuesta.data;
-      })
-    } catch (error) {
-      console.log('Error en consulta', error)
-    }
-  }
-
-  traerCapacitaciones() {
-    this.loading = true;
-    this.capacitaciones = [];
-    try {
-      this.clasificadosService.get(`${this.API_URI}/advertisements/capacitaciones/`, this.token).subscribe(res => {
-        this.loading = false
-        this.capacitaciones = res.data;
-      })
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
 }

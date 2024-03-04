@@ -7,6 +7,7 @@ import { environment } from 'src/environments/environment';
 import { PantallaService } from 'src/app/core/services/pantalla.service';
 import { Subscription } from 'rxjs';
 import { Variant } from 'src/app/models/ui/CustomInfoCard';
+import { DataFetchingService } from 'src/app/core/services/main/data-fetching.service';
 
 @Component({
   selector: 'app-gestionar',
@@ -54,34 +55,28 @@ export class GestionarComponent implements OnInit, OnDestroy {
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
     private fb: UntypedFormBuilder,
-    private pantallaService: PantallaService
+    private pantallaService: PantallaService,
+    private dataFetchingService: DataFetchingService
   ) {
     this.variantColor = Variant.Blue
   }
 
   ngOnInit(): void {
     this.token = localStorage.getItem('token')
-    this.traerMomentos();
     const [width] = this.pantallaService.calcularEspacioPantalla();
     this.subscription$ = width.subscribe(width => this.width = width);
+    this.dataFetchingService.getMomentos().subscribe(res => {
+      this.momentos = [];
+      this.momentosVerificated = [];
+      this.momentos = res.data;
+      res.data.map((momento: any) => this.momentosVerificated.push(momento.tipo.toLowerCase().replace(/\s+/g, '')))
+    })
   }
   ngOnDestroy(): void {
     this.subscription$.unsubscribe()
   }
 
 
-  traerMomentos() {
-    this.momentos = [];
-    this.momentosVerificated = [];
-    try {
-      this.encuestasService.get(`${this.API_URI}/poll/momentos/`, this.token).subscribe(respuesta => {
-        this.momentos = respuesta.data;
-        respuesta.data.map((momento: any) => this.momentosVerificated.push(momento.tipo.toLowerCase().replace(/\s+/g, '')))
-      })
-    } catch (error) {
-      console.log('Error en consulta', error)
-    }
-  }
 
 
   onSubmit() {
@@ -91,7 +86,12 @@ export class GestionarComponent implements OnInit, OnDestroy {
     try {
       this.encuestasService.post(`${this.API_URI}/poll/momentos/create/`, this.formCreate.value, this.token).subscribe(respuesta => {
         this.formCreate.reset();
-        this.traerMomentos();
+        this.dataFetchingService.getMomentos().subscribe(res => {
+          this.momentos = [];
+          this.momentosVerificated = [];
+          this.momentos = res.data;
+          res.data.map((momento: any) => this.momentosVerificated.push(momento.tipo.toLowerCase().replace(/\s+/g, '')))
+        })
         this.changeDisplayFormCreate();
         return this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Creado correctamente' })
       })
@@ -106,7 +106,12 @@ export class GestionarComponent implements OnInit, OnDestroy {
     }
     try {
       this.encuestasService.put(`${this.API_URI}/poll/momentos/update/${this.idEdit}/`, this.formEdit.value, this.token).subscribe(respuesta => {
-        this.traerMomentos();
+        this.dataFetchingService.getMomentos().subscribe(res => {
+          this.momentos = [];
+          this.momentosVerificated = [];
+          this.momentos = res.data;
+          res.data.map((momento: any) => this.momentosVerificated.push(momento.tipo.toLowerCase().replace(/\s+/g, '')))
+        })
         this.formEdit.reset();
         this.changeDisplayFormEdit()
         return this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Editado correctamente' })
@@ -118,7 +123,12 @@ export class GestionarComponent implements OnInit, OnDestroy {
   handleDelete(momento: any) {
     try {
       this.encuestasService.delete(`${this.API_URI}/poll/momentos/delete/${momento.id}/`, this.token).subscribe(respuesta => {
-        this.traerMomentos();
+        this.dataFetchingService.getMomentos().subscribe(res => {
+          this.momentos = [];
+          this.momentosVerificated = [];
+          this.momentos = res.data;
+          res.data.map((momento: any) => this.momentosVerificated.push(momento.tipo.toLowerCase().replace(/\s+/g, '')))
+        })
         return this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Eliminado correctamente' })
       })
     } catch (error) {
@@ -135,7 +145,12 @@ export class GestionarComponent implements OnInit, OnDestroy {
     }
     try {
       this.encuestasService.delete(`${this.API_URI}poll/momentos/delete/`, this.token, body).subscribe(respuesta => {
-        this.traerMomentos();
+        this.dataFetchingService.getMomentos().subscribe(res => {
+          this.momentos = [];
+          this.momentosVerificated = [];
+          this.momentos = res.data;
+          res.data.map((momento: any) => this.momentosVerificated.push(momento.tipo.toLowerCase().replace(/\s+/g, '')))
+        })
         this.itemsBulkDelete = [];
         return this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Eliminado correctamente !!!' })
       });
@@ -175,7 +190,12 @@ export class GestionarComponent implements OnInit, OnDestroy {
       accept: () => {
         try {
           this.encuestasService.delete(`${this.API_URI}/poll/momentos/delete/${id}/`, this.token).subscribe(respuesta => {
-            this.traerMomentos();
+            this.dataFetchingService.getMomentos().subscribe(res => {
+              this.momentos = [];
+              this.momentosVerificated = [];
+              this.momentos = res.data;
+              res.data.map((momento: any) => this.momentosVerificated.push(momento.tipo.toLowerCase().replace(/\s+/g, '')))
+            })
             return this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Eliminado correctamente !!!' })
           });
         } catch (error) {

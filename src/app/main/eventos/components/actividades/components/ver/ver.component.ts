@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { EventosService } from 'src/app/core/services/dashboard/eventos.service';
+import { DataFetchingService } from 'src/app/core/services/main/data-fetching.service';
 import { formateDateOutPut } from 'src/app/helpers/formateDate';
 import { environment } from 'src/environments/environment';
 
@@ -46,22 +47,12 @@ export class VerComponent implements OnInit {
   constructor(
     private eventosService: EventosService,
     public fb: UntypedFormBuilder,
-    private messageService: MessageService
+    private dataFetchingService: DataFetchingService
   ) { }
 
   ngOnInit(): void {
     this.token = localStorage.getItem('token');
-    this.traerActividades();
-  }
-
-  traerActividades() {
-    try {
-      this.eventosService.get(`${this.API_URI}/eventos/`, this.token).subscribe(r => {
-        this.actividades = r.data
-      })
-    } catch (error) {
-      console.log(error)
-    }
+    this.dataFetchingService.getActividades().subscribe(res => this.actividades = res.data)
   }
 
   getEventValue($event: any): string {

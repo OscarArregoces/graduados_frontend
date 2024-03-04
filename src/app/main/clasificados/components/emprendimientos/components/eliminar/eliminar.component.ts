@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
 import { ClasificadosService } from 'src/app/core/services/dashboard/clasificados.service';
+import { DataFetchingService } from 'src/app/core/services/main/data-fetching.service';
 import { PantallaService } from 'src/app/core/services/pantalla.service';
 import { environment } from 'src/environments/environment';
 
@@ -19,8 +20,8 @@ export class EliminarComponent implements OnInit, OnDestroy {
   public emprendimientosSeleccionados: any[] = [];
   public token: any;
   public width: any;
-  public loading:boolean = false;
-  public visible:boolean = false;
+  public loading: boolean = false;
+  public visible: boolean = false;
   public inforCardDescription: string = `
   La opción 'Eliminar Emprendimientos' brinda a los usuarios la capacidad de gestionar su lista de emprendimientos de manera efectiva. Permite la eliminación de emprendimientos que ya no son relevantes o que han sido cerrados. Esta función garantiza una base de datos actualizada y ordenada, proporcionando a los usuarios la flexibilidad para reflejar con precisión el estado actual de sus negocios en la plataforma.
   `;
@@ -29,46 +30,38 @@ export class EliminarComponent implements OnInit, OnDestroy {
     private clasificadosService: ClasificadosService,
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
-    private pantallaService: PantallaService
+    private pantallaService: PantallaService,
+    private dataFetchingService: DataFetchingService,
   ) { }
 
   ngOnInit(): void {
     this.token = localStorage.getItem('token');
-    this.traerEmprendimientos();
     const [width] = this.pantallaService.calcularEspacioPantalla();
     this.subscription$ = width.subscribe(width => this.width = width);
+    this.dataFetchingService.getEmprendimientos().subscribe(res => {
+      this.emprendimientos = [];
+      this.emprendimientos = res.data
+    })
   }
   ngOnDestroy(): void {
     this.subscription$.unsubscribe()
   }
 
 
-  traerEmprendimientos() {
-    this.emprendimientos = [];
-    try {
-      this.clasificadosService.get(`${this.API_URI}/advertisements/`, this.token).subscribe(respuesta => {
-        console.log(respuesta)
-        this.emprendimientos = respuesta.data})
-     
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
   showDetalles(id: number) {
     this.visible = true;
-    this.emprendimiento = this.emprendimientos.filter( (emprendimiento:any) => emprendimiento.id === id)
-    console.log( this.emprendimiento )
+    this.emprendimiento = this.emprendimientos.filter((emprendimiento: any) => emprendimiento.id === id)
+    console.log(this.emprendimiento)
   }
   closeDetalles() {
     this.visible = false;
   }
 
-  
+
   getEventValue($event: any): string {
     return $event.target.value;
   }
-  confirm(event: Event | any, id:any) {
+  confirm(event: Event | any, id: any) {
     this.confirmationService.confirm({
       target: event.target,
       message: '¿Seguro que desea eliminar este emprendimiento?',
@@ -76,7 +69,10 @@ export class EliminarComponent implements OnInit, OnDestroy {
       accept: () => {
         try {
           this.clasificadosService.delete(`${this.API_URI}/advertisements/delete/${id}/`, this.token).subscribe(respuesta => {
-            this.traerEmprendimientos();
+            this.dataFetchingService.getEmprendimientos().subscribe(res => {
+              this.emprendimientos = [];
+              this.emprendimientos = res.data
+            })
             return this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Eliminado correctamente !!!' });
           });
         } catch (error) {

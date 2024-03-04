@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { PqrsService } from 'src/app/core/services/dashboard/pqrs.service';
+import { DataFetchingService } from 'src/app/core/services/main/data-fetching.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -23,30 +24,19 @@ export class MisSolicitudesComponent implements OnInit {
   El apartado 'Mis Solicitudes' dentro del módulo PQRS - Solicitudes ofrece a los usuarios una vista personalizada de las solicitudes que han presentado. Desde esta sección, los usuarios pueden acceder a detalles específicos de cada solicitud, incluyendo su estado actual y las respuestas proporcionadas por el equipo administrativo. Facilita un seguimiento detallado y transparente de las interacciones del usuario con el sistema PQRS, permitiéndoles estar informados sobre el progreso y las soluciones implementadas en respuesta a sus consultas, quejas, reclamos o sugerencias.
   `;
 
-
   constructor(
     private pqrsService: PqrsService,
-    private router: Router
+    private router: Router,
+    private dataFetchingService: DataFetchingService
   ) { }
 
   ngOnInit(): void {
     this.token = localStorage.getItem('token');
-    this.traerSolicitudes();
-  }
-
-  traerSolicitudes() {
-    try {
-      this.pqrsService.get(`${this.API_URI}/pqrs`, this.token).subscribe(respuesta => {
-        // console.log(respuesta)
-        this.solicitudes = respuesta.data.reverse();
-        this.cargando = false;
-        this.mostrarMensaje = this.solicitudes.length === 0;
-      })
-    } catch (error) {
-      console.log(error)
+    this.dataFetchingService.getSolicitudes().subscribe(res => {
+      this.solicitudes = res.data.reverse();
       this.cargando = false;
-      this.mostrarMensaje = true;
-    }
+      this.mostrarMensaje = this.solicitudes.length === 0;
+    })
   }
 
   changeDisplay() {

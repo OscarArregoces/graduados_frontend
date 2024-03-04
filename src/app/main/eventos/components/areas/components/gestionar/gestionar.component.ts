@@ -3,6 +3,7 @@ import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
 import { EventosService } from 'src/app/core/services/dashboard/eventos.service';
+import { DataFetchingService } from 'src/app/core/services/main/data-fetching.service';
 import { PantallaService } from 'src/app/core/services/pantalla.service';
 import { environment } from 'src/environments/environment';
 
@@ -51,43 +52,36 @@ export class GestionarComponent implements OnInit, OnDestroy {
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
     private fb: UntypedFormBuilder,
-    private pantallaService: PantallaService
+    private pantallaService: PantallaService,
+    private dataFetchingService: DataFetchingService
   ) { }
 
 
   ngOnInit(): void {
     this.token = localStorage.getItem('token')
-    this.traerAreas();
     const [width] = this.pantallaService.calcularEspacioPantalla();
     this.subscription$ = width.subscribe(width => this.width = width);
+    this.dataFetchingService.getAreas().subscribe(res => {
+      this.areas = res.data
+      res.data.map((area: any) => this.areasVerificated.push(area.name.toLowerCase().replace(/\s+/g, '')))
+    })
   }
 
   ngOnDestroy(): void {
     this.subscription$.unsubscribe();
   }
 
-  traerAreas() {
-    this.areas = []
-    this.areasVerificated = []
-    try {
-      this.eventosService.get(`${this.API_URI}/eventos/areas/`, this.token).subscribe(respuesta => {
-        this.areas = respuesta.data
-        respuesta.data.map((area: any) => this.areasVerificated.push(area.name.toLowerCase().replace(/\s+/g, '')))
-      })
-    } catch (error) {
-      console.log('Error en consulta', error)
-    }
-  }
-
   onSubmit() {
     if (this.areasVerificated.includes(this.formCreate.value.name.toLowerCase().replace(/\s+/g, ''))) {
       return this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Esta area ya existe' })
     }
-
     try {
       this.eventosService.post(`${this.API_URI}/eventos/areas/create/`, this.formCreate.value, this.token).subscribe(respuesta => {
         this.formCreate.reset();
-        this.traerAreas();
+        this.dataFetchingService.getAreas().subscribe(res => {
+          this.areas = res.data
+          res.data.map((area: any) => this.areasVerificated.push(area.name.toLowerCase().replace(/\s+/g, '')))
+        })
         this.changeDisplayFormCreate();
         return this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Creado correctamente' })
       })
@@ -107,7 +101,10 @@ export class GestionarComponent implements OnInit, OnDestroy {
     }
     try {
       this.eventosService.put(`${this.API_URI}/eventos/areas/update/${this.idEdit}/`, body, this.token).subscribe(respuesta => {
-        this.traerAreas();
+        this.dataFetchingService.getAreas().subscribe(res => {
+          this.areas = res.data
+          res.data.map((area: any) => this.areasVerificated.push(area.name.toLowerCase().replace(/\s+/g, '')))
+        })
         this.formEdit.reset();
         this.changeDisplayFormEdit()
         return this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Editado correctamente' })
@@ -126,7 +123,10 @@ export class GestionarComponent implements OnInit, OnDestroy {
     }
     try {
       this.eventosService.delete(`${this.API_URI}/eventos/areas/delete/`, this.token, body).subscribe(respuesta => {
-        this.traerAreas();
+        this.dataFetchingService.getAreas().subscribe(res => {
+          this.areas = res.data
+          res.data.map((area: any) => this.areasVerificated.push(area.name.toLowerCase().replace(/\s+/g, '')))
+        })
         return this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Eliminado correctamente !!!' })
       });
     } catch (error) {
@@ -165,7 +165,10 @@ export class GestionarComponent implements OnInit, OnDestroy {
       accept: () => {
         try {
           this.eventosService.delete(`${this.API_URI}/eventos/areas/delete/${id}/`, this.token).subscribe(respuesta => {
-            this.traerAreas();
+            this.dataFetchingService.getAreas().subscribe(res => {
+              this.areas = res.data
+              res.data.map((area: any) => this.areasVerificated.push(area.name.toLowerCase().replace(/\s+/g, '')))
+            })
             return this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Eliminado correctamente !!!' })
           });
         } catch (error) {

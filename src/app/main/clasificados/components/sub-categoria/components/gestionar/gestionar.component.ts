@@ -3,6 +3,7 @@ import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
 import { ClasificadosService } from 'src/app/core/services/dashboard/clasificados.service';
+import { DataFetchingService } from 'src/app/core/services/main/data-fetching.service';
 import { PantallaService } from 'src/app/core/services/pantalla.service';
 import { environment } from 'src/environments/environment';
 
@@ -47,43 +48,25 @@ export class GestionarComponent implements OnInit, OnDestroy {
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
     private fb: UntypedFormBuilder,
-    private pantallaService: PantallaService
+    private pantallaService: PantallaService,
+    private dataFetchingService: DataFetchingService
   ) { }
 
   ngOnInit(): void {
     this.token = localStorage.getItem('token')
-    this.traerSubCategorias();
-    this.traerCategorias();
     const [width] = this.pantallaService.calcularEspacioPantalla();
     this.subscription$ = width.subscribe(width => this.width = width);
+    this.dataFetchingService.getCategorias().subscribe(res => this.categorias = res.data);
+    this.dataFetchingService.getSubCategorias().subscribe(res => {
+      this.subCategorias = [];
+      this.subCategoriasVerificated = [];
+      this.subCategorias = res.data;
+      res.data.map((capacitacion: any) => this.subCategoriasVerificated.push(capacitacion.name.toLowerCase().replace(/\s+/g, '')))
+    });
   }
   ngOnDestroy(): void {
     this.subscription$.unsubscribe()
   }
-
-  traerCategorias() {
-    this.categorias = [];
-    try {
-      this.clasificadosService.get(`${this.API_URI}/advertisements/category/`, this.token).subscribe(respuesta => {
-        this.categorias = respuesta.data;
-      })
-    } catch (error) {
-      console.log('Error en consulta', error)
-    }
-  }
-  traerSubCategorias() {
-    this.subCategorias = [];
-    this.subCategoriasVerificated = [];
-    try {
-      this.clasificadosService.get(`${this.API_URI}/advertisements/sub/category/`, this.token).subscribe(respuesta => {
-        this.subCategorias = respuesta.data;
-        respuesta.data.map((capacitacion: any) => this.subCategoriasVerificated.push(capacitacion.name.toLowerCase().replace(/\s+/g, '')))
-      })
-    } catch (error) {
-      console.log('Error en consulta', error)
-    }
-  }
-
 
   onSubmit() {
     if (this.subCategoriasVerificated.includes(this.formCreate.value.name.toLowerCase().replace(/\s+/g, ''))) {
@@ -98,7 +81,12 @@ export class GestionarComponent implements OnInit, OnDestroy {
     try {
       this.clasificadosService.post(`${this.API_URI}/advertisements/sub/category/create/`, body, this.token).subscribe(respuesta => {
         this.formCreate.reset();
-        this.traerSubCategorias();
+        this.dataFetchingService.getSubCategorias().subscribe(res => {
+          this.subCategorias = [];
+          this.subCategoriasVerificated = [];
+          this.subCategorias = res.data;
+          res.data.map((capacitacion: any) => this.subCategoriasVerificated.push(capacitacion.name.toLowerCase().replace(/\s+/g, '')))
+        });
         this.changeDisplayFormCreate();
         return this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Creado correctamente' })
       })
@@ -118,7 +106,12 @@ export class GestionarComponent implements OnInit, OnDestroy {
     }
     try {
       this.clasificadosService.put(`${this.API_URI}/advertisements/sub/category/update/${this.idEdit}/`, body, this.token).subscribe(respuesta => {
-        this.traerSubCategorias();
+        this.dataFetchingService.getSubCategorias().subscribe(res => {
+          this.subCategorias = [];
+          this.subCategoriasVerificated = [];
+          this.subCategorias = res.data;
+          res.data.map((capacitacion: any) => this.subCategoriasVerificated.push(capacitacion.name.toLowerCase().replace(/\s+/g, '')))
+        });
         this.formEdit.reset();
         this.changeDisplayFormEdit()
         return this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Editado correctamente' })
@@ -137,7 +130,12 @@ export class GestionarComponent implements OnInit, OnDestroy {
     }
     try {
       this.clasificadosService.delete(`${this.API_URI}/advertisements/sub/category/delete/`, this.token, body).subscribe(respuesta => {
-        this.traerSubCategorias();
+        this.dataFetchingService.getSubCategorias().subscribe(res => {
+          this.subCategorias = [];
+          this.subCategoriasVerificated = [];
+          this.subCategorias = res.data;
+          res.data.map((capacitacion: any) => this.subCategoriasVerificated.push(capacitacion.name.toLowerCase().replace(/\s+/g, '')))
+        });
         return this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Eliminado correctamente !!!' })
       });
     } catch (error) {
@@ -165,7 +163,12 @@ export class GestionarComponent implements OnInit, OnDestroy {
       accept: () => {
         try {
           this.clasificadosService.delete(`${this.API_URI}/advertisements/sub/category/delete/${id}/`, this.token).subscribe(respuesta => {
-            this.traerSubCategorias();
+            this.dataFetchingService.getSubCategorias().subscribe(res => {
+              this.subCategorias = [];
+              this.subCategoriasVerificated = [];
+              this.subCategorias = res.data;
+              res.data.map((capacitacion: any) => this.subCategoriasVerificated.push(capacitacion.name.toLowerCase().replace(/\s+/g, '')))
+            });
             return this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Eliminado correctamente !!!' })
           });
         } catch (error) {

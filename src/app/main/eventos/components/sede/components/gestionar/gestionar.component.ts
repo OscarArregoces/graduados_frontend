@@ -3,6 +3,7 @@ import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
 import { EventosService } from 'src/app/core/services/dashboard/eventos.service';
+import { DataFetchingService } from 'src/app/core/services/main/data-fetching.service';
 import { PantallaService } from 'src/app/core/services/pantalla.service';
 import { environment } from 'src/environments/environment';
 
@@ -46,39 +47,28 @@ export class GestionarComponent implements OnInit, OnDestroy {
     name: ['', Validators.required],
   })
 
-
-  // .replace(/\s+/g, '')
-
-
   constructor(
     private eventosService: EventosService,
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
     private fb: UntypedFormBuilder,
-    private pantallaService: PantallaService
+    private pantallaService: PantallaService,
+    private dataFetchingService: DataFetchingService
   ) { }
 
   ngOnInit(): void {
     this.token = localStorage.getItem('token')
-    this.traerSedes();
     const [width] = this.pantallaService.calcularEspacioPantalla();
     this.subscription$ = width.subscribe(width => this.width = width);
+    this.dataFetchingService.getSedes().subscribe(res => {
+      this.sedes = res.data
+      res.data.map((sede: any) => this.sedesVerificated.push(sede.name.toLowerCase().replace(/\s+/g, '')))
+    })
   }
   ngOnDestroy(): void {
     this.subscription$.unsubscribe();
   }
 
-  traerSedes() {
-    this.sedes = []
-    try {
-      this.eventosService.get(`${this.API_URI}/university/sede/`, this.token).subscribe(respuesta => {
-        this.sedes = respuesta.data
-        respuesta.data.map((sede: any) => this.sedesVerificated.push(sede.name.toLowerCase().replace(/\s+/g, '')))
-      })
-    } catch (error) {
-      console.log('Error en consulta', error)
-    }
-  }
 
 
   onSubmit() {
@@ -89,7 +79,10 @@ export class GestionarComponent implements OnInit, OnDestroy {
     try {
       this.eventosService.post(`${this.API_URI}/university/sede/create/`, this.formCreate.value, this.token).subscribe(respuesta => {
         this.formCreate.reset();
-        this.traerSedes();
+        this.dataFetchingService.getSedes().subscribe(res => {
+          this.sedes = res.data
+          res.data.map((sede: any) => this.sedesVerificated.push(sede.name.toLowerCase().replace(/\s+/g, '')))
+        })
         this.changeDisplayFormCreate();
         return this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Creado correctamente' })
       })
@@ -107,7 +100,10 @@ export class GestionarComponent implements OnInit, OnDestroy {
     try {
       this.eventosService.put(`${this.API_URI}/university/sede/update/${this.idEdit}/`, this.formEdit.value, this.token).subscribe(respuesta => {
         this.formEdit.reset();
-        this.traerSedes();
+        this.dataFetchingService.getSedes().subscribe(res => {
+          this.sedes = res.data
+          res.data.map((sede: any) => this.sedesVerificated.push(sede.name.toLowerCase().replace(/\s+/g, '')))
+        })
         this.changeDisplayFormEdit()
         return this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Editado correctamente' })
       })
@@ -124,7 +120,10 @@ export class GestionarComponent implements OnInit, OnDestroy {
     }
     try {
       this.eventosService.delete(`${this.API_URI}/university/sede/delete/`, this.token, body).subscribe(respuesta => {
-        this.traerSedes();
+        this.dataFetchingService.getSedes().subscribe(res => {
+          this.sedes = res.data
+          res.data.map((sede: any) => this.sedesVerificated.push(sede.name.toLowerCase().replace(/\s+/g, '')))
+        })
         return this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Eliminado correctamente !!!' })
       });
     } catch (error) {
@@ -163,7 +162,10 @@ export class GestionarComponent implements OnInit, OnDestroy {
       accept: () => {
         try {
           this.eventosService.delete(`${this.API_URI}/university/sede/delete/${id}/`, this.token).subscribe(respuesta => {
-            this.traerSedes();
+            this.dataFetchingService.getSedes().subscribe(res => {
+              this.sedes = res.data
+              res.data.map((sede: any) => this.sedesVerificated.push(sede.name.toLowerCase().replace(/\s+/g, '')))
+            })
             return this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Eliminado correctamente !!!' })
           });
         } catch (error) {

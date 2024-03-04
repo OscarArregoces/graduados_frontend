@@ -3,6 +3,7 @@ import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
 import { PqrsService } from 'src/app/core/services/dashboard/pqrs.service';
+import { DataFetchingService } from 'src/app/core/services/main/data-fetching.service';
 import { PantallaService } from 'src/app/core/services/pantalla.service';
 import { environment } from 'src/environments/environment';
 
@@ -45,33 +46,24 @@ export class GestionarComponent implements OnInit, OnDestroy {
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
     private fb: UntypedFormBuilder,
-    private pantallaService: PantallaService
+    private pantallaService: PantallaService,
+    private dataFetchingService: DataFetchingService
   ) { }
 
   ngOnInit(): void {
     this.token = localStorage.getItem('token')
-    this.traerTipoSolicitudes();
     const [width] = this.pantallaService.calcularEspacioPantalla();
     this.subscription$ = width.subscribe(width => this.width = width);
+    this.dataFetchingService.getTipoSolicitudes().subscribe(res => {
+      this.tipoSolicitudes = [];
+      this.tipoSolicitudesVerificated = [];
+      this.tipoSolicitudes = res.data;
+      res.data.map((tipoSolicitud: any) => this.tipoSolicitudesVerificated.push(tipoSolicitud.tipo.toLowerCase().replace(/\s+/g, '')))
+    })
   }
   ngOnDestroy(): void {
     this.subscription$.unsubscribe();
   }
-
-
-  traerTipoSolicitudes() {
-    this.tipoSolicitudes = [];
-    this.tipoSolicitudesVerificated = [];
-    try {
-      this.pqrsService.get(`${this.API_URI}/pqrs/tipo/`, this.token).subscribe(respuesta => {
-        this.tipoSolicitudes = respuesta.data;
-        respuesta.data.map((tipoSolicitud: any) => this.tipoSolicitudesVerificated.push(tipoSolicitud.tipo.toLowerCase().replace(/\s+/g, '')))
-      })
-    } catch (error) {
-      console.log('Error en consulta', error)
-    }
-  }
-
 
   onSubmit() {
     if (this.tipoSolicitudesVerificated.includes(this.formCreate.value.tipo.toLowerCase().replace(/\s+/g, ''))) {
@@ -80,7 +72,12 @@ export class GestionarComponent implements OnInit, OnDestroy {
     try {
       this.pqrsService.post(`${this.API_URI}/pqrs/tipo/create/`, this.formCreate.value, this.token).subscribe(respuesta => {
         this.formCreate.reset();
-        this.traerTipoSolicitudes();
+        this.dataFetchingService.getTipoSolicitudes().subscribe(res => {
+          this.tipoSolicitudes = [];
+          this.tipoSolicitudesVerificated = [];
+          this.tipoSolicitudes = res.data;
+          res.data.map((tipoSolicitud: any) => this.tipoSolicitudesVerificated.push(tipoSolicitud.tipo.toLowerCase().replace(/\s+/g, '')))
+        })
         this.changeDisplayFormCreate();
         return this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Creado correctamente' })
       })
@@ -95,7 +92,12 @@ export class GestionarComponent implements OnInit, OnDestroy {
     }
     try {
       this.pqrsService.put(`${this.API_URI}/pqrs/tipo/update/${this.idEdit}/`, this.formEdit.value, this.token).subscribe(respuesta => {
-        this.traerTipoSolicitudes();
+        this.dataFetchingService.getTipoSolicitudes().subscribe(res => {
+          this.tipoSolicitudes = [];
+          this.tipoSolicitudesVerificated = [];
+          this.tipoSolicitudes = res.data;
+          res.data.map((tipoSolicitud: any) => this.tipoSolicitudesVerificated.push(tipoSolicitud.tipo.toLowerCase().replace(/\s+/g, '')))
+        })
         this.formEdit.reset();
         this.changeDisplayFormEdit()
         return this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Editado correctamente' })
@@ -115,7 +117,12 @@ export class GestionarComponent implements OnInit, OnDestroy {
     }
     try {
       this.pqrsService.delete(`${this.API_URI}/pqrs/tipo/delete/`, this.token, body).subscribe(respuesta => {
-        this.traerTipoSolicitudes();
+        this.dataFetchingService.getTipoSolicitudes().subscribe(res => {
+          this.tipoSolicitudes = [];
+          this.tipoSolicitudesVerificated = [];
+          this.tipoSolicitudes = res.data;
+          res.data.map((tipoSolicitud: any) => this.tipoSolicitudesVerificated.push(tipoSolicitud.tipo.toLowerCase().replace(/\s+/g, '')))
+        })
         this.itemsBulkDelete = [];
         return this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Eliminado correctamente !!!' })
       });
@@ -148,7 +155,12 @@ export class GestionarComponent implements OnInit, OnDestroy {
       accept: () => {
         try {
           this.pqrsService.delete(`${this.API_URI}/pqrs/tipo/delete/${id}/`, this.token).subscribe(respuesta => {
-            this.traerTipoSolicitudes();
+            this.dataFetchingService.getTipoSolicitudes().subscribe(res => {
+              this.tipoSolicitudes = [];
+              this.tipoSolicitudesVerificated = [];
+              this.tipoSolicitudes = res.data;
+              res.data.map((tipoSolicitud: any) => this.tipoSolicitudesVerificated.push(tipoSolicitud.tipo.toLowerCase().replace(/\s+/g, '')))
+            })
             return this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Eliminado correctamente !!!' })
           });
         } catch (error) {

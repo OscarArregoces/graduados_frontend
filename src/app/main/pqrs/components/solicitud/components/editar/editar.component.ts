@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { PqrsService } from 'src/app/core/services/dashboard/pqrs.service';
+import { DataFetchingService } from 'src/app/core/services/main/data-fetching.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -12,7 +13,7 @@ import { environment } from 'src/environments/environment';
 export class EditarComponent implements OnInit {
 
   API_URI = environment.API_URI;
-  
+
 
   public solicitudesSeleccionadas: any[] = [];
   public tipoSolicitudes: any[] = [];
@@ -42,12 +43,13 @@ export class EditarComponent implements OnInit {
     private fb: UntypedFormBuilder,
     private pqrsService: PqrsService,
     private messageService: MessageService,
+    private dataFetchingService: DataFetchingService
   ) { }
 
   ngOnInit(): void {
     this.token = localStorage.getItem('token');
-    this.traerSolicitudes();
-    this.traerTipoSolicitudes();
+    this.dataFetchingService.getSolicitudes().subscribe(res => this.solicitud = res.data);
+    this.dataFetchingService.getTipoSolicitudes().subscribe(res => this.tipoSolicitudes = res.data);
   }
 
   showEditar(id: any, solicitud: any) {
@@ -61,16 +63,16 @@ export class EditarComponent implements OnInit {
 
   submit() {
     let body = {
-      "titulo":  this.form.value.titulo,
+      "titulo": this.form.value.titulo,
       "description": this.form.value.description,
       "tipopqrs": this.form.value.tipopqrs.id,
       "status": this.form.value.status.name,
     }
     try {
-      this.pqrsService.put(`${this.API_URI}/pqrs/update/${this.id}/`, body , this.token).subscribe(respuesta => {
+      this.pqrsService.put(`${this.API_URI}/pqrs/update/${this.id}/`, body, this.token).subscribe(respuesta => {
         this.form.reset();
-        this.traerSolicitudes();
-        this.showEditar('','');
+        this.dataFetchingService.getSolicitudes().subscribe(res => this.solicitud = res.data);
+        this.showEditar('', '');
         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Editado correctamente' })
       })
     } catch (error) {
@@ -79,28 +81,6 @@ export class EditarComponent implements OnInit {
     }
   }
 
-  traerSolicitudes() {
-    this.solicitudes = [];
-    try {
-      this.pqrsService.get(`${this.API_URI}/pqrs`, this.token).subscribe(respuesta => {
-        this.solicitudes = respuesta.data;
-      })
-    } catch (error) {
-      console.log(error)
-      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error al traer las solicitudes' })
-    }
-  }
-
-
-  traerTipoSolicitudes() {
-    try {
-      this.pqrsService.get(`${this.API_URI}/pqrs/tipo/`, this.token).subscribe(respuesta => {
-        this.tipoSolicitudes = respuesta.data;
-      })
-    } catch (error) {
-      console.log(error)
-    }
-  }
   getEventValue($event: any): string {
     return $event.target.value;
   }

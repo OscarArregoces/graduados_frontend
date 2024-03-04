@@ -31,6 +31,8 @@ import { TagModule } from 'primeng/tag';
 import { BadgeModule } from 'primeng/badge';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { PaginatorModule } from 'primeng/paginator';
+import { CarouselModule } from 'primeng/carousel';
+import { MenubarModule } from 'primeng/menubar';
 
 @NgModule({
   declarations: [
@@ -66,6 +68,8 @@ import { PaginatorModule } from 'primeng/paginator';
     TagModule,
     ConfirmDialogModule,
     PaginatorModule,
+    CarouselModule,
+    MenubarModule,
 
     SharedModule,
 

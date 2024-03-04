@@ -7,7 +7,6 @@ import { TableViewComponent } from './components/table-view/table-view.component
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import { CardDialogComponent } from './components/card-dialog/card-dialog.component';
 import { DetailActivityComponent } from './components/detail-activity/detail-activity.component';
-import { CompanyViewComponent } from './components/company-view/company-view.component';
 import { ActivityComponent } from './components/activity/activity.component';
 import { QuestionComponent } from './components/question/question.component';
 import { UpsComponent } from './components/ups/ups.component';
@@ -57,7 +56,6 @@ import { FormatPermissionNamePipe } from './pipes/format-permission-name.pipe';
     ScannerPipe,
     ActivityComponent,
     DetailActivityComponent,
-    CompanyViewComponent,
     UpsComponent,
     QuestionComponent,
     PieGraphicComponent,
@@ -78,7 +76,6 @@ import { FormatPermissionNamePipe } from './pipes/format-permission-name.pipe';
     ActivityComponent,
     SpinnerComponent,
     DetailActivityComponent,
-    CompanyViewComponent,
     UpsComponent,
     QuestionComponent,
     CardReportComponent,

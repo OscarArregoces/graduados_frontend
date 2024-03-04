@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { EncuestasService } from 'src/app/core/services/dashboard/encuestas.service';
+import { DataFetchingService } from 'src/app/core/services/main/data-fetching.service';
 import { environment } from 'src/environments/environment';
 
 interface Answer {
@@ -66,38 +67,24 @@ export class LlenarComponent implements OnInit {
   constructor(
     private encuestasService: EncuestasService,
     private fb: UntypedFormBuilder,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private dataFetchingService: DataFetchingService
   ) { }
 
   ngOnInit(): void {
     this.token = localStorage.getItem('token')!;
-    this.traerPreguntas();
+    this.dataFetchingService.getPreguntas().subscribe(res =>{
+      this.preguntas = res.data;
+      this.organizarRespuestas();
+    })
   }
-  traerPreguntas() {
-    this.respuestas = [];
-    try {
-      this.encuestasService.get(`${this.API_URI}/poll/questions/`, this.token).subscribe(res => {
-        console.log('PREGUNTAS', res.data);
-        this.preguntas = res.data;
-        // res.forEach( (pregunta:Pregunta) =>  this.form.addControl(pregunta.pregunta_nombre, this.fb.control('')))
-        this.organizarRespuestas();
-      })
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
   organizarRespuestas() {
-    // if (this.preguntas.length == 0) console.log('No hay preguntas')
     this.preguntas.forEach((pregunta: Pregunta) => {
       if (pregunta.tipo_pregunta == this.tipo_pregunta[0]) this.respuestas.push({ pregunta: pregunta.id, type: this.tipo_pregunta[0], respuesta: null });
       if (pregunta.tipo_pregunta == this.tipo_pregunta[1]) this.respuestas.push({ pregunta: pregunta.id, type: this.tipo_pregunta[1], respuesta: [] });
       if (pregunta.tipo_pregunta == this.tipo_pregunta[2]) this.respuestas.push({ pregunta: pregunta.id, type: this.tipo_pregunta[2], respuesta: null });
       if (pregunta.tipo_pregunta == this.tipo_pregunta[3]) this.respuestas.push({ pregunta: pregunta.id, type: this.tipo_pregunta[3], respuesta: null });
-
     })
-
-    console.log('RESPUESTAS', this.respuestas)
   }
 
   addMultiple(index: number, idRespuesta: number) {
@@ -112,9 +99,6 @@ export class LlenarComponent implements OnInit {
       const respuestaFiltered = this.respuestas.find((p: Respuestas) => p.pregunta === pregunta.depende_respuesta.pregunta.id);
   
       if (!respuestaFiltered || respuestaFiltered.respuesta === null) return false;
-
-      // console.log(respuestaFiltered.respuesta === pregunta.depende_respuesta.id);
-      
       return Number(respuestaFiltered.respuesta) === pregunta.depende_respuesta.id;
     }
     return false;
@@ -132,7 +116,6 @@ export class LlenarComponent implements OnInit {
         respuesta.respuesta = respuesta.respuesta === null ? null : Number(respuesta.respuesta)
       }
     })
-
     try {
       this.encuestasService.post(`${this.API_URI}/poll/questions/responses/`, { "respuestas": this.respuestas}, this.token).subscribe( res => {
         console.log(res)

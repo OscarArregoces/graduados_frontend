@@ -3,6 +3,7 @@ import { UntypedFormBuilder } from '@angular/forms';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
 import { EncuestasService } from 'src/app/core/services/dashboard/encuestas.service';
+import { DataFetchingService } from 'src/app/core/services/main/data-fetching.service';
 import { PantallaService } from 'src/app/core/services/pantalla.service';
 import { Variant } from 'src/app/models/ui/CustomInfoCard';
 import { environment } from 'src/environments/environment';
@@ -102,49 +103,29 @@ export class GestionarComponent implements OnInit, OnDestroy {
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
     private fb: UntypedFormBuilder,
-    private pantallaService: PantallaService
+    private pantallaService: PantallaService,
+    private dataFetchingService: DataFetchingService
   ) {
     this.variantColor = Variant.Blue
   }
 
   ngOnInit(): void {
     this.token = localStorage.getItem('token')
-    this.traerMomentos();
-    this.traerPreguntas();
     const [width] = this.pantallaService.calcularEspacioPantalla();
     this.subscription$ = width.subscribe(width => this.width = width);
+    this.dataFetchingService.getPreguntas().subscribe(res => {
+      this.preguntas = res.data
+      res.data.map((pregunta: any) => {
+        if (pregunta.tipo_pregunta === 'unica respuesta') {
+          this.preguntasVerificated.push(pregunta)
+        }
+      })
+    });
+    this.dataFetchingService.getMomentos().subscribe(res => this.momentos = res.data);
   }
   ngOnDestroy(): void {
     this.subscription$.unsubscribe()
   }
-
-  traerMomentos() {
-    this.momentos = []
-    try {
-      this.encuestasService.get(`${this.API_URI}/poll/momentos/`, this.token).subscribe(respuesta => {
-        this.momentos = respuesta.data;
-      })
-    } catch (error) {
-      console.log('Error en consulta', error)
-    }
-  }
-  traerPreguntas() {
-    this.preguntas = []
-    this.preguntasVerificated = []
-    try {
-      this.encuestasService.get(`${this.API_URI}/poll/questions/`, this.token).subscribe(respuesta => {
-        this.preguntas = respuesta.data
-        respuesta.data.map((pregunta: any) => {
-          if (pregunta.tipo_pregunta === 'unica respuesta') {
-            this.preguntasVerificated.push(pregunta)
-          }
-        })
-      })
-    } catch (error) {
-      console.log('Error en consulta', error)
-    }
-  }
-
   onSubmit() {
     const {
       question,
@@ -172,7 +153,14 @@ export class GestionarComponent implements OnInit, OnDestroy {
     try {
       this.encuestasService.post(`${this.API_URI}/poll/questions/create/`, body, this.token).subscribe(respuesta => {
         this.formReset();
-        this.traerPreguntas();
+        this.dataFetchingService.getPreguntas().subscribe(res => {
+          this.preguntas = res.data
+          res.data.map((pregunta: any) => {
+            if (pregunta.tipo_pregunta === 'unica respuesta') {
+              this.preguntasVerificated.push(pregunta)
+            }
+          })
+        });
         this.changeDisplayFormCreate();
         return this.messageService.add({ severity: 'success', summary: 'Notififación', detail: 'Creado correctamente' })
       })
@@ -201,7 +189,14 @@ export class GestionarComponent implements OnInit, OnDestroy {
     }
     try {
       this.encuestasService.put(`${this.API_URI}/poll/questions/update/${this.idEdit}/`, body, this.token).subscribe(respuesta => {
-        this.traerPreguntas();
+        this.dataFetchingService.getPreguntas().subscribe(res => {
+          this.preguntas = res.data
+          res.data.map((pregunta: any) => {
+            if (pregunta.tipo_pregunta === 'unica respuesta') {
+              this.preguntasVerificated.push(pregunta)
+            }
+          })
+        });
         // this.formEdit.reset();
         this.changeDisplayFormEdit()
         return this.messageService.add({ severity: 'success', summary: 'Notififación', detail: 'Editado correctamente' })
@@ -220,7 +215,14 @@ export class GestionarComponent implements OnInit, OnDestroy {
     }
     try {
       this.encuestasService.delete(`${this.API_URI}/poll/questions/delete/`, this.token, body).subscribe(respuesta => {
-        this.traerPreguntas();
+        this.dataFetchingService.getPreguntas().subscribe(res => {
+          this.preguntas = res.data
+          res.data.map((pregunta: any) => {
+            if (pregunta.tipo_pregunta === 'unica respuesta') {
+              this.preguntasVerificated.push(pregunta)
+            }
+          })
+        });
         this.itemsBulkDelete = [];
         return this.messageService.add({ severity: 'success', summary: 'Notififación', detail: 'Eliminado correctamente !!!' })
       });
@@ -261,7 +263,14 @@ export class GestionarComponent implements OnInit, OnDestroy {
       accept: () => {
         try {
           this.encuestasService.delete(`${this.API_URI}/poll/questions/delete/${id}/`, this.token).subscribe(respuesta => {
-            this.traerPreguntas();
+            this.dataFetchingService.getPreguntas().subscribe(res => {
+              this.preguntas = res.data
+              res.data.map((pregunta: any) => {
+                if (pregunta.tipo_pregunta === 'unica respuesta') {
+                  this.preguntasVerificated.push(pregunta)
+                }
+              })
+            });
             return this.messageService.add({ severity: 'success', summary: 'Notififación', detail: 'Eliminado correctamente !!!' })
           });
         } catch (error) {

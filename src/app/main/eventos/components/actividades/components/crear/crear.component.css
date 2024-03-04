@@ -1,7 +1,26 @@
+.customLabel {
+    line-height: 1.625;
+    font-weight: 400;
+    font-size: 1.2rem;
+    font-family: Roboto, sans-serif;
+    color: #535050;
+}
+
 .customText {
     line-height: 1.625;
     font-weight: 400;
-    font-size: 1.5rem;
     font-family: Roboto, sans-serif;
-    color: #616161;
 }
+
+::ng-deep .p-datatable{
+    .p-datatable-thead tr th{
+        border: none;
+        border-bottom: 1px solid #dee2e6;
+        color: #535050;
+    }
+    .p-datatable-tbody tr td{
+        border: none;
+        border-bottom: 1px solid #dee2e6;
+    }
+}
+

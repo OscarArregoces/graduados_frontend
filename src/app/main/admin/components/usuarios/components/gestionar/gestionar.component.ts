@@ -91,7 +91,7 @@ export class GestionarComponent implements OnInit {
   deleteAll() { }
 
   changeDisplayFormDetail(documento: string) {
-    this.adminService.get(`${this.API_URI}/users/graduados/Detail/${documento}`, this.token).subscribe(res => {
+    this.adminService.get(`${this.API_URI}/users/detail/${documento}`, this.token).subscribe(res => {
       const {
         persona: {
           document_type,
@@ -175,7 +175,7 @@ export class GestionarComponent implements OnInit {
         })
       )
       .subscribe(res => {
-        this.graduados = [res.data]
+        this.graduados = res.data
       })
   }
 

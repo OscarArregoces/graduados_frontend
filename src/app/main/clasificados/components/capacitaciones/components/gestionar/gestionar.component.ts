@@ -3,6 +3,7 @@ import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
 import { ClasificadosService } from 'src/app/core/services/dashboard/clasificados.service';
+import { DataFetchingService } from 'src/app/core/services/main/data-fetching.service';
 import { PantallaService } from 'src/app/core/services/pantalla.service';
 import { environment } from 'src/environments/environment';
 
@@ -53,30 +54,25 @@ export class GestionarComponent implements OnInit, OnDestroy {
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
     private fb: UntypedFormBuilder,
-    private pantallaService: PantallaService
+    private pantallaService: PantallaService,
+    private dataFetchingService: DataFetchingService
   ) { }
 
   ngOnInit(): void {
     this.token = localStorage.getItem('token');
-    this.traerCapacitaciones();
     const [width] = this.pantallaService.calcularEspacioPantalla();
     this.subscription$ = width.subscribe(width => this.width = width);
+    this.dataFetchingService.getCapacitaciones().subscribe(res => {
+      this.capacitaciones = [];
+      this.capacitacionesVerificated = [];
+      this.capacitaciones = res.data;
+      res.data.map((capacitacion: any) => this.capacitacionesVerificated.push(capacitacion.name.toLowerCase().replace(/\s+/g, '')))
+    })
   }
   ngOnDestroy(): void {
     this.subscription$.unsubscribe()
   }
-  traerCapacitaciones() {
-    this.capacitaciones = [];
-    this.capacitacionesVerificated = [];
-    try {
-      this.clasificadosService.get(`${this.API_URI}/advertisements/capacitaciones/`, this.token).subscribe(respuesta => {
-        this.capacitaciones = respuesta.data;
-        respuesta.data.map((capacitacion: any) => this.capacitacionesVerificated.push(capacitacion.name.toLowerCase().replace(/\s+/g, '')))
-      })
-    } catch (error) {
-      console.log('Error en consulta', error)
-    }
-  }
+
 
   onSubmit() {
     if (this.capacitacionesVerificated.includes(this.formCreate.value.name.toLowerCase().replace(/\s+/g, ''))) {
@@ -85,7 +81,12 @@ export class GestionarComponent implements OnInit, OnDestroy {
     try {
       this.clasificadosService.post(`${this.API_URI}/advertisements/capacitaciones/create/`, this.formCreate.value, this.token).subscribe(respuesta => {
         this.formCreate.reset();
-        this.traerCapacitaciones();
+        this.dataFetchingService.getCapacitaciones().subscribe(res => {
+          this.capacitaciones = [];
+          this.capacitacionesVerificated = [];
+          this.capacitaciones = res.data;
+          res.data.map((capacitacion: any) => this.capacitacionesVerificated.push(capacitacion.name.toLowerCase().replace(/\s+/g, '')))
+        })
         this.changeDisplayFormCreate();
         return this.messageService.add({ severity: 'success', summary: 'Notificación', detail: 'Creado correctamente' })
       })
@@ -100,7 +101,12 @@ export class GestionarComponent implements OnInit, OnDestroy {
     }
     try {
       this.clasificadosService.put(`${this.API_URI}/advertisements/capacitaciones/update/${this.idEdit}/`, this.formEdit.value, this.token).subscribe(respuesta => {
-        this.traerCapacitaciones();
+        this.dataFetchingService.getCapacitaciones().subscribe(res => {
+          this.capacitaciones = [];
+          this.capacitacionesVerificated = [];
+          this.capacitaciones = res.data;
+          res.data.map((capacitacion: any) => this.capacitacionesVerificated.push(capacitacion.name.toLowerCase().replace(/\s+/g, '')))
+        })
         this.formEdit.reset();
         this.changeDisplayFormEdit()
         return this.messageService.add({ severity: 'success', summary: 'Notificación', detail: 'Editado correctamente' })
@@ -143,7 +149,12 @@ export class GestionarComponent implements OnInit, OnDestroy {
 
     try {
       this.clasificadosService.delete(`${this.API_URI}/advertisements/capacitaciones/delete/`, this.token, body).subscribe(respuesta => {
-        this.traerCapacitaciones();
+        this.dataFetchingService.getCapacitaciones().subscribe(res => {
+          this.capacitaciones = [];
+          this.capacitacionesVerificated = [];
+          this.capacitaciones = res.data;
+          res.data.map((capacitacion: any) => this.capacitacionesVerificated.push(capacitacion.name.toLowerCase().replace(/\s+/g, '')))
+        })
         return this.messageService.add({ severity: 'success', summary: 'Notificación', detail: 'Eliminado correctamente !!!' })
       });
     } catch (error) {
@@ -161,7 +172,12 @@ export class GestionarComponent implements OnInit, OnDestroy {
       accept: () => {
         try {
           this.clasificadosService.delete(`${this.API_URI}/advertisements/capacitaciones/delete/${id}/`, this.token).subscribe(respuesta => {
-            this.traerCapacitaciones();
+            this.dataFetchingService.getCapacitaciones().subscribe(res => {
+              this.capacitaciones = [];
+              this.capacitacionesVerificated = [];
+              this.capacitaciones = res.data;
+              res.data.map((capacitacion: any) => this.capacitacionesVerificated.push(capacitacion.name.toLowerCase().replace(/\s+/g, '')))
+            })
             return this.messageService.add({ severity: 'success', summary: 'Notificación', detail: 'Eliminado correctamente !!!' })
           });
         } catch (error) {

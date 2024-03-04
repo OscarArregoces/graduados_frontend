@@ -3,6 +3,7 @@ import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
 import { EventosService } from 'src/app/core/services/dashboard/eventos.service';
+import { DataFetchingService } from 'src/app/core/services/main/data-fetching.service';
 import { PantallaService } from 'src/app/core/services/pantalla.service';
 import { environment } from 'src/environments/environment';
 
@@ -56,49 +57,35 @@ export class GestionarComponent implements OnInit, OnDestroy {
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
     private fb: UntypedFormBuilder,
-    private pantallaService: PantallaService
+    private pantallaService: PantallaService,
+    private dataFetchingService: DataFetchingService
   ) { }
-  
+
   ngOnInit(): void {
     this.token = localStorage.getItem('token')
-    this.traerProgramas();
-    this.traerFacultades();
-    const [ width ] = this.pantallaService.calcularEspacioPantalla();
-    this.subscription$ = width.subscribe( width => this.width = width);
+    const [width] = this.pantallaService.calcularEspacioPantalla();
+    this.subscription$ = width.subscribe(width => this.width = width);
+    this.dataFetchingService.getProgramas().subscribe(res => {
+      res.data.map((facultad: any) => this.facultades.push({
+        "id": facultad.id,
+        "name": facultad.name,
+      }))
+    })
+    this.dataFetchingService.getProgramas().subscribe(res => {
+      this.programas = res.data
+      res.data.map((programas: any) => this.programasVerificated.push(programas.name.toLowerCase().replace(/\s+/g, '')))
+    })
   }
   ngOnDestroy(): void {
-   this.subscription$.unsubscribe();
+    this.subscription$.unsubscribe();
   }
 
-  traerFacultades() {
-    this.facultades = []
-    try {
-      this.eventosService.get(`${this.API_URI}/university/faculta/`, this.token).subscribe(respuesta => {
-        // this.facultades = respuesta.data
-        respuesta.data.map((facultad: any) => this.facultades.push( {
-          "id": facultad.id,
-          "name": facultad.name,
-        }))
-      })
-    } catch (error) {
-      console.log('Error en consulta', error)
-    }
-  }
-  traerProgramas() {
-    this.programas = []
-    try {
-      this.eventosService.get(`${this.API_URI}/university/programa/`, this.token).subscribe(respuesta => {
-        this.programas = respuesta.data
-        respuesta.data.map((programas: any) => this.programasVerificated.push(programas.name.toLowerCase().replace(/\s+/g, '')))
-      })
-    } catch (error) {
-      console.log('Error en consulta', error)
-    }
-  }
+
+
 
 
   onSubmit() {
-    if(this.programasVerificated.includes(this.formCreate.value.name.toLowerCase().replace(/\s+/g, ''))){
+    if (this.programasVerificated.includes(this.formCreate.value.name.toLowerCase().replace(/\s+/g, ''))) {
       return this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Este programa ya existe' })
     }
 
@@ -107,9 +94,12 @@ export class GestionarComponent implements OnInit, OnDestroy {
       "faculta": this.formCreate.value.faculty.id,
     }
     try {
-      this.eventosService.post(`${this.API_URI}/university/programa/create/`, body , this.token).subscribe(respuesta => {
+      this.eventosService.post(`${this.API_URI}/university/programa/create/`, body, this.token).subscribe(respuesta => {
         this.formCreate.reset();
-        this.traerProgramas();
+        this.dataFetchingService.getProgramas().subscribe(res => {
+          this.programas = res.data
+          res.data.map((programas: any) => this.programasVerificated.push(programas.name.toLowerCase().replace(/\s+/g, '')))
+        })
         this.changeDisplayFormCreate();
         return this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Creado correctamente' })
       })
@@ -120,18 +110,21 @@ export class GestionarComponent implements OnInit, OnDestroy {
 
   handleEdit() {
 
-    if(this.programasVerificated.includes(this.formEdit.value.name.toLowerCase().replace(/\s+/g, ''))){
+    if (this.programasVerificated.includes(this.formEdit.value.name.toLowerCase().replace(/\s+/g, ''))) {
       return this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Este programa ya existe' })
     }
     let body = {
       "name": this.formEdit.value.name,
       "faculta": this.formEdit.value.faculty.id,
     }
-    
+
     try {
-      this.eventosService.put(`${this.API_URI}/university/programa/update/${this.idEdit}/`, body , this.token).subscribe(respuesta => {
+      this.eventosService.put(`${this.API_URI}/university/programa/update/${this.idEdit}/`, body, this.token).subscribe(respuesta => {
         this.formEdit.reset();
-        this.traerProgramas();
+        this.dataFetchingService.getProgramas().subscribe(res => {
+          this.programas = res.data
+          res.data.map((programas: any) => this.programasVerificated.push(programas.name.toLowerCase().replace(/\s+/g, '')))
+        })
         this.changeDisplayFormEdit()
         return this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Editado correctamente' })
       })
@@ -140,7 +133,7 @@ export class GestionarComponent implements OnInit, OnDestroy {
     }
   }
 
-  
+
 
   deleteAll() {
     const itemsMaped = this.itemsBulkDelete.map((item: any) => item.id)
@@ -151,7 +144,10 @@ export class GestionarComponent implements OnInit, OnDestroy {
     }
     try {
       this.eventosService.delete(`${this.API_URI}/university/programa/delete/`, this.token, body).subscribe(respuesta => {
-        this.traerProgramas();
+        this.dataFetchingService.getProgramas().subscribe(res => {
+          this.programas = res.data
+          res.data.map((programas: any) => this.programasVerificated.push(programas.name.toLowerCase().replace(/\s+/g, '')))
+        })
         return this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Eliminado correctamente !!!' })
       });
     } catch (error) {
@@ -190,7 +186,10 @@ export class GestionarComponent implements OnInit, OnDestroy {
       accept: () => {
         try {
           this.eventosService.delete(`${this.API_URI}/university/programa/delete/${id}/`, this.token).subscribe(respuesta => {
-            this.traerProgramas();
+            this.dataFetchingService.getProgramas().subscribe(res => {
+              this.programas = res.data
+              res.data.map((programas: any) => this.programasVerificated.push(programas.name.toLowerCase().replace(/\s+/g, '')))
+            })
             return this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Eliminado correctamente !!!' })
           });
         } catch (error) {

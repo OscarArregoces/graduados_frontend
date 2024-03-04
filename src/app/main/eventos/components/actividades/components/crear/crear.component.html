@@ -1,220 +1,324 @@
-<app-card width="90%" titulo="SOLICITUD DE ACTIVIDAD">
+<app-card width="95%" titulo="Solicitud de Actividad">
     <form card-body [formGroup]="form">
         <div class="grid">
-            <div class="col-12 md:col-12 lg:col-12 mb-2">
-                <div class="grid p-5 shadow-3" style="background-color:#f5f5f58e;">
-                    <div class="col-12">
-                        <span class="customText">Datos Basicos</span>
-                    </div>
-                    <div class="col-12 md:col-6 lg:col-4">
-                        <div class="flex flex-column gap-2">
-                            <label class="mb-2" [style]="{'font-weight': 'bold'}">Nombre de la actividad</label>
-                            <div class="p-inputgroup my-1">
-                                <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                        style="color:#f16357;"></i></span>
-                                <input type="text" placeholder="Nombre o titulo" [maxlength]="256" pInputText
-                                    formControlName="nombre_actividad" />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 md:col-6 lg:col-4">
-                        <div class="flex flex-column gap-2">
-                            <label class="mb-2" [style]="{'font-weight': 'bold'}">Fecha</label>
-                            <div class="p-inputgroup my-1">
-                                <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                        style="color:#f16357;"></i></span>
-                                <p-calendar [style]="{'width':'100%'}" placeholder="Seleccione la fecha"
-                                    formControlName="fecha" dateFormat="mm-dd-yy" inputId="dateformat"></p-calendar>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 md:col-6 lg:col-4">
-                        <div class="flex flex-column gap-2">
-                            <label class="mb-2" [style]="{'font-weight': 'bold'}">Hora</label>
-                            <div class="p-inputgroup my-1">
-                                <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                        style="color:#f16357;"></i></span>
-                                <p-calendar [style]="{'width':'100%'}" placeholder="Seleccione la hora"
-                                    formControlName="hora" [timeOnly]="true" hourFormat="12"
-                                    inputId="timeonly"></p-calendar>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 md:col-6 lg:col-4">
-                        <div class="flex flex-column gap-2">
-                            <label class="mb-2" [style]="{'font-weight': 'bold'}">Tipo de actividad</label>
-                            <div class="p-inputgroup my-1">
-                                <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                        style="color:#f16357;"></i></span>
-                                <p-dropdown [style]="{'width':'100%'}" [options]="tipo_actividades"
-                                    placeholder="Selecciona una opcion" formControlName="tipo_actividad"
-                                    optionLabel="name"></p-dropdown>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 md:col-6 lg:col-4">
-                        <div class="flex flex-column gap-2">
-                            <label class="mb-2" [style]="{'font-weight': 'bold'}">Area</label>
-                            <div class="p-inputgroup my-1">
-                                <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                        style="color:#f16357;"></i></span>
-                                <p-dropdown [style]="{'width':'100%'}" [options]="areas" optionLabel="name"
-                                    placeholder="Selecciona una opcion" (ngModelChange)="onChangeAreas($event)"
-                                    formControlName="area"></p-dropdown>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 md:col-6 lg:col-4">
-                        <div class="flex flex-column gap-2">
-                            <label class="mb-2" [style]="{'font-weight': 'bold'}">Subarea</label>
-                            <div class="p-inputgroup my-1">
-                                <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                        style="color:#f16357;"></i></span>
-                                <p-dropdown [style]="{'width':'100%'}" [options]="subareas" optionLabel="name"
-                                    placeholder="Selecciona una opcion" formControlName="subArea"></p-dropdown>
-                            </div>
-                        </div>
+            <div class="col-12 md:col-6 lg:col-6">
+                <div class="flex flex-column gap-2">
+                    <label class="customLabel">Nombre de la actividad</label>
+                    <div class="p-inputgroup">
+                        <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                style="color:#f16357;"></i></span>
+                        <input type="text" [maxlength]="256" pInputText formControlName="nombre_actividad" />
                     </div>
                 </div>
             </div>
-
-            <div class="col-12 md:col-12 lg:col-12 mb-2">
-                <div class="grid p-5 shadow-3" style="background-color:#f5f5f58e;">
-                    <div class="col-12">
-                        <span class="customText">Mas Información</span>
-                    </div>
-                    <div class="col-12 md:col-6 lg:col-6">
-                        <div class="flex flex-column gap-2">
-                            <div class="flex flex-column gap-2">
-                                <label class="mb-2" [style]="{'font-weight': 'bold'}">Lugar donde se llevará a
-                                    cabo</label>
-                                <div class="p-inputgroup my-1">
-                                    <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                            style="color:#f16357;"></i></span>
-                                    <input type="text" placeholder="Direccion o zona en el campus universitario"
-                                        pInputText formControlName="lugar" [maxlength]="256" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 md:col-6 lg:col-6">
-                        <div class="flex flex-column gap-2">
-                            <label class="mb-2" [style]="{'font-weight': 'bold'}">Cupos disponibles</label>
-                            <div class="p-inputgroup my-1">
-                                <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                        style="color:#f16357;"></i></span>
-                                <input type="number" placeholder="Cantidad" pInputText formControlName="cupos" />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 md:col-6 lg:col-6">
-                        <div class="flex flex-column gap-2">
-                            <label class="mb-2" [style]="{'font-weight': 'bold'}">Responsable de la actividad</label>
-                            <div class="p-inputgroup my-1">
-                                <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                        style="color:#f16357;"></i></span>
-                                <input type="text" placeholder="Encargado de digirir la actividad" [maxlength]="256"
-                                    pInputText formControlName="responsable" />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 md:col-6 lg:col-6">
-                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Publico dirigido</label>
-                        <div [style]="{'width': '100%'}" class="grid flex flex-row justify-content-space">
-                            <div class="col-11 md:col-9 lg:col-11">
-                                <div class="p-inputgroup my-1">
-                                    <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                            style="color:#f16357;"></i></span>
-                                    <p-multiSelect [options]="programas" formControlName="publico"
-                                        placeholder="Escoge una opcion" optionLabel="name" display="chip"
-                                        [style]="{'minWidth': '14rem', 'width':'100%'}"></p-multiSelect>
-                                </div>
-                            </div>
-                            <div class="col-1 md:col-3 lg:col-1 my-1">
-                                <p-button icon="pi pi-plus" class="p-button-secundary"
-                                    (onClick)="changeDisplayCustomEmails()"></p-button>
-                            </div>
-                        </div>
+            <div class="col-12 md:col-6 lg:col-6">
+                <div class="flex flex-column gap-2">
+                    <label class="customLabel">Tipo de actividad</label>
+                    <div class="p-inputgroup">
+                        <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                style="color:#f16357;"></i></span>
+                        <p-dropdown [style]="{'width':'100%'}" [options]="tipo_actividades"
+                            placeholder="Selecciona una opcion" formControlName="tipo_actividad"
+                            optionLabel="name"></p-dropdown>
                     </div>
                 </div>
             </div>
-            <div class="col-12 md:col-12 lg:col-12 mb-2">
-                <div class="grid p-5 shadow-3" style="background-color:#f5f5f58e;">
-                    <div class="col-12">
-                        <span class="customText">Información Adicional</span>
+            <div class="col-12 md:col-6 lg:col-3">
+                <div class="flex flex-column gap-2">
+                    <label class="customLabel">Area</label>
+                    <div class="p-inputgroup">
+                        <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                style="color:#f16357;"></i></span>
+                        <p-dropdown [style]="{'width':'100%'}" [options]="areas" optionLabel="name"
+                            placeholder="Selecciona una opcion" (ngModelChange)="onChangeAreas($event)"
+                            formControlName="area"></p-dropdown>
                     </div>
-                    <div class="col-12 md:col-12 lg:col-6">
-                        <div class="flex flex-column gap-2">
-                            <label class="mb-2" [style]="{'font-weight': 'bold'}">Descripción</label>
-                            <textarea formControlName="descripcion"
-                                placeholder="Describe brevemente los aspectos importantes" [rows]="7" [cols]="30"
-                                pInputTextarea [autoResize]="false" [maxlength]="600" [autoResize]="true"></textarea>
-                        </div>
+                </div>
+            </div>
+            <div class="col-12 md:col-6 lg:col-3">
+                <div class="flex flex-column gap-2">
+                    <label class="customLabel">Subarea</label>
+                    <div class="p-inputgroup">
+                        <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                style="color:#f16357;"></i></span>
+                        <p-dropdown [style]="{'width':'100%'}" [options]="subareas" optionLabel="name"
+                            placeholder="Selecciona una opcion" formControlName="subArea"></p-dropdown>
                     </div>
-                    <div class="col-12 md:col-12 lg:col-6">
-                        <div class="flex flex-column gap-2">
-                            <div class="flex flex-column gap-2">
-                                <label class="mb-2" [style]="{'font-weight': 'bold'}">Objetivo de la
-                                    actividad</label>
-                                <textarea formControlName="objectivo"
-                                    placeholder="Finalidad con la que se llevará a cabo esta actividad" [rows]="7"
-                                    [cols]="30" pInputTextarea [autoResize]="false" [maxlength]="300"
-                                    [autoResize]="true"></textarea>
-                            </div>
-                        </div>
+                </div>
+            </div>
+            <div class="col-12 md:col-6 lg:col-3">
+                <div class="flex flex-column gap-2">
+                    <label class="customLabel">Fecha Inicio</label>
+                    <div class="p-inputgroup">
+                        <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                style="color:#f16357;"></i></span>
+                        <p-calendar [style]="{'width':'100%'}" placeholder="Seleccione una fecha"
+                            formControlName="fecha" dateFormat="mm-dd-yy" inputId="dateformat"></p-calendar>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 md:col-6 lg:col-3">
+                <div class="flex flex-column gap-2">
+                    <label class="customLabel">Fecha Final</label>
+                    <div class="p-inputgroup">
+                        <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                style="color:#f16357;"></i></span>
+                        <p-calendar [style]="{'width':'100%'}" placeholder="Seleccione una fecha"
+                            formControlName="fecha" dateFormat="mm-dd-yy" inputId="dateformat"></p-calendar>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 md:col-12 lg:col-6">
+                <div class="flex flex-column gap-2">
+                    <label class="customLabel">Descripción</label>
+                    <textarea formControlName="descripcion" placeholder="Describe brevemente los aspectos importantes"
+                        [rows]="7" [cols]="30" pInputTextarea [autoResize]="false" [maxlength]="600"
+                        [autoResize]="true"></textarea>
+                </div>
+            </div>
+            <div class="col-12 md:col-12 lg:col-6">
+                <div class="flex flex-column gap-2">
+                    <div class="flex flex-column gap-2">
+                        <label class="customLabel">Objetivo</label>
+                        <textarea formControlName="objectivo"
+                            placeholder="Finalidad con la que se llevará a cabo esta actividad" [rows]="7" [cols]="30"
+                            pInputTextarea [autoResize]="false" [maxlength]="300" [autoResize]="true"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 md:col-6 lg:col-6">
+                <div class="flex flex-column gap-2">
+                    <label class="customLabel">Dirección</label>
+                    <div class="p-inputgroup">
+                        <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                style="color:#f16357;"></i></span>
+                        <input type="text" [maxlength]="256" pInputText formControlName="nombre_actividad" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 md:col-6 lg:col-6">
+                <div class="flex flex-column gap-2">
+                    <label class="customLabel">Servicios Requeridos</label>
+                    <div class="p-inputgroup">
+                        <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                style="color:#f16357;"></i></span>
+                        <!-- <p-dropdown [style]="{'width':'100%'}" [options]="servicios" placeholder="Selecciona una opcion"
+                            formControlName="tipo_actividad" optionLabel="name"></p-dropdown> -->
+                        <p-multiSelect [options]="servicios" formControlName="publico" placeholder="Escoge una opcion"
+                            optionLabel="name" display="chip"
+                            [style]="{'minWidth': '14rem', 'width':'100%'}"></p-multiSelect>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 md:col-6 lg:col-4">
+                <div class="flex flex-column gap-2">
+                    <label class="customLabel">Modalidad</label>
+                    <div class="p-inputgroup">
+                        <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                style="color:#f16357;"></i></span>
+                        <p-dropdown [style]="{'width':'100%'}" [options]="modalidades"
+                            placeholder="Selecciona una opcion" formControlName="modalidad"
+                            optionLabel="name"></p-dropdown>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 md:col-6 lg:col-4">
+                <div class="flex flex-column gap-2">
+                    <label class="customLabel">Sede</label>
+                    <div class="p-inputgroup">
+                        <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                style="color:#f16357;"></i></span>
+                        <p-dropdown [style]="{'width':'100%'}" [options]="sedes" placeholder="Selecciona una opcion"
+                            formControlName="tipo_actividad" optionLabel="name"></p-dropdown>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 md:col-6 lg:col-4">
+                <div class="flex flex-column gap-2">
+                    <label class="customLabel">Dependencia</label>
+                    <div class="p-inputgroup">
+                        <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                style="color:#f16357;"></i></span>
+                        <p-dropdown [style]="{'width':'100%'}" [options]="dependencias"
+                            placeholder="Selecciona una opcion" formControlName="tipo_actividad"
+                            optionLabel="name"></p-dropdown>
                     </div>
                 </div>
             </div>
         </div>
+        <div class="col-12 md:col-12 lg:col-12" *ngIf="form?.value?.modalidad?.name === 'VIRTUAL'">
+            <div class="flex flex-column gap-2">
+                <label class="customLabel">Enlace de la Reunión</label>
+                <div class="p-inputgroup">
+                    <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill" style="color:#f16357;"></i></span>
+                    <input type="text" [maxlength]="256" pInputText formControlName="nombre_actividad" />
+                </div>
+            </div>
+        </div>
+        <div class="col-12 p-0">
+            <div class="flex flex-column gap-2">
+                <label class="my-2 customLabel">Responsable(s) y Ponente(s)</label>
+                <button pButton pRipple type="button" icon="pi pi-user-plus" label="Agregar"
+                    class="p-button-raised p-button max-w-max" (click)="changeDisplayFormPonentes()"></button>
+                <p-table [value]="responsables" responsiveLayout="scroll" *ngIf="responsables.length">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th class="customText">Indice</th>
+                            <th class="customText">Nombres y Apellidos</th>
+                            <th class="customText">Documento</th>
+                            <th class="customText">Correo</th>
+                            <th class="customText">Telefono</th>
+                            <th class="customText">Vinculación</th>
+                            <th class="customText">Rol</th>
+                            <th class="customText">Dedicación (Horas)</th>
+                            <th class="customText">Acciones</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-responsable let-rowIndex="rowIndex">
+                        <tr>
+                            <td class="customText">{{rowIndex + 1 }}</td>
+                            <td class="customText">{{responsable.fullname}}</td>
+                            <td class="customText">{{responsable.document}}</td>
+                            <td class="customText">{{responsable.email}}</td>
+                            <td class="customText">{{responsable.phone}}</td>
+                            <td class="customText">{{responsable.vinculacion}}</td>
+                            <td class="customText">{{responsable.rol}}</td>
+                            <td class="customText">{{responsable.dedicacion}}</td>
+                            <td>
+                                <button pButton pRipple type="button" icon="pi pi-pencil"
+                                    class="p-button-raised p-button-warning m-1"></button>
+                                <button pButton pRipple type="button" icon="pi pi-trash"
+                                    class="p-button-raised p-button-danger m-1"></button>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
 
+        </div>
         <div class="col-12">
             <div class="flex justify-content-center aling-items-center my-3">
-                <button [style]="{'width': '40%'}" pButton pRipple type="submit" label="Crear" class="p-button-success"
+                <button pButton pRipple type="submit" label="Crear" icon="pi pi-save" class="p-button-success"
                     (click)="onSubmit()" [disabled]="!form.valid"></button>
             </div>
         </div>
     </form>
 </app-card>
 
-<p-dialog header="Correos Electronicos Personalizados" [(visible)]="DisplayFormCustomEmails"
-    [style]="{'width': width, 'text-aling': 'center', 'min-height':'70vh'}" [showHeader]="true" [modal]="true"
-    [dismissableMask]="false">
-    <app-custom-info-card [description]="inforCardDescription"></app-custom-info-card>
-    <form [formGroup]="formCustomEmails">
+<p-dialog header="Registrando Responsable(s) / Ponente(s)" [(visible)]="displayFormPonentes"
+    [style]="{'width': '50vw','text-aling': 'center', 'min-height':'60vh'}" [showHeader]="true" [modal]="true"
+    [dismissableMask]="false" (onHide)="closeDisplayFormPonentes()">
+    <form [formGroup]="formPonentes">
         <div class="grid">
+            <div class="col-12 md:col-12 lg:col-12">
+                <div class="flex flex-column gap-2">
+                    <label class="customLabel">Nombres y Apellidos</label>
+                    <div class="p-inputgroup">
+                        <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                style="color:#f16357;"></i></span>
+                        <input type="text" [maxlength]="150" pInputText formControlName="fullname" />
+                    </div>
+                    <div *ngIf="formPonentes.get('fullname')?.hasError('required') && formPonentes.get('fullname')?.touched"
+                        class="text-red-500 my-1 text-left">
+                        Campo requerido
+                    </div>
+                </div>
+            </div>
             <div class="col-12 md:col-6 lg:col-6">
                 <div class="flex flex-column gap-2">
-                    <div class="flex flex-column gap-2">
-                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Correo electronico</label>
-                        <div class="p-inputgroup">
-                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                    style="color:#f16357;"></i></span>
-                            <input type="text" placeholder="usuario@Ejemplo.com" formControlName="email" pInputText
-                                [maxlength]="40" />
-                        </div>
+                    <label class="customLabel">No Documento</label>
+                    <div class="p-inputgroup">
+                        <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                style="color:#f16357;"></i></span>
+                        <input type="number" [maxlength]="100" pInputText formControlName="document" />
+                    </div>
+                    <div *ngIf="formPonentes.get('document')?.hasError('required') && formPonentes.get('document')?.touched"
+                        class="text-red-500 my-1 text-left">
+                        Campo requerido
                     </div>
                 </div>
             </div>
             <div class="col-12 md:col-6 lg:col-6">
-                <button pButton pRipple type="button" label="Agregar" class="p-button mr-5 m-none md:mt-5 lg:mt-5"
-                    (click)="addCustomEmail()" [disabled]="!formCustomEmails.valid"></button>
-                    <button pButton pRipple type="button" label="Eliminar Todos"
-                    class="p-button-danger mr-5 m-none md:mt-5 lg:mt-5" (click)="clearAll()"></button>
-            </div>
-            <div class="col-12 overflow-y-auto shadow-2" [style]="{'height': '300px', 'background-color':'#fafafa'}">
-                <div *ngFor="let email of customEmails">
-                    <div class="grid">
-                        <div class="col-10">
-                            <p-chip [label]="email.email" icon="pi pi-google" styleClass="mr-2"></p-chip>
-                        </div>
-                        <div class="col-2">
-                            <button pButton pRipple type="button" icon="pi pi-times"
-                                class="p-button-rounded p-button-danger p-button-outlined"
-                                (click)="removeCustomEmail(email.email)"></button>
-                        </div>
+                <div class="flex flex-column gap-2">
+                    <label class="customLabel">Correo</label>
+                    <div class="p-inputgroup">
+                        <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                style="color:#f16357;"></i></span>
+                        <input type="email" [maxlength]="100" pInputText formControlName="email" />
+                    </div>
+                    <div *ngIf="formPonentes.get('email')?.hasError('required') && formPonentes.get('email')?.touched"
+                        class="text-red-500 my-1 text-left">
+                        Campo requerido
                     </div>
                 </div>
             </div>
+            <div class="col-12 md:col-6 lg:col-6">
+                <div class="flex flex-column gap-2">
+                    <label class="customLabel">Vinculación</label>
+                    <div class="p-inputgroup">
+                        <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                style="color:#f16357;"></i></span>
+                        <p-dropdown [style]="{'width':'100%'}" [options]="tipoVinculacion"
+                            placeholder="Selecciona una opcion" formControlName="vinculacion"
+                            optionLabel="name"></p-dropdown>
+                    </div>
+                    <div *ngIf="formPonentes.get('vinculacion')?.hasError('required') && formPonentes.get('vinculacion')?.touched"
+                        class="text-red-500 my-1 text-left">
+                        Campo requerido
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 md:col-6 lg:col-6">
+                <div class="flex flex-column gap-2">
+                    <label class="customLabel">Rol</label>
+                    <div class="p-inputgroup">
+                        <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                style="color:#f16357;"></i></span>
+                        <p-dropdown [style]="{'width':'100%'}" [options]="roles" placeholder="Selecciona una opcion"
+                            formControlName="rol" optionLabel="name"></p-dropdown>
+                    </div>
+                    <div *ngIf="formPonentes.get('roles')?.hasError('required') && formPonentes.get('roles')?.touched"
+                        class="text-red-500 my-1 text-left">
+                        Campo requerido
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 md:col-6 lg:col-6">
+                <div class="flex flex-column gap-2">
+                    <label class="customLabel">Telefono</label>
+                    <div class="p-inputgroup">
+                        <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                style="color:#f16357;"></i></span>
+                        <input type="number" [maxlength]="30" pInputText formControlName="phone" />
+                    </div>
+                    <div *ngIf="formPonentes.get('phone')?.hasError('required') && formPonentes.get('phone')?.touched"
+                        class="text-red-500 my-1 text-left">
+                        Campo requerido
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 md:col-6 lg:col-6">
+                <div class="flex flex-column gap-2">
+                    <label class="customLabel">Dedicación (Horas)</label>
+                    <div class="p-inputgroup">
+                        <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                style="color:#f16357;"></i></span>
+                        <input type="number" [maxlength]="10" pInputText formControlName="dedicacion" />
+                    </div>
+                    <div *ngIf="formPonentes.get('dedicacion')?.hasError('required') && formPonentes.get('dedicacion')?.touched"
+                        class="text-red-500 my-1 text-left">
+                        Campo requerido
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12">
+                <div class="flex justify-content-center aling-items-center my-3">
+                    <button pButton pRipple type="submit" label="Registrar" icon="pi pi-save" class="p-button-success"
+                        (click)="onSubmitFormPonentes()"></button>
+                </div>
+            </div>
+
         </div>
     </form>
 </p-dialog>

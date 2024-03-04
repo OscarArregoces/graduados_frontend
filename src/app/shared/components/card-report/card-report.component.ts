@@ -1,8 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { AfterViewInit, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { EventosService } from 'src/app/core/services/dashboard/eventos.service';
-import { PqrsService } from 'src/app/core/services/dashboard/pqrs.service';
 import { PantallaService } from 'src/app/core/services/pantalla.service';
 import { environment } from 'src/environments/environment.prod';
 
@@ -47,7 +45,6 @@ export class CardReportComponent implements OnInit, OnChanges, OnDestroy, AfterV
   constructor(
     private pantallaService: PantallaService,
     private cd: ChangeDetectorRef,
-    private pqrsService: PqrsService,
     private http: HttpClient
   ) { }
   ngAfterViewInit(): void {

@@ -3,6 +3,7 @@ import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
 import { EventosService } from 'src/app/core/services/dashboard/eventos.service';
+import { DataFetchingService } from 'src/app/core/services/main/data-fetching.service';
 import { PantallaService } from 'src/app/core/services/pantalla.service';
 import { formateDateInput, formateDateOutPut } from 'src/app/helpers/formateDate';
 import { formateHours12 } from 'src/app/helpers/formateHours';
@@ -52,16 +53,25 @@ export class EditarComponent implements OnInit {
     private fb: UntypedFormBuilder,
     private eventosService: EventosService,
     private messageService: MessageService,
-    private pantallaService: PantallaService
+    private pantallaService: PantallaService,
+    private dataFetchingService: DataFetchingService
   ) { }
 
   ngOnInit(): void {
     this.token = localStorage.getItem('token');
-    this.traerActividades();
-    this.traerTipoActividades();
-    this.traerAreas();
     const [width] = this.pantallaService.calcularEspacioPantalla();
     this.subscription$ = width.subscribe(width => this.width = width);
+    this.dataFetchingService.getActividades().subscribe(res => {
+      this.actividades = [];
+      this.actividades = res.data;
+    })
+    this.dataFetchingService.getTipoActividades().subscribe(res => {
+      this.tipoActividades = res.data;
+    })
+    this.dataFetchingService.getAreas().subscribe(res => {
+      this.areas = res.data;
+      this.form.controls['subArea'].disable()
+    })
   }
 
   getEventValue($event: any): string {
@@ -107,7 +117,10 @@ export class EditarComponent implements OnInit {
 
     try {
       this.eventosService.put(`${this.API_URI}/eventos/update/${this.id}/`, body, this.token).subscribe(r => {
-        this.traerActividades();
+        this.dataFetchingService.getActividades().subscribe(res => {
+          this.actividades = [];
+          this.actividades = res.data;
+        })
         this.form.reset();
         this.display = false;
         return this.messageService.add({ severity: 'success', summary: 'Notificación', detail: 'Editado correctamente' })
@@ -117,16 +130,7 @@ export class EditarComponent implements OnInit {
     }
   }
 
-  traerActividades() {
-    this.actividades = [];
-    try {
-      this.eventosService.get(`${this.API_URI}/eventos/`, this.token).subscribe(r => {
-        this.actividades = r.data
-      })
-    } catch (error) {
-      console.log(error)
-    }
-  }
+
 
   onChangeAreas(event: any) {
 
@@ -145,27 +149,6 @@ export class EditarComponent implements OnInit {
       } catch (error) {
         console.log(error)
       }
-    }
-  }
-
-  traerAreas() {
-    try {
-      this.eventosService.get(`${this.API_URI}/eventos/areas`, this.token).subscribe(r => {
-        this.areas = r.data;
-        this.form.controls['subArea'].disable()
-      })
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  traerTipoActividades() {
-    try {
-      this.eventosService.get(`${this.API_URI}/eventos/tipos/`, this.token).subscribe(r => {
-        this.tipoActividades = r.data;
-      })
-    } catch (error) {
-      console.log(error)
     }
   }
 

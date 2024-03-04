@@ -3,6 +3,7 @@ import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
 import { ClasificadosService } from 'src/app/core/services/dashboard/clasificados.service';
+import { DataFetchingService } from 'src/app/core/services/main/data-fetching.service';
 import { PantallaService } from 'src/app/core/services/pantalla.service';
 import { environment } from 'src/environments/environment';
 
@@ -38,15 +39,19 @@ export class DetallesComponent implements OnInit {
     private pantallaService: PantallaService,
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
-    private fb: UntypedFormBuilder
+    private fb: UntypedFormBuilder,
+    private dataFetchingService: DataFetchingService
   ) { }
 
   ngOnInit(): void {
     this.token = localStorage.getItem('token');
-    this.traerEmprendimientos();
     const [width] = this.pantallaService.calcularEspacioPantalla();
     this.subscription$ = width.subscribe(width => this.width = width);
+    this.dataFetchingService.getEmprendimientos().subscribe(res => {
+      this.emprendimientos = res.data;
+    })
   }
+
   ngOnDestroy(): void {
     this.subscription$.unsubscribe()
   }
@@ -54,18 +59,6 @@ export class DetallesComponent implements OnInit {
   getEventValue($event: any): string {
     return $event.target.value;
   }
-
-
-  traerEmprendimientos() {
-    try {
-      this.clasificadosService.get(`${this.API_URI}/advertisements/`, this.token).subscribe(r => {
-        this.emprendimientos = r.data
-      })
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
   showDetalles(id: number) {
     this.visible = true;
     this.emprendimiento = this.emprendimientos.filter((emprendimiento: any) => emprendimiento.id === id)
@@ -78,14 +71,14 @@ export class DetallesComponent implements OnInit {
     this.displayObservaciones = !this.displayObservaciones;
   }
 
-  confirm(idEmprendimiento:number) {
+  confirm(idEmprendimiento: number) {
     this.confirmationService.confirm({
       message: '¿Quieres verificar este emprendimiento?',
       icon: 'pi pi-check-circle',
     });
 
     this.idCurrentEmprendimiento = idEmprendimiento;
-    
+
   }
 
   accept() {
@@ -93,8 +86,10 @@ export class DetallesComponent implements OnInit {
       "state": true
     }
     try {
-      this.clasificadosService.post(`${this.API_URI}/advertisements/${this.idCurrentEmprendimiento}/change/state/`, body ,this.token).subscribe( (res) => {
-        this.traerEmprendimientos();
+      this.clasificadosService.post(`${this.API_URI}/advertisements/${this.idCurrentEmprendimiento}/change/state/`, body, this.token).subscribe((res) => {
+        this.dataFetchingService.getEmprendimientos().subscribe(res => {
+          this.emprendimientos = res.data;
+        })
         this.confirmationService.close();
         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Emprendimiento verificado' });
       })
@@ -108,9 +103,9 @@ export class DetallesComponent implements OnInit {
   }
 
 
-  handleSubmit(){
+  handleSubmit() {
     try {
-      this.clasificadosService.post(`${this.API_URI}/advertisements/${this.idCurrentEmprendimiento}/change/state/`, this.formObservaciones.value ,this.token).subscribe( (res) => {
+      this.clasificadosService.post(`${this.API_URI}/advertisements/${this.idCurrentEmprendimiento}/change/state/`, this.formObservaciones.value, this.token).subscribe((res) => {
         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Observaciones enviadas' });
         this.confirmationService.close();
         this.formObservaciones.reset();
