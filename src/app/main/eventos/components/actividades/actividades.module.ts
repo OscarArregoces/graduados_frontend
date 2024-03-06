@@ -8,6 +8,9 @@ import { CrearComponent } from './components/crear/crear.component';
 import { EditarComponent } from './components/editar/editar.component';
 import { EliminarComponent } from './components/eliminar/eliminar.component';
 import { MisActividadesComponent } from './components/mis-actividades/mis-actividades.component';
+import { AprobacionComponent } from './components/aprobacion/aprobacion.component';
+import { FormVinculacionComponent } from './components/crear/components/form-vinculacion/form-vinculacion.component';
+import { FormExternoComponent } from './components/crear/components/form-externo/form-externo.component';
 
 import { SharedModule } from 'src/app/shared/shared.module';
 
@@ -26,8 +29,9 @@ import { CascadeSelectModule } from 'primeng/cascadeselect';
 import { CardModule } from 'primeng/card';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { ChipModule } from 'primeng/chip';
-import { AprobacionComponent } from './components/aprobacion/aprobacion.component';
-
+import { DividerModule } from 'primeng/divider';
+import { MessageModule } from 'primeng/message';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @NgModule({
   declarations: [
@@ -37,7 +41,9 @@ import { AprobacionComponent } from './components/aprobacion/aprobacion.componen
     EditarComponent,
     EliminarComponent,
     MisActividadesComponent,
-    AprobacionComponent
+    AprobacionComponent,
+    FormVinculacionComponent,
+    FormExternoComponent
   ],
   imports: [
     CommonModule,
@@ -60,7 +66,10 @@ import { AprobacionComponent } from './components/aprobacion/aprobacion.componen
     CascadeSelectModule,
     CardModule,
     MultiSelectModule,
-    ChipModule
+    ChipModule,
+    DividerModule,
+    MessageModule,
+    ProgressSpinnerModule
   ]
 })
 export class ActividadesModule { }

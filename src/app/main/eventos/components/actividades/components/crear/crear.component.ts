@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { UntypedFormBuilder, Validators } from '@angular/forms';
+import { FormControl, UntypedFormBuilder, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
 import { EventosService } from 'src/app/core/services/dashboard/eventos.service';
@@ -9,6 +9,8 @@ import { formateDateOutPut } from 'src/app/helpers/formateDate';
 import { formateHours12 } from 'src/app/helpers/formateHours';
 import { ValidForm } from 'src/app/helpers/validForms';
 import { verifyDate } from 'src/app/helpers/verifyDate';
+import { Sede } from 'src/app/models/main/Inicio.interface';
+import { Dependencia, Modalidad, Responsable, Servicio } from 'src/app/models/main/eventos.interface';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -18,27 +20,25 @@ import { environment } from 'src/environments/environment';
 })
 export class CrearComponent implements OnInit, OnDestroy {
 
-  API_URI = environment.API_URI;
-  public subscription$!: Subscription;
-  public width: string = '';
-  public programas: any[] = [];
-  public modalidades: any[] = [
-    { id: 1, name: 'PRESENCIAL' },
-    { id: 2, name: 'VIRTUAL' },
+
+  public modalidades: Modalidad[] = [
+    { id: 1, name: 'Presencial' },
+    { id: 2, name: 'Virtual' },
+    { id: 3, name: 'Híbrida ' },
   ];
-  public sedes: any[] = [
-    { id: 1, name: 'RIOHACHA' },
-    { id: 2, name: 'MAICAO' },
-    { id: 3, name: 'FONSECA' },
+  public sedes: Sede[] = [
+    { id: 1, name: 'Riohacha' },
+    { id: 2, name: 'Maicao' },
+    { id: 3, name: 'Fonseca' },
   ];
-  public dependencias: any[] = [
+  public dependencias: Dependencia[] = [
     { id: 1, name: 'FACEYA' },
     { id: 2, name: 'FACED' },
     { id: 3, name: 'FCSYH' },
     { id: 4, name: 'FIUG' },
     { id: 5, name: 'FCBYA y Dependencias' },
   ];
-  public servicios: any[] = [
+  public servicios: Servicio[] = [
     { id: 1, name: ' Comunicaciones (Publicidad)' },
     { id: 2, name: ' Ori (Ponente)' },
     { id: 3, name: ' Bienestar Universitario' },
@@ -46,94 +46,44 @@ export class CrearComponent implements OnInit, OnDestroy {
     { id: 5, name: ' Recursos Fisicos' },
     { id: 5, name: ' Talento Humano' },
   ];
-  public roles: any[] = [
-    { id: 1, name: 'Organizador' },
-    { id: 2, name: 'Ponente' },
-    { id: 3, name: 'Ponente Magistral' },
-    { id: 4, name: 'Moderador' },
-    { id: 5, name: 'Asistente' },
-  ];
-  public tipoVinculacion: any[] = [
-    { id: 1, name: 'Docente catedrático' },
-    { id: 2, name: 'Docente ocasional y/o planta' },
-    { id: 3, name: 'Estudiante' },
-    { id: 4, name: 'Administrativo' },
-    { id: 5, name: 'Graduado' },
-    { id: 6, name: 'Directivo' },
-    { id: 7, name: 'Invitado externo' },
-  ];
-  public responsables: any[] = [];
 
+
+  API_URI = environment.API_URI;
+  public subscription$!: Subscription;
+  public width: string = '';
+  public programas: any[] = [];
+  public responsables: Responsable[] = [];
   public token: any;
   public areas: any[] = [];
   public areasVerificated: any[] = [];
   public subareas: any[] = [];
   public tipo_actividades: any[] = [];
   public tipoActividadesVerificated: any[] = [];
-  public ponentes: any[] = [];
   public displayFormPonentes: boolean = false;
+  public displayVinculacion: boolean = false;
+  public vinculacionSelected: string | null = null;
+
   public inforCardDescription: string = `
-  En la sección de Correos Electrónicos Personalizados, tienes la opción de agregar direcciones de correo manualmente para invitar a personas específicas a tu actividad. Esto te brinda la flexibilidad de extender invitaciones personalizadas a individuos fuera de las listas de facultades o programas predefinidos.
-  ¡Aprovecha esta herramienta para garantizar que todos aquellos a quienes deseas incluir en tu evento reciban una invitación personalizada y completa!
+  Este formulario te permite registrar a los responsables de la actividad, asignándoles roles y tipos de vinculación específicos. Selecciona cuidadosamente la combinación de rol y tipo de vinculación que mejor describa la participación de cada responsable en la actividad.
   `;
   public form = this.fb.group({
-    area: ['', Validators.required],
-    subArea: [{ value: '', disabled: true }, Validators.required],
     nombre_actividad: ['', [Validators.required, Validators.maxLength(256)]],
-    tipo_actividad: ['', [Validators.required, Validators.maxLength(256)]],
-    responsable: ['', [Validators.required, Validators.maxLength(256)]],
-    lugar: ['', [Validators.required, Validators.maxLength(256)]],
-    cupos: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-    descripcion: ['', [Validators.required, Validators.maxLength(600)]],
-    objectivo: ['', [Validators.required, Validators.maxLength(300)]],
-    hora: ['', [Validators.required, Validators.maxLength(10)]],
-    fecha: ['', Validators.required],
-    publico: ['', Validators.required],
+    tipo_actividad: ['', Validators.required],
+    area: ['', Validators.required],
+    subarea: [{ value: '', disabled: true }, Validators.required],
+    fecha_inicio: ['', Validators.required],
+    fecha_final: ['', Validators.required],
+    descripcion: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(600)]],
+    objetivo: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(300)]],
+    servicios: ['', [Validators.required]],
     modalidad: ['', Validators.required],
+    sede: ['', [Validators.required]],
+    dependencia: ['', [Validators.required]],
+    enlace_reunion: [''],
+    direccion: ['', [Validators.minLength(1), Validators.maxLength(150)]],
+
   });
 
-  public formPonentes = this.fb.group({
-    fullname: ['', Validators.required],
-    document: ['', Validators.required],
-    email: ['', [Validators.required, Validators.email]],
-    phone: ['', Validators.required],
-    vinculacion: ['', Validators.required],
-    rol: ['', Validators.required],
-    dedicacion: ['', Validators.required],
-  })
-
-  public dimensiones = {
-    "pc": {
-      width: {
-        "max": 1280,
-        "valor": "30%"
-      },
-      height: {
-        "max": 1280,
-        "valor": "100%"
-      }
-    },
-    "tablet": {
-      width: {
-        "max": 768,
-        "valor": "50%"
-      },
-      height: {
-        "max": 768,
-        "valor": "100%"
-      }
-    },
-    "movil": {
-      width: {
-        "max": 425,
-        "valor": "100%"
-      },
-      height: {
-        "max": 425,
-        "valor": "100%"
-      }
-    },
-  }
   constructor(
     private eventosService: EventosService,
     private fb: UntypedFormBuilder,
@@ -143,7 +93,7 @@ export class CrearComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    const [width] = this.pantallaService.calcularEspacioPantallaPersonalized(this.dimensiones);
+    const [width] = this.pantallaService.calcularEspacioPantalla()
     this.subscription$ = width.subscribe(width => this.width = width);
     this.token = localStorage.getItem('token');
     this.dataFechingService.getProgramas().subscribe(res => this.programas = res.data);
@@ -152,7 +102,7 @@ export class CrearComponent implements OnInit, OnDestroy {
       this.areasVerificated = []
       this.areas = res.data;
       res.data.map((area: any) => this.areasVerificated.push(area.name.toLowerCase().replace(/\s+/g, '')))
-      this.form.controls['subArea'].disable()
+      this.form.controls['subarea'].disable()
     });
     this.dataFechingService.getTipoActividades().subscribe(res => {
       this.tipoActividadesVerificated = []
@@ -167,40 +117,39 @@ export class CrearComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
-    const { area, subArea, nombre_actividad, tipo_actividad, responsable, lugar, cupos, descripcion, objectivo, fecha, hora, publico } = this.form.value;
-    const fullHour12 = formateHours12(hora);
-    const fullDate = formateDateOutPut(fecha);
-    if (verifyDate(fullDate, fullHour12)) {
-      return this.messageService.add({ severity: 'warn', summary: 'Notificación', detail: 'No puedes colocar una fecha anterior a la fecha actual' })
+    ValidForm(this.form)
+    if (this.responsables.length === 0) {
+      return this.messageService.add({ severity: 'warn', summary: 'Aviso', detail: 'Agregue un responsable' })
     }
+    console.log({
+      formulario: this.form.value,
+      ponentes: this.responsables
+    });
+    this.form.reset();
+    this.messageService.add({ severity: 'success', summary: 'Notificación', detail: 'Solicitud Exitosa' })
 
-    let body = {
-      "area": area.id,
-      "subArea": subArea.id,
-      nombre_actividad,
-      "tipo_actividad": tipo_actividad.id,
-      responsable,
-      lugar,
-      cupos,
-      descripcion,
-      objectivo,
-      "fecha": fullDate,
-      "hora": fullHour12,
-      publico,
-    }
-    try {
-      this.eventosService.post(`${this.API_URI}/eventos/create/`, body, this.token).subscribe(r => {
-        this.form.reset();
-        this.messageService.add({ severity: 'success', summary: 'Notificación', detail: 'Creado correctamente' })
-      })
-    } catch (error) {
-      return this.messageService.add({ severity: 'error', summary: 'Notificación', detail: 'Hubo un problema en la petición' })
-    }
+    // ValidForm(this.formPonentes);
+    // if (this.formPonentes.valid) {}
+    // const { area, subArea, nombre_actividad, tipo_actividad, responsable, lugar, cupos, descripcion, objectivo, fecha, hora, publico } = this.form.value;
+    // const fullHour12 = formateHours12(hora);
+    // const fullDate = formateDateOutPut(fecha);
+    // if (verifyDate(fullDate, fullHour12)) {
+    //   return this.messageService.add({ severity: 'warn', summary: 'Notificación', detail: 'No puedes colocar una fecha anterior a la fecha actual' })
+    // }
+
+    // try {
+    //   this.eventosService.post(`${this.API_URI}/eventos/create/`, body, this.token).subscribe(r => {
+    //     this.form.reset();
+    //     this.messageService.add({ severity: 'success', summary: 'Notificación', detail: 'Creado correctamente' })
+    //   })
+    // } catch (error) {
+    //   return this.messageService.add({ severity: 'error', summary: 'Notificación', detail: 'Hubo un problema en la petición' })
+    // }
   }
 
 
   onChangeAreas(event: any) {
-    this.form.controls['subArea'].disable()
+    this.form.controls['subarea'].disable()
 
     if (event !== null) {
       let body = {
@@ -213,32 +162,37 @@ export class CrearComponent implements OnInit, OnDestroy {
       } catch (error) {
         console.log(error)
       }
-      this.form.controls['subArea'].enable()
+      this.form.controls['subarea'].enable()
     }
   }
 
   changeDisplayFormPonentes() {
     this.displayFormPonentes = !this.displayFormPonentes;
   }
+  changeDisplayVinculacion() {
+    this.displayVinculacion = !this.displayVinculacion;
+  }
   closeDisplayFormPonentes() {
     this.displayFormPonentes = false;
-    this.formPonentes.reset();
+  }
+  onChangeModalidad(e: any) {
+    this.form.get('direccion')!.setValue('');
+    this.form.get('enlace_reunion')!.setValue('');
   }
 
-  onSubmitFormPonentes() {
-    ValidForm(this.form);
-    if (this.formPonentes.valid) {
-      this.responsables.push({
-        fullname: this.formPonentes.value.fullname,
-        document: this.formPonentes.value.document,
-        email: this.formPonentes.value.email,
-        phone: this.formPonentes.value.phone,
-        vinculacion: this.formPonentes.value.vinculacion.name,
-        rol: this.formPonentes.value.rol.name,
-        dedicacion: this.formPonentes.value.dedicacion,
-      });
-      this.closeDisplayFormPonentes();
-    }
+  handleClickVinculacion(vinculacion: string) {
+    this.vinculacionSelected = vinculacion;
+  }
+  handleResetVinculacion() {
+    this.vinculacionSelected = null;
+  }
 
+  addResponsable(responsable: Responsable) {
+    this.responsables.push(responsable);
+    this.vinculacionSelected = null;
+    this.closeDisplayFormPonentes();
+  }
+  removeResponsable(document: string) {
+    this.responsables = this.responsables.filter(responsable => responsable.document !== document)
   }
 }

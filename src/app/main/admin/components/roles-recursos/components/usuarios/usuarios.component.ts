@@ -81,7 +81,7 @@ export class UsuariosComponent implements OnInit {
     email2: [''],
     phone: ['', [Validators.required]],
     phone2: [''],
-    graduado: [{ value: true }, [Validators.required]],
+    graduado: [{ value: false }, [Validators.required]],
     funcionario: [{ value: true }, [Validators.required]],
   })
   public formDetail = this.fb.group({
@@ -170,14 +170,14 @@ export class UsuariosComponent implements OnInit {
         fullname,
         identification,
         address,
-        nationality,
+        nationality: Paises.find( pais => pais.name === nationality),
         date_of_birth: date_of_birth && formateDateInput(date_of_birth),
         phone,
         phone2,
         fecha_expedicion: fecha_expedicion && formateDateInput(fecha_expedicion),
         condicion_vulnerable,
-        municipio,
-        departamento,
+        municipio: Paises.find( pais => pais.name === municipio),
+        departamento: Paises.find( pais => pais.name === departamento),
         email,
         email2,
       }
@@ -252,10 +252,10 @@ export class UsuariosComponent implements OnInit {
         graduado: graduado.value
       }
 
-      this.adminService.post(`${this.API_URI}/users/funcionarios`, body, this.token)
+      this.adminService.post(`${this.API_URI}/users/funcionarios/`, body, this.token)
         .pipe(
           catchError(error => {
-            console.log(error.error.errors.error);
+            console.log(error);
             throw error;
           })
         )

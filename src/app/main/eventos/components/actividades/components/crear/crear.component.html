@@ -7,7 +7,12 @@
                     <div class="p-inputgroup">
                         <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
                                 style="color:#f16357;"></i></span>
-                        <input type="text" [maxlength]="256" pInputText formControlName="nombre_actividad" />
+                        <input type="text" [maxlength]="256" placeholder="Titulo para la actividad" pInputText
+                            formControlName="nombre_actividad" />
+                    </div>
+                    <div *ngIf="form.get('nombre_actividad')?.hasError('required') && form.get('nombre_actividad')?.touched"
+                        class="text-red-500 my-1 text-left">
+                        Campo requerido
                     </div>
                 </div>
             </div>
@@ -21,6 +26,10 @@
                             placeholder="Selecciona una opcion" formControlName="tipo_actividad"
                             optionLabel="name"></p-dropdown>
                     </div>
+                    <div *ngIf="form.get('tipo_actividad')?.hasError('required') && form.get('tipo_actividad')?.touched"
+                        class="text-red-500 my-1 text-left">
+                        Campo requerido
+                    </div>
                 </div>
             </div>
             <div class="col-12 md:col-6 lg:col-3">
@@ -33,6 +42,10 @@
                             placeholder="Selecciona una opcion" (ngModelChange)="onChangeAreas($event)"
                             formControlName="area"></p-dropdown>
                     </div>
+                    <div *ngIf="form.get('area')?.hasError('required') && form.get('area')?.touched"
+                        class="text-red-500 my-1 text-left">
+                        Campo requerido
+                    </div>
                 </div>
             </div>
             <div class="col-12 md:col-6 lg:col-3">
@@ -42,7 +55,11 @@
                         <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
                                 style="color:#f16357;"></i></span>
                         <p-dropdown [style]="{'width':'100%'}" [options]="subareas" optionLabel="name"
-                            placeholder="Selecciona una opcion" formControlName="subArea"></p-dropdown>
+                            placeholder="Selecciona una opcion" formControlName="subarea"></p-dropdown>
+                    </div>
+                    <div *ngIf="form.get('subarea')?.hasError('required') && form.get('subarea')?.touched"
+                        class="text-red-500 my-1 text-left">
+                        Campo requerido
                     </div>
                 </div>
             </div>
@@ -52,8 +69,13 @@
                     <div class="p-inputgroup">
                         <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
                                 style="color:#f16357;"></i></span>
-                        <p-calendar [style]="{'width':'100%'}" placeholder="Seleccione una fecha"
-                            formControlName="fecha" dateFormat="mm-dd-yy" inputId="dateformat"></p-calendar>
+                        <p-calendar [style]="{'width':'100%'}" formControlName="fecha_inicio" [showTime]="true"
+                            [showSeconds]="false" hourFormat="12" inputId="time"
+                            placeholder="Seleccione una fecha"></p-calendar>
+                    </div>
+                    <div *ngIf="form.get('fecha_inicio')?.hasError('required') && form.get('fecha_inicio')?.touched"
+                        class="text-red-500 my-1 text-left">
+                        Campo requerido
                     </div>
                 </div>
             </div>
@@ -63,8 +85,13 @@
                     <div class="p-inputgroup">
                         <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
                                 style="color:#f16357;"></i></span>
-                        <p-calendar [style]="{'width':'100%'}" placeholder="Seleccione una fecha"
-                            formControlName="fecha" dateFormat="mm-dd-yy" inputId="dateformat"></p-calendar>
+                        <p-calendar [style]="{'width':'100%'}" formControlName="fecha_final" [showTime]="true"
+                            [showSeconds]="false" hourFormat="12" inputId="time"
+                            placeholder="Seleccione una fecha"></p-calendar>
+                    </div>
+                    <div *ngIf="form.get('fecha_final')?.hasError('required') && form.get('fecha_final')?.touched"
+                        class="text-red-500 my-1 text-left">
+                        Campo requerido
                     </div>
                 </div>
             </div>
@@ -80,78 +107,102 @@
                 <div class="flex flex-column gap-2">
                     <div class="flex flex-column gap-2">
                         <label class="customLabel">Objetivo</label>
-                        <textarea formControlName="objectivo"
+                        <textarea formControlName="objetivo"
                             placeholder="Finalidad con la que se llevará a cabo esta actividad" [rows]="7" [cols]="30"
                             pInputTextarea [autoResize]="false" [maxlength]="300" [autoResize]="true"></textarea>
                     </div>
-                </div>
-            </div>
-            <div class="col-12 md:col-6 lg:col-6">
-                <div class="flex flex-column gap-2">
-                    <label class="customLabel">Dirección</label>
-                    <div class="p-inputgroup">
-                        <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                style="color:#f16357;"></i></span>
-                        <input type="text" [maxlength]="256" pInputText formControlName="nombre_actividad" />
+                    <div *ngIf="form.get('objetivo')?.hasError('required') && form.get('objetivo')?.touched"
+                        class="text-red-500 my-1 text-left">
+                        Campo requerido
                     </div>
                 </div>
             </div>
-            <div class="col-12 md:col-6 lg:col-6">
-                <div class="flex flex-column gap-2">
-                    <label class="customLabel">Servicios Requeridos</label>
-                    <div class="p-inputgroup">
-                        <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                style="color:#f16357;"></i></span>
-                        <!-- <p-dropdown [style]="{'width':'100%'}" [options]="servicios" placeholder="Selecciona una opcion"
-                            formControlName="tipo_actividad" optionLabel="name"></p-dropdown> -->
-                        <p-multiSelect [options]="servicios" formControlName="publico" placeholder="Escoge una opcion"
-                            optionLabel="name" display="chip"
-                            [style]="{'minWidth': '14rem', 'width':'100%'}"></p-multiSelect>
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 md:col-6 lg:col-4">
+            <div class="col-12 md:col-6 lg:col-3">
                 <div class="flex flex-column gap-2">
                     <label class="customLabel">Modalidad</label>
                     <div class="p-inputgroup">
                         <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
                                 style="color:#f16357;"></i></span>
                         <p-dropdown [style]="{'width':'100%'}" [options]="modalidades"
-                            placeholder="Selecciona una opcion" formControlName="modalidad"
-                            optionLabel="name"></p-dropdown>
+                            placeholder="Selecciona una opcion" formControlName="modalidad" optionLabel="name"
+                            (onChange)="onChangeModalidad($event)"></p-dropdown>
+                    </div>
+                    <div *ngIf="form.get('modalidad')?.hasError('required') && form.get('modalidad')?.touched"
+                        class="text-red-500 my-1 text-left">
+                        Campo requerido
                     </div>
                 </div>
             </div>
-            <div class="col-12 md:col-6 lg:col-4">
+            <div class="col-12 md:col-6 lg:col-3">
+                <div class="flex flex-column gap-2">
+                    <label class="customLabel">Servicios Requeridos</label>
+                    <div class="p-inputgroup">
+                        <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
+                                style="color:#f16357;"></i></span>
+                        <p-multiSelect [options]="servicios" formControlName="servicios" placeholder="Escoge una opcion"
+                            optionLabel="name" display="chip"
+                            [style]="{'minWidth': '14rem', 'width':'100%'}"></p-multiSelect>
+                    </div>
+                    <div *ngIf="form.get('servicios')?.hasError('required') && form.get('servicios')?.touched"
+                        class="text-red-500 my-1 text-left">
+                        Campo requerido
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 md:col-6 lg:col-3">
                 <div class="flex flex-column gap-2">
                     <label class="customLabel">Sede</label>
                     <div class="p-inputgroup">
                         <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
                                 style="color:#f16357;"></i></span>
                         <p-dropdown [style]="{'width':'100%'}" [options]="sedes" placeholder="Selecciona una opcion"
-                            formControlName="tipo_actividad" optionLabel="name"></p-dropdown>
+                            formControlName="sede" optionLabel="name"></p-dropdown>
+                    </div>
+                    <div *ngIf="form.get('sede')?.hasError('required') && form.get('sede')?.touched"
+                        class="text-red-500 my-1 text-left">
+                        Campo requerido
                     </div>
                 </div>
             </div>
-            <div class="col-12 md:col-6 lg:col-4">
+            <div class="col-12 md:col-6 lg:col-3">
                 <div class="flex flex-column gap-2">
                     <label class="customLabel">Dependencia</label>
                     <div class="p-inputgroup">
                         <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
                                 style="color:#f16357;"></i></span>
                         <p-dropdown [style]="{'width':'100%'}" [options]="dependencias"
-                            placeholder="Selecciona una opcion" formControlName="tipo_actividad"
+                            placeholder="Selecciona una opcion" formControlName="dependencia"
                             optionLabel="name"></p-dropdown>
+                    </div>
+                    <div *ngIf="form.get('dependencia')?.hasError('required') && form.get('dependencia')?.touched"
+                        class="text-red-500 my-1 text-left">
+                        Campo requerido
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-12 md:col-12 lg:col-12" *ngIf="form?.value?.modalidad?.name === 'VIRTUAL'">
+        <div class="col-12 md:col-12 lg:col-12"
+            *ngIf="form?.value?.modalidad?.id === 1 || form?.value?.modalidad?.id === 3">
+            <div class="flex flex-column gap-2">
+                <label class="customLabel">Dirección</label>
+                <div class="p-inputgroup">
+                    <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill" style="color:#f16357;"></i></span>
+                    <input type="text" [maxlength]="256" placeholder="Ubicación donde se llevará a cabo la actividad"
+                        pInputText formControlName="direccion" />
+                </div>
+            </div>
+        </div>
+        <div class="col-12 md:col-12 lg:col-12"
+            *ngIf="form?.value?.modalidad?.id === 2 || form?.value?.modalidad?.id === 3">
             <div class="flex flex-column gap-2">
                 <label class="customLabel">Enlace de la Reunión</label>
                 <div class="p-inputgroup">
                     <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill" style="color:#f16357;"></i></span>
-                    <input type="text" [maxlength]="256" pInputText formControlName="nombre_actividad" />
+                    <input type="text" [maxlength]="256" pInputText formControlName="enlace_reunion" />
+                </div>
+                <div *ngIf="form.get('modalidad')?.hasError('required') && form.get('modalidad')?.touched"
+                    class="text-red-500 my-1 text-left">
+                    Campo requerido
                 </div>
             </div>
         </div>
@@ -183,12 +234,14 @@
                             <td class="customText">{{responsable.phone}}</td>
                             <td class="customText">{{responsable.vinculacion}}</td>
                             <td class="customText">{{responsable.rol}}</td>
-                            <td class="customText">{{responsable.dedicacion}}</td>
+                            <td class="customText">
+                                {{responsable.dedicacion}}</td>
                             <td>
-                                <button pButton pRipple type="button" icon="pi pi-pencil"
-                                    class="p-button-raised p-button-warning m-1"></button>
+                                <!-- <button pButton pRipple type="button" icon="pi pi-pencil"
+                                    class="p-button-raised p-button-warning m-1"></button> -->
                                 <button pButton pRipple type="button" icon="pi pi-trash"
-                                    class="p-button-raised p-button-danger m-1"></button>
+                                    class="p-button-raised p-button-danger m-1"
+                                    (click)="removeResponsable(responsable.document)"></button>
                             </td>
                         </tr>
                     </ng-template>
@@ -198,129 +251,41 @@
         </div>
         <div class="col-12">
             <div class="flex justify-content-center aling-items-center my-3">
-                <button pButton pRipple type="submit" label="Crear" icon="pi pi-save" class="p-button-success"
-                    (click)="onSubmit()" [disabled]="!form.valid"></button>
+                <button pButton pRipple type="submit" label="Solicitar Actividad" icon="pi pi-chevron-circle-right"
+                    class="p-button-success" (click)="onSubmit()"></button>
             </div>
         </div>
     </form>
 </app-card>
 
 <p-dialog header="Registrando Responsable(s) / Ponente(s)" [(visible)]="displayFormPonentes"
-    [style]="{'width': '50vw','text-aling': 'center', 'min-height':'60vh'}" [showHeader]="true" [modal]="true"
-    [dismissableMask]="false" (onHide)="closeDisplayFormPonentes()">
-    <form [formGroup]="formPonentes">
-        <div class="grid">
-            <div class="col-12 md:col-12 lg:col-12">
-                <div class="flex flex-column gap-2">
-                    <label class="customLabel">Nombres y Apellidos</label>
-                    <div class="p-inputgroup">
-                        <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                style="color:#f16357;"></i></span>
-                        <input type="text" [maxlength]="150" pInputText formControlName="fullname" />
-                    </div>
-                    <div *ngIf="formPonentes.get('fullname')?.hasError('required') && formPonentes.get('fullname')?.touched"
-                        class="text-red-500 my-1 text-left">
-                        Campo requerido
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 md:col-6 lg:col-6">
-                <div class="flex flex-column gap-2">
-                    <label class="customLabel">No Documento</label>
-                    <div class="p-inputgroup">
-                        <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                style="color:#f16357;"></i></span>
-                        <input type="number" [maxlength]="100" pInputText formControlName="document" />
-                    </div>
-                    <div *ngIf="formPonentes.get('document')?.hasError('required') && formPonentes.get('document')?.touched"
-                        class="text-red-500 my-1 text-left">
-                        Campo requerido
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 md:col-6 lg:col-6">
-                <div class="flex flex-column gap-2">
-                    <label class="customLabel">Correo</label>
-                    <div class="p-inputgroup">
-                        <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                style="color:#f16357;"></i></span>
-                        <input type="email" [maxlength]="100" pInputText formControlName="email" />
-                    </div>
-                    <div *ngIf="formPonentes.get('email')?.hasError('required') && formPonentes.get('email')?.touched"
-                        class="text-red-500 my-1 text-left">
-                        Campo requerido
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 md:col-6 lg:col-6">
-                <div class="flex flex-column gap-2">
-                    <label class="customLabel">Vinculación</label>
-                    <div class="p-inputgroup">
-                        <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                style="color:#f16357;"></i></span>
-                        <p-dropdown [style]="{'width':'100%'}" [options]="tipoVinculacion"
-                            placeholder="Selecciona una opcion" formControlName="vinculacion"
-                            optionLabel="name"></p-dropdown>
-                    </div>
-                    <div *ngIf="formPonentes.get('vinculacion')?.hasError('required') && formPonentes.get('vinculacion')?.touched"
-                        class="text-red-500 my-1 text-left">
-                        Campo requerido
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 md:col-6 lg:col-6">
-                <div class="flex flex-column gap-2">
-                    <label class="customLabel">Rol</label>
-                    <div class="p-inputgroup">
-                        <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                style="color:#f16357;"></i></span>
-                        <p-dropdown [style]="{'width':'100%'}" [options]="roles" placeholder="Selecciona una opcion"
-                            formControlName="rol" optionLabel="name"></p-dropdown>
-                    </div>
-                    <div *ngIf="formPonentes.get('roles')?.hasError('required') && formPonentes.get('roles')?.touched"
-                        class="text-red-500 my-1 text-left">
-                        Campo requerido
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 md:col-6 lg:col-6">
-                <div class="flex flex-column gap-2">
-                    <label class="customLabel">Telefono</label>
-                    <div class="p-inputgroup">
-                        <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                style="color:#f16357;"></i></span>
-                        <input type="number" [maxlength]="30" pInputText formControlName="phone" />
-                    </div>
-                    <div *ngIf="formPonentes.get('phone')?.hasError('required') && formPonentes.get('phone')?.touched"
-                        class="text-red-500 my-1 text-left">
-                        Campo requerido
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 md:col-6 lg:col-6">
-                <div class="flex flex-column gap-2">
-                    <label class="customLabel">Dedicación (Horas)</label>
-                    <div class="p-inputgroup">
-                        <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                                style="color:#f16357;"></i></span>
-                        <input type="number" [maxlength]="10" pInputText formControlName="dedicacion" />
-                    </div>
-                    <div *ngIf="formPonentes.get('dedicacion')?.hasError('required') && formPonentes.get('dedicacion')?.touched"
-                        class="text-red-500 my-1 text-left">
-                        Campo requerido
-                    </div>
-                </div>
-            </div>
+    [style]="{'width': width,'text-aling': 'center', 'min-height':'60vh'}" [showHeader]="true" [modal]="true"
+    [dismissableMask]="false" (onHide)="handleResetVinculacion()">
 
-            <div class="col-12">
-                <div class="flex justify-content-center aling-items-center my-3">
-                    <button pButton pRipple type="submit" label="Registrar" icon="pi pi-save" class="p-button-success"
-                        (click)="onSubmitFormPonentes()"></button>
-                </div>
-            </div>
-
+    <app-custom-info-card [description]="inforCardDescription"></app-custom-info-card>
+    <ng-container *ngIf="!vinculacionSelected">
+        <h1 class="customLabel">Selecciona el Tipo de Vinculación</h1>
+        <div class="
+        flex flex-column justify-content-center aling-items-center gap-2
+        md:flex md:flex-row md:justify-content-center md:aling-items-center md:gap-2
+        lg:flex lg:flex-row lg:justify-content-center lg:aling-items-center lg:gap-2
+        ">
+            <button type="submit" class="btn_submit graduado"
+                (click)="handleClickVinculacion('Graduado')">Graduado</button>
+            <button type="submit" class="btn_submit administrativo"
+                (click)="handleClickVinculacion('Administrativo')">Administrativo</button>
+            <button type="submit" class="btn_submit externo"
+                (click)="handleClickVinculacion('Externo')">Externo</button>
         </div>
-    </form>
-</p-dialog>
+    </ng-container>
+    <button *ngIf="vinculacionSelected" pButton pRipple type="button" icon="pi pi-arrow-circle-left" label="Volver"
+        class="p-button-raised p-button-secondary" (click)="handleResetVinculacion()"></button>
 
-<p-toast></p-toast>
+    <ng-container *ngIf="vinculacionSelected === 'Graduado' || vinculacionSelected === 'Administrativo'">
+        <app-form-vinculacion [vinculacionSelected]="vinculacionSelected"
+            (addResponsable)="addResponsable($event)"></app-form-vinculacion>
+    </ng-container>
+    <ng-container *ngIf="vinculacionSelected === 'Externo'">
+        <app-form-externo (addResponsable)="addResponsable($event)"></app-form-externo>
+    </ng-container>
+</p-dialog>

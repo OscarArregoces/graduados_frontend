@@ -1,13 +1,17 @@
 export interface Pais {
+    id?: number;
     name: string;
 }
 export interface Ciudad {
+    id?: number;
     name: string;
 }
 export interface Departamento {
+    id?: number;
     name: string;
 }
 export interface Sede {
+    id?: number;
     name: string;
 }
 export interface CondicionVulnerable {
@@ -19,6 +23,7 @@ export interface Genero {
     name: string;
 }
 export interface TipoDocumento {
+    id?: number;
     name: string;
 }
 export interface Rol {
@@ -55,6 +60,7 @@ export interface Persona {
     nationality: string;
     identification: string;
     gender_type: Genero;
+    phone?: string;
 }
 
 export interface UserInternal {

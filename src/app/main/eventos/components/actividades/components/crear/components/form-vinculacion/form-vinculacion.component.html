@@ -1,0 +1,99 @@
+<div class="col-12" *ngIf="vinculacionSelected">
+    <form [formGroup]="formSearch" style="background-color: #f5f4f2;" class="p-3 mt-3">
+        <h1 class="customLabel">Busqueda de {{ vinculacionSelected }}</h1>
+        <div class="
+        flex flex-column justify-content-center align-items-start gap-0
+        md:flex md:flex-row md:justify-content-center md:align-items-center md:gap-5
+        lg:flex lg:flex-row lg:justify-content-center lg:align-items-center lg:gap-5
+        ">
+            <div class="w-full">
+                <div class="p-inputgroup my-1">
+                    <span class="p-inputgroup-addon" style="color:#f16357;"><i class="pi pi-filter-fill"></i></span>
+                    <input type="number" style="width: 100%;" placeholder="No Documento" formControlName="documento"
+                        pInputText [maxlength]="100" />
+                </div>
+                <div *ngIf="formSearch.get('documento')?.hasError('required') && formSearch.get('documento')?.touched"
+                    class="text-red-500 my-1 text-left">
+                    Ingresa un Número de Documento
+                </div>
+            </div>
+            <button pButton pRipple type="button" icon="pi pi-search" label="Buscar" class="p-button-raised p-button"
+                (click)="onSubmitSearch()"></button>
+        </div>
+    </form>
+    <div *ngIf="persona?.length === 0" class="mt-5 col-12 flex justify-content-center">
+        <p-message severity="warn" text="{{ vinculacionSelected }} no encontrado." styleClass="mr-2"></p-message>
+    </div>
+    <form [formGroup]="formVinculacion" style="background-color: #f5f4f2;" *ngIf="!loading; else elseBlock">
+        <ng-container *ngIf="onSearch && persona && persona.length">
+            <p-divider class="w-full my-2"></p-divider>
+            <div class="
+            flex flex-column-reverse p-2
+            md:flex md:flex-row md:p-2
+            lg:flex lg:flex-row lg:p-2
+            ">
+                <div class="col-12 md:col-6 lg:col-6 flex flex-column justify-content-center align-items-center">
+                    <div class="w-full">
+                        <div class="flex flex-column gap-2">
+                            <label class="customLabel">Dedicación (Horas)</label>
+                            <div class="p-inputgroup">
+                                <span class="p-inputgroup-addon"><i class="pi pi-clock"></i></span>
+                                <input type="number" pInputText formControlName="dedicacion"
+                                    placeholder="Número de horas" />
+                            </div>
+                            <div *ngIf="formVinculacion.get('dedicacion')?.hasError('required') && formVinculacion.get('dedicacion')?.touched"
+                                class="text-red-500 my-1 text-left">
+                                Campo requerido
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-full">
+                        <div class="flex flex-column gap-2">
+                            <label class="customLabel">Rol</label>
+                            <div class="p-inputgroup">
+                                <span class="p-inputgroup-addon"><i class="pi pi-sitemap"></i></span>
+                                <p-dropdown [style]="{'width':'100%'}" [options]="roles"
+                                    placeholder="Selecciona una opcion" formControlName="rol"
+                                    optionLabel="name"></p-dropdown>
+                            </div>
+                            <div *ngIf="formVinculacion.get('rol')?.hasError('required') && formVinculacion.get('rol')?.touched"
+                                class="text-red-500 my-1 text-left">
+                                Campo requerido
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 md:col-6 lg:col-6 shadow-3 border-round-sm p-0 bg-white">
+                    <div class="w-full pl-1 border-round-top flex justify-content-start align-items-center"
+                        style="background-color: #f16357;">
+                        <i class="pi pi-id-card mr-2" style="font-size: 1.2rem; color:white;"></i>
+                        <label class="text-white" style="font-size: 1.2rem;">{{vinculacionSelected}}</label>
+                    </div>
+                    <div class="m-1 p-2" style="background-color: #f5f4f2;" *ngIf="persona[0].fullname">
+                        <label class="font-semibold" style="color: #535050;">Nombre</label>
+                        <p class="p-0 m-0 text-gray-700">{{persona[0].fullname}}</p>
+                    </div>
+                    <div class="m-1 p-2" style="background-color: #f5f4f2;" *ngIf="persona[0].email">
+                        <label class="font-semibold" style="color: #535050;">Correo</label>
+                        <p class="p-0 m-0 text-gray-700">{{persona[0].email}}</p>
+                    </div>
+                    <div class="m-1 p-2" style="background-color: #f5f4f2;" *ngIf="persona[0].phone">
+                        <label class="font-semibold" style="color: #535050;">Celular</label>
+                        <p class="p-0 m-0 text-gray-700">{{persona[0].phone}}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 flex justify-content-center align-items-center">
+                <button pButton pRipple type="button" label="Guardar" class="p-button-raised p-button-success"
+                    (click)="onSubmitVinculacion()"></button>
+            </div>
+        </ng-container>
+    </form>
+
+    <ng-template #elseBlock>
+        <div class="w-full h-5rem flex justify-content-center align-items-center">
+            <p-progressSpinner [style]="{width: '50px', height: '50px'}"></p-progressSpinner>
+        </div>
+    </ng-template>
+</div>
