@@ -1,4 +1,4 @@
-<app-card width="90%" titulo="Gestionar Graduados">
+<app-card width="95%" titulo="Gestionar Graduados">
     <div card-body class="grid">
         <app-custom-info-card [description]="inforCardDescription"></app-custom-info-card>
         <form [formGroup]="form">
@@ -24,8 +24,11 @@
             <div class="flex flex-column gap-2">
                 <p-card>
                     <p-table #dt [value]="graduados" [(selection)]="itemsBulkDelete" dataKey="id"
-                        styleClass="p-datatable-customers" [rowHover]="false" [rows]="50" [showCurrentPageReport]="true"
-                        [loading]="loading" responsiveLayout="scroll" [paginator]="false" [filterDelay]="0"
+                        styleClass="p-datatable-customers" [rowHover]="false" [rows]="10" [showCurrentPageReport]="true"
+                        [loading]="loading" responsiveLayout="scroll" [paginator]="true"
+                        [rowsPerPageOptions]="[10,25,50]"
+                        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+                        [filterDelay]="0"
                         [globalFilterFields]="['fullname','email','country','identification','gender_type.name']"
                         responsiveLayout="scroll">
                         <ng-template pTemplate="caption">
@@ -67,11 +70,11 @@
                                             class="ml-auto"></p-columnFilter>
                                     </div>
                                 </th>
-                                <th pSortableColumn="country">
+                                <th pSortableColumn="nationality.name">
                                     <div class="flex justify-content-between align-items-center">
                                         Pais
-                                        <p-sortIcon field="country"></p-sortIcon>
-                                        <p-columnFilter type="text" field="country" display="menu"
+                                        <p-sortIcon field="nationality.name"></p-sortIcon>
+                                        <p-columnFilter type="text" field="nationality.name" display="menu"
                                             class="ml-auto"></p-columnFilter>
                                     </div>
                                 </th>
@@ -107,11 +110,11 @@
                                 </td>
                                 <td>
                                     <span class="p-column-title">Tipo</span>
-                                    {{graduado.email}}
+                                    {{graduado.email ? graduado.email : "NP"}}
                                 </td>
                                 <td>
                                     <span class="p-column-title">Tipo</span>
-                                    {{graduado.nationality}}
+                                    {{graduado.nationality.name}}
                                 </td>
                                 <td>
                                     <span class="p-column-title">Tipo</span>
@@ -133,18 +136,22 @@
                             </tr>
                         </ng-template>
                     </p-table>
-                    <app-custom-paginator 
+                    <!-- <app-custom-paginator 
                         [nextDisabled]="next" 
                         [previousDisabled]="previous"
                         (nextClick)="nextPaginator()" 
                         (previousClick)="previousPaginator()">
-                    </app-custom-paginator>
+                    </app-custom-paginator> -->
                 </p-card>
             </div>
         </div>
+
         <div *ngIf="graduadoFound === true && graduados.length === 0" class="mt-5 col-12 flex justify-content-center">
             <p-message severity="warn" text="Graduado no Encontrado, verifica el No Documento."
                 styleClass="mr-2"></p-message>
+        </div>
+        <div *ngIf="graduadoFound === false && graduados.length === 0" class="mt-5 col-12 flex justify-content-center">
+            <p-message severity="info" text="No hay Graduados que mostrar." styleClass="mr-2"></p-message>
         </div>
     </div>
 </app-card>
@@ -225,7 +232,7 @@
                                         <div class="p-inputgroup my-1">
                                             <span class="p-inputgroup-addon" style="color:#f16357;"><i
                                                     class="pi pi-bookmark-fill"></i></span>
-                                            <p-dropdown formControlName="nationality" [style]="{'width': '100%'}"
+                                            <p-dropdown formControlName="departamento" [style]="{'width': '100%'}"
                                                 [options]="departamentos" optionLabel="name" [filter]="true"
                                                 filterBy="name" [showClear]="true" placeholder="Selecciona una opción"
                                                 [maxlength]="100">
@@ -250,7 +257,7 @@
                                         <div class="p-inputgroup my-1">
                                             <span class="p-inputgroup-addon" style="color:#f16357;"><i
                                                     class="pi pi-bookmark-fill"></i></span>
-                                            <p-dropdown formControlName="nationality" [style]="{'width': '100%'}"
+                                            <p-dropdown formControlName="municipio" [style]="{'width': '100%'}"
                                                 [options]="ciudades" optionLabel="name" [filter]="true" filterBy="name"
                                                 [showClear]="true" placeholder="Selecciona una opción"
                                                 [maxlength]="100">

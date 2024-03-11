@@ -115,7 +115,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
   ],
   providers: [ConfirmationService, MessageService, CdkVirtualScrollViewport,
-    // { provide: LOCALE_ID, useValue: 'es' },
+    { provide: LOCALE_ID, useValue: 'es' },
     // { provide: LocationStrategy, useClass: HashLocationStrategy },
   ],
 

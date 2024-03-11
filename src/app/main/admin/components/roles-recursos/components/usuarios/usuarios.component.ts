@@ -1,15 +1,13 @@
-import { JsonPipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { Subscription, catchError } from 'rxjs';
-import { Paises } from 'src/app/consts/paises';
 import { AdminService } from 'src/app/core/services/dashboard/admin.service';
 import { DataFetchingService } from 'src/app/core/services/main/data-fetching.service';
 import { PantallaService } from 'src/app/core/services/pantalla.service';
 import { formateDateInput, formateDateOutPut } from 'src/app/helpers/formateDate';
-import { ValidForm } from 'src/app/helpers/validForms';
-import { CondicionVulnerable, Funcionario, Genero, Graduado, InfoCarrera, Pais, Rol, TipoDocumento } from 'src/app/models/main/Inicio.interface';
+import { ValidForm, ValidarDominioEmail, ValidarFechaPosterior } from 'src/app/helpers/validForms';
+import { Ciudad, CondicionVulnerable, Departamento, Funcionario, Genero, Graduado, InfoCarrera, Pais, Rol, TipoDocumento } from 'src/app/models/main/Inicio.interface';
 import { Variant } from 'src/app/models/ui/CustomInfoCard';
 import { environment } from 'src/environments/environment';
 
@@ -24,9 +22,13 @@ export class UsuariosComponent implements OnInit {
   API_URI = environment.API_URI;
   public subscription$!: Subscription;
   public width: string = '';
-  selectedCountry!: Pais;
+  public selectedCountry!: Pais;
+  public selectedDepartamento!: Departamento;
+  public selectedCiudad!: Ciudad;
   public itemsBulkDelete: any[] = [];
   public paises: Pais[] = [];
+  public departamentos: Departamento[] = [];
+  public ciudades: Ciudad[] = [];
   public modules: any[] = [];
   public loading: boolean = false;
   public idUserEdit: number | null = null;
@@ -70,19 +72,19 @@ export class UsuariosComponent implements OnInit {
     condicion_vulnerable: [''],
     document_type: [''],
     identification: ['', [Validators.required]],
-    fecha_expedicion: [''],
-    nationality: ['COLOMBIA', [Validators.required]],
-    departamento: ['LA GUAJIRA', [Validators.required]],
-    municipio: ['RIOHACHA', [Validators.required]],
+    fecha_expedicion: ['', ValidarFechaPosterior],
+    nationality: ['', [Validators.required]],
+    departamento: [{ value: '', disabled: true }, [Validators.required]],
+    municipio: [{ value: '', disabled: true }, [Validators.required]],
     gender_type: [''],
     address: [''],
-    date_of_birth: [''],
-    email: ['', [Validators.required]],
-    email2: [''],
+    date_of_birth: ['', ValidarFechaPosterior],
+    email: ['', [Validators.required, ValidarDominioEmail]],
+    email2: ['', ValidarDominioEmail],
     phone: ['', [Validators.required]],
     phone2: [''],
-    graduado: [{ value: false }, [Validators.required]],
-    funcionario: [{ value: true }, [Validators.required]],
+    graduado: [{ value: false }],
+    funcionario: [{ value: true }],
   })
   public formDetail = this.fb.group({
     document_type: ['', [Validators.minLength(5), Validators.maxLength(100)]],
@@ -118,7 +120,6 @@ export class UsuariosComponent implements OnInit {
     private dataFetchingService: DataFetchingService
   ) {
     this.variantColor = Variant.Blue;
-    this.paises = Paises;
   }
 
   ngOnInit(): void {
@@ -130,6 +131,9 @@ export class UsuariosComponent implements OnInit {
     this.dataFetchingService.getTiposDocumento().subscribe(res => this.document_type = res.data);
     this.dataFetchingService.getCondiciones().subscribe(res => this.condiciones = res.data);
     this.dataFetchingService.getRoles().subscribe(res => this.roles = res.data);
+    this.dataFetchingService.getPaises().subscribe(res => this.paises = res.data);
+    this.dataFetchingService.getDepartamentos().subscribe(res => this.departamentos = res.data);
+    this.dataFetchingService.getCiudades().subscribe(res => this.ciudades = res.data);
   }
 
   getEventValue($event: any): string {
@@ -170,14 +174,14 @@ export class UsuariosComponent implements OnInit {
         fullname,
         identification,
         address,
-        nationality: Paises.find( pais => pais.name === nationality),
+        nationality,
         date_of_birth: date_of_birth && formateDateInput(date_of_birth),
         phone,
         phone2,
         fecha_expedicion: fecha_expedicion && formateDateInput(fecha_expedicion),
         condicion_vulnerable,
-        municipio: Paises.find( pais => pais.name === municipio),
-        departamento: Paises.find( pais => pais.name === departamento),
+        municipio,
+        departamento,
         email,
         email2,
       }
@@ -234,13 +238,13 @@ export class UsuariosComponent implements OnInit {
 
       let body = {
         fullname,
-        condicion_vulnerable: condicion_vulnerable?.id ? condicion_vulnerable.id : "",
+        condicion_vulnerable: condicion_vulnerable?.id ? condicion_vulnerable.id : null,
         document_type: document_type?.id ? document_type.id : null,
         identification,
         fecha_expedicion: fecha_expedicion ? formateDateOutPut(fecha_expedicion) : null,
-        nationality: nationality.name,
-        departamento: departamento.name,
-        municipio: municipio.name,
+        nationality: nationality.id,
+        departamento: departamento.id,
+        municipio: municipio.id,
         gender_type: gender_type?.id ? gender_type.id : null,
         address,
         date_of_birth: date_of_birth ? formateDateOutPut(date_of_birth) : null,
@@ -369,5 +373,42 @@ export class UsuariosComponent implements OnInit {
         this.next = res.next;
         this.previous = res.previous;
       })
+  }
+
+  onChangePais(event: any) {
+    this.formCreate.controls['departamento'].disable();
+    this.formCreate.controls['municipio'].disable();
+    this.formCreate.get('departamento')!.setValue('');
+    this.formCreate.get('municipio')!.setValue('');
+    if (event?.value) {
+      this.adminService.get(`${this.API_URI}/nationality/departamento/byPais/${event?.value?.id}`, this.token)
+        .pipe(
+          catchError(error => {
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Hhubo un Problema.' });
+            throw error;
+          })
+        )
+        .subscribe(res => {
+          this.formCreate.controls['departamento'].enable();
+          this.departamentos = res.data
+        })
+    }
+  }
+  onChangeDepartamento(event: any) {
+    this.formCreate.controls['municipio'].disable();
+    this.formCreate.get('municipio')!.setValue('');
+    if (event?.value) {
+      this.adminService.get(`${this.API_URI}/nationality/ciudad/byDepartamento/${event?.value?.id}`, this.token)
+        .pipe(
+          catchError(error => {
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Hhubo un Problema.' });
+            throw error;
+          })
+        )
+        .subscribe(res => {
+          this.formCreate.controls['municipio'].enable();
+          this.ciudades = res.data
+        })
+    }
   }
 }

@@ -1,15 +1,20 @@
 export interface Pais {
-    id?: number;
+    id: number;
     name: string;
-}
-export interface Ciudad {
-    id?: number;
-    name: string;
+    sap: string;
 }
 export interface Departamento {
-    id?: number;
+    id: number;
     name: string;
+    pais: number;
 }
+export interface Ciudad {
+    id: number;
+    sap: string;
+    name: string;
+    departamento: number;
+}
+
 export interface Sede {
     id?: number;
     name: string;

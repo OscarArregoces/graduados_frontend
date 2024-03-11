@@ -37,10 +37,9 @@ export class DataFetchingService {
       catchError(this.handleHttpError)
     );
   }
-
-  getProgramas(): Observable<any> {
+  getSedes(): Observable<any> {
     const headers = this.createHeaders();
-    return this.http.get(`${this.API_URI}/university/programa/`, { headers }).pipe(
+    return this.http.get(`${this.API_URI}/university/sede/`, { headers }).pipe(
       catchError(this.handleHttpError)
     );
   }
@@ -50,9 +49,9 @@ export class DataFetchingService {
       catchError(this.handleHttpError)
     );
   }
-  getSedes(): Observable<any> {
+  getProgramas(): Observable<any> {
     const headers = this.createHeaders();
-    return this.http.get(`${this.API_URI}/university/sede/`, { headers }).pipe(
+    return this.http.get(`${this.API_URI}/university/programa/`, { headers }).pipe(
       catchError(this.handleHttpError)
     );
   }
@@ -125,6 +124,36 @@ export class DataFetchingService {
   getRoles(): Observable<any> {
     const headers = this.createHeaders();
     return this.http.get(`${this.API_URI}/roles/`, { headers }).pipe(
+      catchError(this.handleHttpError)
+    );
+  }
+  getPaises(): Observable<any> {
+    const headers = this.createHeaders();
+    return this.http.get(`${this.API_URI}/nationality/pais/`, { headers }).pipe(
+      catchError(this.handleHttpError)
+    );
+  }
+  getDepartamentos(): Observable<any> {
+    const headers = this.createHeaders();
+    return this.http.get(`${this.API_URI}/nationality/departamento`, { headers }).pipe(
+      catchError(this.handleHttpError)
+    );
+  }
+  getCiudades(): Observable<any> {
+    const headers = this.createHeaders();
+    return this.http.get(`${this.API_URI}/nationality/ciudad`, { headers }).pipe(
+      catchError(this.handleHttpError)
+    );
+  }
+  getServicios(): Observable<any> {
+    const headers = this.createHeaders();
+    return this.http.get(`${this.API_URI}/eventos/servicios/`, { headers }).pipe(
+      catchError(this.handleHttpError)
+    );
+  }
+  getDependencias(): Observable<any> {
+    const headers = this.createHeaders();
+    return this.http.get(`${this.API_URI}/gestor/`, { headers }).pipe(
       catchError(this.handleHttpError)
     );
   }

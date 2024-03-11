@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 
 import { ActividadesRoutingModule } from './actividades-routing.module';
 import { ActividadesComponent } from './actividades.component';
@@ -32,6 +32,7 @@ import { ChipModule } from 'primeng/chip';
 import { DividerModule } from 'primeng/divider';
 import { MessageModule } from 'primeng/message';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { TagModule } from 'primeng/tag';
 
 @NgModule({
   declarations: [
@@ -69,7 +70,11 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
     ChipModule,
     DividerModule,
     MessageModule,
-    ProgressSpinnerModule
+    ProgressSpinnerModule,
+    TagModule
+  ],
+  providers: [
+    DatePipe
   ]
 })
 export class ActividadesModule { }

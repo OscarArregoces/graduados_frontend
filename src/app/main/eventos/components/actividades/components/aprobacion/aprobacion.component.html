@@ -1,4 +1,4 @@
-<app-card width="90%" titulo="Aprobación de Actividades">
+<app-card width="95%" titulo="Aprobación de Actividades">
     <div card-body class="grid">
         <app-custom-info-card [description]="inforCardDescription"></app-custom-info-card>
         <div class="col-12 md:col-12 lg:col-12">
@@ -6,10 +6,12 @@
                 <p-card>
                     <p-table #dt [value]="actividades" [(selection)]="itemsBulkDelete" dataKey="id"
                         styleClass="p-datatable-customers" [rowHover]="true" [rows]="50" [showCurrentPageReport]="true"
-                        [loading]="loading" responsiveLayout="scroll" [paginator]="false"
+                        [loading]="loading" responsiveLayout="scroll" [paginator]="true"
+                        [rowsPerPageOptions]="[10,25,50]"
+                        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
                         currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} elementos"
                         [filterDelay]="0"
-                        [globalFilterFields]="['nombre_actividad', 'tipo_actividad.name', 'responsable']"
+                        [globalFilterFields]="['nombre_actividad', 'tipo_actividad.name', 'sede.name','modalidad','dependencia.name']"
                         responsiveLayout="scroll">
                         <ng-template pTemplate="caption">
                             <div class="table-header">
@@ -36,7 +38,7 @@
                                 </th>
                                 <th pSortableColumn="nombre_actividad">
                                     <div class="flex justify-content-between align-items-center">
-                                        Actividad
+                                        Nombre
                                         <p-sortIcon field="nombre_actividad"></p-sortIcon>
                                         <p-columnFilter type="text" field="nombre_actividad" display="menu"
                                             class="ml-auto"></p-columnFilter>
@@ -50,12 +52,27 @@
                                             class="ml-auto"></p-columnFilter>
                                     </div>
                                 </th>
-
-                                <th pSortableColumn="responsable">
+                                <th pSortableColumn="sede.name">
                                     <div class="flex justify-content-between align-items-center">
-                                        Responsable
-                                        <p-sortIcon field="responsable"></p-sortIcon>
-                                        <p-columnFilter type="text" field="responsable" display="menu"
+                                        Sede
+                                        <p-sortIcon field="sede.name"></p-sortIcon>
+                                        <p-columnFilter type="text" field="sede.name" display="menu"
+                                            class="ml-auto"></p-columnFilter>
+                                    </div>
+                                </th>
+                                <th pSortableColumn="modalidad">
+                                    <div class="flex justify-content-between align-items-center">
+                                        Modalidad
+                                        <p-sortIcon field="modalidad"></p-sortIcon>
+                                        <p-columnFilter type="text" field="modalidad" display="menu"
+                                            class="ml-auto"></p-columnFilter>
+                                    </div>
+                                </th>
+                                <th pSortableColumn="dependencia.name">
+                                    <div class="flex justify-content-between align-items-center">
+                                        Depdendencia
+                                        <p-sortIcon field="dependencia.name"></p-sortIcon>
+                                        <p-columnFilter type="text" field="dependencia.name" display="menu"
                                             class="ml-auto"></p-columnFilter>
                                     </div>
                                 </th>
@@ -70,7 +87,7 @@
                                     {{rowIndex + 1 }}
                                 </td>
                                 <td>
-                                    <span class="p-column-title">Nombre de la actividad</span>
+                                    <span class="p-column-title">Nombre</span>
                                     {{actividad.nombre_actividad}}
                                 </td>
                                 <td>
@@ -78,12 +95,20 @@
                                     {{actividad.tipo_actividad.name}}
                                 </td>
                                 <td>
-                                    <span class="p-column-title">Responsable</span>
-                                    {{actividad.responsable}}
+                                    <span class="p-column-title">Sede</span>
+                                    {{actividad.sede.name}}
                                 </td>
-
+                                <td>
+                                    <span class="p-column-title">Modalidad</span>
+                                    {{actividad.modalidad}}
+                                </td>
+                                <td>
+                                    <span class="p-column-title">Modalidad</span>
+                                    {{actividad.dependencia.name}}
+                                </td>
                                 <td style="text-align: center">
-                                    <button pButton type="button" icon="pi pi-eye" class="p-button-secondary"></button>
+                                    <button pButton type="button" icon="pi pi-eye" class="p-button-secondary"
+                                        (click)="changeDisplayDetail(actividad.id)"></button>
                                 </td>
                             </tr>
                         </ng-template>
@@ -100,3 +125,97 @@
 
     </div>
 </app-card>
+
+<p-dialog header="Detalle Actividad" [(visible)]="displayDetail"
+    [style]="{'width': width,'text-aling': 'center', 'min-height':'80vh'}" [showHeader]="true" [modal]="true"
+    [dismissableMask]="false" (onHide)="closeDisplayDetail()">
+
+    <div class="grid">
+        <div class="col-12">
+            <div class="grid p-5 my-2 shadow-3" style="background-color:#fbf9f8;">
+                <div class="col-12 flex justify-content-between align-items-center">
+                    <span class="customTitle">Informacion Actividad</span>
+                    <div class="flex gap-3">
+                        <span class="tag-ghost tag-inicio">{{ actividad?.fecha_inicio | date:"MMMM dd, yyyy hh:mm a" | titlecase }}</span>
+                        <span class="tag-ghost tag-final">{{ actividad?.fecha_final| date:"MMMM dd, yyyy hh:mm a" | titlecase }}</span>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <label class="mb-2" [style]="{'font-weight': 'bold'}">Nombre Actividad </label>
+                    <input type="text" style="width: 100%;" pInputText [value]="actividad?.nombre_actividad">
+                </div>
+                <div class="col-12 md:col-6 lg:col-4">
+                    <label class="mb-2" [style]="{'font-weight': 'bold'}">Tipo Actividad </label>
+                    <input type="text" style="width: 100%;" pInputText [value]="actividad?.tipo_actividad?.name">
+                </div>
+                <div class="col-12 md:col-6 lg:col-4">
+                    <label class="mb-2" [style]="{'font-weight': 'bold'}">Area </label>
+                    <input type="text" style="width: 100%;" pInputText [value]="actividad?.area?.name">
+                </div>
+                <div class="col-12 md:col-6 lg:col-4">
+                    <label class="mb-2" [style]="{'font-weight': 'bold'}">Subarea </label>
+                    <input type="text" style="width: 100%;" pInputText [value]="actividad?.subarea?.name">
+                </div>
+                <div class="col-12 md:col-6 lg:col-4">
+                    <label class="mb-2" [style]="{'font-weight': 'bold'}">Sede </label>
+                    <input type="text" style="width: 100%;" pInputText [value]="actividad?.sede?.name">
+                </div>
+
+                <div class="col-12 md:col-6 lg:col-4">
+                    <label class="mb-2" [style]="{'font-weight': 'bold'}">Dependencia </label>
+                    <input type="text" style="width: 100%;" pInputText [value]="actividad?.dependencia?.name">
+                </div>
+                <div class="col-12 md:col-6 lg:col-4">
+                    <label class="mb-2" [style]="{'font-weight': 'bold'}">Modalidad </label>
+                    <input type="text" style="width: 100%;" pInputText [value]="actividad?.modalidad">
+                </div>
+                <div class="col-12 md:col-12 lg:col-12" *ngIf="actividad?.modalidad === 'Presencial'">
+                    <label class="mb-2" [style]="{'font-weight': 'bold'}">Dirección </label>
+                    <input type="text" style="width: 100%;" pInputText [value]="actividad?.direccion">
+                </div>
+                <div class="col-12 md:col-12 lg:col-12" *ngIf="actividad?.modalidad === 'Virtual'">
+                    <label class="mb-2" [style]="{'font-weight': 'bold'}">Enlace Reuión </label>
+                    <input type="text" style="width: 100%;" pInputText [value]="actividad?.enlace_reunion">
+                </div>
+                <div class="col-12 md:col-6 lg:col-6" *ngIf="actividad?.modalidad === 'Híbrida'">
+                    <label class="mb-2" [style]="{'font-weight': 'bold'}">Dirección </label>
+                    <input type="text" style="width: 100%;" pInputText [value]="actividad?.direccion">
+                </div>
+                <div class="col-12 md:col-6 lg:col-6" *ngIf="actividad?.modalidad === 'Híbrida'">
+                    <label class="mb-2" [style]="{'font-weight': 'bold'}">Enlace Reuión </label>
+                    <input type="text" style="width: 100%;" pInputText [value]="actividad?.enlace_reunion">
+                </div>
+
+                <div class=" col-12 md:col-12 lg:col-6">
+                    <div class="flex flex-column">
+                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Descripción </label>
+                        <textarea [value]="actividad?.descripcion" [rows]="7" [cols]="30" pInputTextarea
+                            [autoResize]="true" style="min-height: 180px;"></textarea>
+                    </div>
+                </div>
+                <div class="col-12 md:col-12 lg:col-6">
+                    <div class="flex flex-column">
+                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Objetivo </label>
+                        <textarea [rows]="7" [value]="actividad?.objetivo" [cols]="30" pInputTextarea
+                            [autoResize]="true" style="min-height: 180px;"></textarea>
+                    </div>
+                </div>
+
+
+                <div class="col-12">
+                    <span class="customTitle">Solicitante</span>
+                </div>
+                <div class="col-12">
+                    <input type="text" style="width: 100%;" pInputText
+                        [value]="actividad?.userCreate?.person?.fullname">
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <p *ngFor="let responsable of responsables">
+        {{responsable.fullname}}
+    </p>
+</p-dialog>

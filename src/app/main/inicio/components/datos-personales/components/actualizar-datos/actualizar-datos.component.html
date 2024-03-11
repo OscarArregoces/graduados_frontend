@@ -1,5 +1,4 @@
-<app-card width="95%" titulo="Actualizar Datos">
-
+<app-card width="95%" titulo="Actualizar Datos" *ngIf="!isLoading; else elseBlock">
     <p-tabView card-body>
         <p-tabPanel header="Datos Personales">
             <form [formGroup]="formPersona">
@@ -18,6 +17,10 @@
                                         <input [style]="{'width': '100%'}" type="text" pInputText
                                             formControlName="fullname" [maxlength]="150">
                                     </div>
+                                    <div *ngIf="formPersona.get('fullname')?.hasError('required') && formPersona.get('fullname')?.touched"
+                                        class="text-red-500">
+                                        Campo requerido
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-12 md:col-4 lg:col-4">
@@ -25,8 +28,12 @@
                                     <label class="mb-2" [style]="{'font-weight': 'bold'}">Fecha de nacimiento </label>
                                     <div class="p-inputgroup my-1">
                                         <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"></i></span>
-                                        <p-calendar placeholder="Seleccione la fecha" [style]="{'width': '100%'}"
+                                        <p-calendar placeholder="Seleccione una fecha" [style]="{'width': '100%'}"
                                             formControlName="date_of_birth" dateFormat="mm-dd-yy"></p-calendar>
+                                    </div>
+                                    <div *ngIf="formPersona.get('date_of_birth')?.hasError('fechaPosterior') && formPersona.get('date_of_birth')?.touched"
+                                        class="text-red-500">
+                                        La fecha no puede ser posterior a la fecha actual
                                     </div>
                                 </div>
                             </div>
@@ -49,7 +56,8 @@
                                                 class="pi pi-bookmark-fill"></i></span>
                                         <p-dropdown formControlName="nationality" [style]="{'width': '100%'}"
                                             [options]="paises" optionLabel="name" [filter]="true" filterBy="name"
-                                            [showClear]="true" placeholder="Selecciona una opción" [maxlength]="100">
+                                            [showClear]="true" placeholder="Selecciona una opción" [maxlength]="100"
+                                            (onChange)="onChangePais($event)">
                                             <ng-template pTemplate="selectedCountry">
                                                 <div class="country-item country-item-value" *ngIf="selectedCountry">
                                                     <div>{{selectedCountry.name}}</div>
@@ -61,6 +69,10 @@
                                                 </div>
                                             </ng-template>
                                         </p-dropdown>
+                                    </div>
+                                    <div *ngIf="formPersona.get('nationality')?.hasError('required') && formPersona.get('nationality')?.touched"
+                                        class="text-red-500">
+                                        Campo requerido
                                     </div>
                                 </div>
                             </div>
@@ -70,13 +82,14 @@
                                     <div class="p-inputgroup my-1">
                                         <span class="p-inputgroup-addon" style="color:#f16357;"><i
                                                 class="pi pi-bookmark-fill"></i></span>
-                                        <p-dropdown formControlName="nationality" [style]="{'width': '100%'}"
-                                            [options]="paises" optionLabel="name" [filter]="true" filterBy="name"
-                                            [showClear]="true" placeholder="Selecciona una opción" [maxlength]="100">
-                                            <ng-template pTemplate="selectedCountry">
+                                        <p-dropdown formControlName="departamento" [style]="{'width': '100%'}"
+                                            [options]="departamentos" optionLabel="name" [filter]="true" filterBy="name"
+                                            [showClear]="true" placeholder="Selecciona una opción" [maxlength]="100"
+                                            (onChange)="onChangeDepartamento($event)">
+                                            <ng-template pTemplate="selectedDepartamento">
                                                 <div class="country-item country-item-value"
-                                                    *ngIf="selectedCountry">
-                                                    <div>{{selectedCountry.name}}</div>
+                                                    *ngIf="selectedDepartamento">
+                                                    <div>{{selectedDepartamento.name}}</div>
                                                 </div>
                                             </ng-template>
                                             <ng-template let-country pTemplate="item">
@@ -86,6 +99,10 @@
                                             </ng-template>
                                         </p-dropdown>
                                     </div>
+                                    <div *ngIf="formPersona.get('departamento')?.hasError('required') && formPersona.get('departamento')?.touched"
+                                        class="text-red-500">
+                                        Campo requerido
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-12 md:col-4 lg:col-4">
@@ -94,12 +111,12 @@
                                     <div class="p-inputgroup my-1">
                                         <span class="p-inputgroup-addon" style="color:#f16357;"><i
                                                 class="pi pi-bookmark-fill"></i></span>
-                                        <p-dropdown formControlName="nationality" [style]="{'width': '100%'}"
-                                            [options]="paises" optionLabel="name" [filter]="true" filterBy="name"
+                                        <p-dropdown formControlName="municipio" [style]="{'width': '100%'}"
+                                            [options]="ciudades" optionLabel="name" [filter]="true" filterBy="name"
                                             [showClear]="true" placeholder="Selecciona una opción" [maxlength]="100">
-                                            <ng-template pTemplate="selectedCountry">
-                                                <div class="country-item country-item-value" *ngIf="selectedCountry">
-                                                    <div>{{selectedCountry.name}}</div>
+                                            <ng-template pTemplate="selectedCiudad">
+                                                <div class="country-item country-item-value" *ngIf="selectedCiudad">
+                                                    <div>{{selectedCiudad.name}}</div>
                                                 </div>
                                             </ng-template>
                                             <ng-template let-country pTemplate="item">
@@ -108,6 +125,10 @@
                                                 </div>
                                             </ng-template>
                                         </p-dropdown>
+                                    </div>
+                                    <div *ngIf="formPersona.get('municipio')?.hasError('required') && formPersona.get('municipio')?.touched"
+                                        class="text-red-500">
+                                        Campo requerido
                                     </div>
                                 </div>
                             </div>
@@ -127,8 +148,12 @@
                                     <label class="mb-2" [style]="{'font-weight': 'bold'}">Fecha de Expedición </label>
                                     <div class="p-inputgroup my-1">
                                         <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"></i></span>
-                                        <p-calendar placeholder="Seleccione la fecha" [style]="{'width': '100%'}"
+                                        <p-calendar placeholder="Seleccione una fecha" [style]="{'width': '100%'}"
                                             formControlName="fecha_expedicion" dateFormat="mm-dd-yy"></p-calendar>
+                                    </div>
+                                    <div *ngIf="formPersona.get('fecha_expedicion')?.hasError('fechaPosterior') && formPersona.get('fecha_expedicion')?.touched"
+                                        class="text-red-500">
+                                        La fecha no puede ser posterior a la fecha actual
                                     </div>
                                 </div>
                             </div>
@@ -140,6 +165,10 @@
                                                 style="color:#f16357;"></i></span>
                                         <input type="text" pInputText formControlName="identification"
                                             [maxlength]="40" />
+                                    </div>
+                                    <div *ngIf="formPersona.get('identification')?.hasError('required') && formPersona.get('identification')?.touched"
+                                        class="text-red-500">
+                                        Campo requerido
                                     </div>
                                 </div>
                             </div>
@@ -177,7 +206,15 @@
                                         <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
                                                 style="color:#f16357;"></i></span>
                                         <input type="text" pInputText formControlName="email"
-                                            placeholder="@gmail.com O @uniguajira.edu.co" />
+                                            placeholder="Ejemplo: usuario@uniguajira.edu.co" />
+                                    </div>
+                                    <div *ngIf="formPersona.get('email')?.hasError('required') && formPersona.get('email')?.touched"
+                                        class="text-red-500">
+                                        Campo requerido
+                                    </div>
+                                    <div *ngIf="formPersona.get('email')?.hasError('dominioInvalido') && formPersona.get('email')?.touched"
+                                        class="text-red-500">
+                                        Solo los correos institucionales o gmail son permitidos.
                                     </div>
                                 </div>
                             </div>
@@ -187,7 +224,11 @@
                                     <div class="p-inputgroup my-1">
                                         <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"></i></span>
                                         <input type="text" pInputText formControlName="email2"
-                                            placeholder="@gmail.com O @uniguajira.edu.co" />
+                                            placeholder="Ejemplo: usuario@gmail.com" />
+                                    </div>
+                                    <div *ngIf="formPersona.get('email2')?.hasError('dominioInvalido') && formPersona.get('email2')?.touched"
+                                        class="text-red-500">
+                                        Solo los correos institucionales o gmail son permitidos.
                                     </div>
                                 </div>
                             </div>
@@ -199,6 +240,10 @@
                                                 style="color:#f16357;"></i></span>
                                         <input type="number" pInputText formControlName="phone" [maxlength]="13" />
                                     </div>
+                                </div>
+                                <div *ngIf="formPersona.get('phone')?.hasError('required') && formPersona.get('phone')?.touched"
+                                    class="text-red-500">
+                                    Campo requerido
                                 </div>
                             </div>
                             <div class="col-12 md:col-6 lg:col-6">
@@ -213,7 +258,7 @@
                         </div>
                         <div class="col-12 md:col-12 lg:col-12 flex justify-content-center">
                             <button pButton pRipple type="button" label="Actualizar" class="p-button-success my-5"
-                                icon="pi pi-user-edit" (click)="onSubmit()" ></button>
+                                icon="pi pi-user-edit" (click)="onSubmit()"></button>
                         </div>
                     </div>
                 </div>
@@ -321,4 +366,7 @@
         </p-tabPanel>
     </p-tabView>
 </app-card>
-<p-toast></p-toast>
+
+<ng-template #elseBlock>
+    <app-spinner></app-spinner>
+</ng-template>

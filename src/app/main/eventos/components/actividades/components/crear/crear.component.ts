@@ -1,16 +1,16 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, UntypedFormBuilder, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
-import { Subscription } from 'rxjs';
+import { Subscription, catchError } from 'rxjs';
 import { EventosService } from 'src/app/core/services/dashboard/eventos.service';
 import { DataFetchingService } from 'src/app/core/services/main/data-fetching.service';
 import { PantallaService } from 'src/app/core/services/pantalla.service';
 import { formateDateOutPut } from 'src/app/helpers/formateDate';
 import { formateHours12 } from 'src/app/helpers/formateHours';
-import { ValidForm } from 'src/app/helpers/validForms';
+import { ValidForm, ValidarFechaAnterior } from 'src/app/helpers/validForms';
 import { verifyDate } from 'src/app/helpers/verifyDate';
 import { Sede } from 'src/app/models/main/Inicio.interface';
-import { Dependencia, Modalidad, Responsable, Servicio } from 'src/app/models/main/eventos.interface';
+import { Area, Dependencia, Modalidad, Responsable, Servicio, Subarea, TipoActividad } from 'src/app/models/main/eventos.interface';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -20,45 +20,23 @@ import { environment } from 'src/environments/environment';
 })
 export class CrearComponent implements OnInit, OnDestroy {
 
+  API_URI = environment.API_URI;
 
   public modalidades: Modalidad[] = [
     { id: 1, name: 'Presencial' },
     { id: 2, name: 'Virtual' },
     { id: 3, name: 'Híbrida ' },
   ];
-  public sedes: Sede[] = [
-    { id: 1, name: 'Riohacha' },
-    { id: 2, name: 'Maicao' },
-    { id: 3, name: 'Fonseca' },
-  ];
-  public dependencias: Dependencia[] = [
-    { id: 1, name: 'FACEYA' },
-    { id: 2, name: 'FACED' },
-    { id: 3, name: 'FCSYH' },
-    { id: 4, name: 'FIUG' },
-    { id: 5, name: 'FCBYA y Dependencias' },
-  ];
-  public servicios: Servicio[] = [
-    { id: 1, name: ' Comunicaciones (Publicidad)' },
-    { id: 2, name: ' Ori (Ponente)' },
-    { id: 3, name: ' Bienestar Universitario' },
-    { id: 4, name: ' Protocolo' },
-    { id: 5, name: ' Recursos Fisicos' },
-    { id: 5, name: ' Talento Humano' },
-  ];
-
-
-  API_URI = environment.API_URI;
+  public sedes: Sede[] = [];
+  public dependencias: Dependencia[] = [];
+  public servicios: Servicio[] = [];
   public subscription$!: Subscription;
   public width: string = '';
-  public programas: any[] = [];
   public responsables: Responsable[] = [];
   public token: any;
-  public areas: any[] = [];
-  public areasVerificated: any[] = [];
-  public subareas: any[] = [];
-  public tipo_actividades: any[] = [];
-  public tipoActividadesVerificated: any[] = [];
+  public areas: Area[] = [];
+  public subareas: Subarea[] = [];
+  public tipo_actividades: TipoActividad[] = [];
   public displayFormPonentes: boolean = false;
   public displayVinculacion: boolean = false;
   public vinculacionSelected: string | null = null;
@@ -71,8 +49,8 @@ export class CrearComponent implements OnInit, OnDestroy {
     tipo_actividad: ['', Validators.required],
     area: ['', Validators.required],
     subarea: [{ value: '', disabled: true }, Validators.required],
-    fecha_inicio: ['', Validators.required],
-    fecha_final: ['', Validators.required],
+    fecha_inicio: ['', [Validators.required, ValidarFechaAnterior]],
+    fecha_final: ['', [Validators.required, ValidarFechaAnterior]],
     descripcion: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(600)]],
     objetivo: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(300)]],
     servicios: ['', [Validators.required]],
@@ -96,19 +74,15 @@ export class CrearComponent implements OnInit, OnDestroy {
     const [width] = this.pantallaService.calcularEspacioPantalla()
     this.subscription$ = width.subscribe(width => this.width = width);
     this.token = localStorage.getItem('token');
-    this.dataFechingService.getProgramas().subscribe(res => this.programas = res.data);
+    this.dataFechingService.getSedes().subscribe(res => this.sedes = res.data);
+    this.dataFechingService.getServicios().subscribe(res => this.servicios = res.data);
+    this.dataFechingService.getDependencias().subscribe(res => this.dependencias = res.data);
     this.dataFechingService.getAreas().subscribe(res => {
-      this.areas = []
-      this.areasVerificated = []
       this.areas = res.data;
-      res.data.map((area: any) => this.areasVerificated.push(area.name.toLowerCase().replace(/\s+/g, '')))
       this.form.controls['subarea'].disable()
     });
     this.dataFechingService.getTipoActividades().subscribe(res => {
-      this.tipoActividadesVerificated = []
-      this.tipo_actividades = []
       this.tipo_actividades = res.data;
-      res.data.map((tipo: any) => this.tipoActividadesVerificated.push(tipo.name.toLowerCase().replace(/\s+/g, '')))
     });
   }
 
@@ -121,12 +95,63 @@ export class CrearComponent implements OnInit, OnDestroy {
     if (this.responsables.length === 0) {
       return this.messageService.add({ severity: 'warn', summary: 'Aviso', detail: 'Agregue un responsable' })
     }
-    console.log({
-      formulario: this.form.value,
-      ponentes: this.responsables
-    });
-    this.form.reset();
-    this.messageService.add({ severity: 'success', summary: 'Notificación', detail: 'Solicitud Exitosa' })
+    if (this.form.valid) {
+      const {
+        nombre_actividad,
+        tipo_actividad,
+        area,
+        subarea,
+        fecha_inicio,
+        fecha_final,
+        descripcion,
+        objetivo,
+        servicios,
+        modalidad,
+        sede,
+        dependencia,
+        enlace_reunion,
+        direccion,
+      } = this.form.value;
+
+      let body = {
+        actividad: {
+          nombre_actividad,
+          tipo_actividad: tipo_actividad.id,
+          area: area.id,
+          subarea: subarea.id,
+          fecha_inicio,
+          fecha_final,
+          descripcion,
+          objetivo,
+          servicios: servicios.map((servicio: Servicio) => servicio.id),
+          modalidad: modalidad.name,
+          sede: sede.id,
+          dependencia: dependencia.id,
+          enlace_reunion: enlace_reunion ? enlace_reunion : "",
+          direccion: direccion ? direccion : "",
+        },
+        ponentes: {
+          vinculacion: this.responsables.filter(responsable => responsable.vinculacion === "Graduado" || responsable.vinculacion === "Administrativo"),
+          externos: this.responsables.filter(responsable => responsable.vinculacion !== "Graduado" && responsable.vinculacion !== "Administrativo"),
+        }
+      }
+      this.eventosService.post(`${this.API_URI}/eventos/`, body, this.token)
+        .pipe(
+          catchError(error => {
+            throw error
+          })
+        )
+        .subscribe(res => {
+          this.form.reset();
+          this.responsables = [];
+          this.messageService.add({ severity: 'success', summary: 'Notificación', detail: 'Actividada Solicitada' })
+        })
+
+    }
+
+
+
+    // this.form.reset();
 
     // ValidForm(this.formPonentes);
     // if (this.formPonentes.valid) {}

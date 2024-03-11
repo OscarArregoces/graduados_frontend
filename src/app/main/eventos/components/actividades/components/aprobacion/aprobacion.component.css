@@ -2,3 +2,40 @@
     background-color: #f16357;
     border: 1px solid #f16357;
 }
+
+.customTitle {
+    line-height: 1.625;
+    font-weight: 400;
+    font-size: 1.5rem;
+    font-family: Roboto, sans-serif;
+    color: #616161;
+}
+
+.customText {
+    line-height: 1.625;
+    font-weight: 400;
+    font-size: 1rem;
+    font-family: Roboto, sans-serif;
+    color: #616161;
+}
+
+.custom-P {
+    line-height: 1.625;
+    font-weight: 400;
+    font-size: 1rem;
+    font-family: Roboto, sans-serif;
+    color: #000000;
+}
+
+.tag-ghost {
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.tag-inicio {
+    background-color: lightgreen;
+}
+
+.tag-final {
+    background-color: lightcoral;
+}

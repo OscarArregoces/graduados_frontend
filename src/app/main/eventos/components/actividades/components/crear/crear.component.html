@@ -77,6 +77,10 @@
                         class="text-red-500 my-1 text-left">
                         Campo requerido
                     </div>
+                    <div *ngIf="form.get('fecha_inicio')?.hasError('fechaAnterior') && form.get('fecha_inicio')?.touched"
+                        class="text-red-500 my-1 text-left">
+                        La fecha no puede ser anterior a la fecha actual
+                    </div>
                 </div>
             </div>
             <div class="col-12 md:col-6 lg:col-3">
@@ -93,14 +97,17 @@
                         class="text-red-500 my-1 text-left">
                         Campo requerido
                     </div>
+                    <div *ngIf="form.get('fecha_final')?.hasError('fechaAnterior') && form.get('fecha_final')?.touched"
+                        class="text-red-500 my-1 text-left">
+                        La fecha no puede ser anterior a la fecha actual
+                    </div>
                 </div>
             </div>
             <div class="col-12 md:col-12 lg:col-6">
                 <div class="flex flex-column gap-2">
                     <label class="customLabel">Descripción</label>
                     <textarea formControlName="descripcion" placeholder="Describe brevemente los aspectos importantes"
-                        [rows]="7" [cols]="30" pInputTextarea [autoResize]="false" [maxlength]="600"
-                        [autoResize]="true"></textarea>
+                        [rows]="7" [cols]="30" pInputTextarea [maxlength]="600" [autoResize]="true"></textarea>
                 </div>
             </div>
             <div class="col-12 md:col-12 lg:col-6">
@@ -109,7 +116,7 @@
                         <label class="customLabel">Objetivo</label>
                         <textarea formControlName="objetivo"
                             placeholder="Finalidad con la que se llevará a cabo esta actividad" [rows]="7" [cols]="30"
-                            pInputTextarea [autoResize]="false" [maxlength]="300" [autoResize]="true"></textarea>
+                            pInputTextarea [maxlength]="300" [autoResize]="true"></textarea>
                     </div>
                     <div *ngIf="form.get('objetivo')?.hasError('required') && form.get('objetivo')?.touched"
                         class="text-red-500 my-1 text-left">

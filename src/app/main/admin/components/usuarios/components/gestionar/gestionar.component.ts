@@ -4,6 +4,7 @@ import { MessageService } from 'primeng/api';
 import { Subscription, catchError } from 'rxjs';
 import { CondicionesVulnerables } from 'src/app/consts/CondicionesVulnerables';
 import { AdminService } from 'src/app/core/services/dashboard/admin.service';
+import { DataFetchingService } from 'src/app/core/services/main/data-fetching.service';
 import { PantallaService } from 'src/app/core/services/pantalla.service';
 import { formateDateInput } from 'src/app/helpers/formateDate';
 import { Ciudad, CondicionVulnerable, Departamento, Genero, Graduado, InfoCarrera, Pais, Sede, TipoDocumento } from 'src/app/models/main/Inicio.interface';
@@ -24,26 +25,24 @@ export class GestionarComponent implements OnInit {
   public displayFormDetail: boolean = false;
   public loading: boolean = false;
 
-  public graduados: Graduado[] = [];
   public next: null | string = ""
   public previous: null | string = ""
-  public gender_type: Genero[] = [];
-  public paises: Pais[] = [];
   public graduadoFound: boolean = false;
   public inforCardDescription: string = `
   Nuestro Módulo de Graduados proporciona una plataforma centralizada para acceder de manera fácil y eficiente a la información detallada de nuestros graduados. Desde fechas de graduación hasta logros académicos, este módulo ofrece una visión completa de la trayectoria educativa de cada graduado. Facilita la gestión y actualización de perfiles, permitiendo un seguimiento preciso de los logros de los graduados a lo largo del tiempo. Con esta herramienta, mantenemos un vínculo continuo con nuestra comunidad de graduados, brindando una experiencia integral y facilitando la conexión entre los logros académicos y las oportunidades futuras.
   `
-  public itemsBulkDelete: any[] = [];
-
   public selectedCountry!: Pais;
   public selectedDepartamento!: Departamento;
   public selectedCiudad!: Ciudad;
   public InfoCarrera: InfoCarrera[] = [];
+  public itemsBulkDelete: any[] = [];
+  public paises: Pais[] = [];
   public departamentos: Departamento[] = [];
   public ciudades: Ciudad[] = [];
   public sedes: Sede[] = [];
-  public condicionesVulnerables: CondicionVulnerable[] = [];
+  public graduados: Graduado[] = [];
   public generos: Genero[] = [];
+  public condicionesVulnerables: CondicionVulnerable[] = [];
   public tiposDocumento: TipoDocumento[] = [];
 
 
@@ -72,7 +71,8 @@ export class GestionarComponent implements OnInit {
     private adminService: AdminService,
     private messageService: MessageService,
     private pantallaService: PantallaService,
-    private fb: UntypedFormBuilder
+    private fb: UntypedFormBuilder,
+    private dataFetchingService: DataFetchingService
   ) { this.condicionesVulnerables = CondicionesVulnerables; }
 
   ngOnInit(): void {
@@ -80,8 +80,9 @@ export class GestionarComponent implements OnInit {
     const [width] = this.pantallaService.calcularEspacioPantalla();
     this.subscription$ = width.subscribe(width => this.width = width);
     this.traerGraduados();
-    this.getDocumentsType();
-    this.getGendersType();
+    this.dataFetchingService.getGeneros().subscribe(res => this.generos = res.data);
+    this.dataFetchingService.getTiposDocumento().subscribe(res => this.tiposDocumento = res.data);
+    this.dataFetchingService.getCondiciones().subscribe(res => this.condicionesVulnerables = res.data);
   }
 
   ngOnDestroy(): void { this.subscription$.unsubscribe(); }
@@ -214,17 +215,6 @@ export class GestionarComponent implements OnInit {
         this.next = res.next;
         this.previous = res.previous;
       })
-  }
-
-  getGendersType() {
-    this.adminService.get(`${this.API_URI}/genders`, this.token).subscribe(res => {
-      this.gender_type = res.data
-    })
-  }
-  getDocumentsType() {
-    this.adminService.get(`${this.API_URI}/documents/`, this.token).subscribe(res => {
-      this.tiposDocumento = res.data
-    })
   }
 
 }
