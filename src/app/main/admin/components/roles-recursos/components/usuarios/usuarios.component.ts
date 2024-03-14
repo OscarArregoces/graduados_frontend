@@ -146,47 +146,48 @@ export class UsuariosComponent implements OnInit {
 
   changeDisplayFormDetail(documento: string) {
     this.displayFormDetail = !this.displayFormDetail;
-    this.adminService.get(`${this.API_URI}/users/detail/${documento}`, this.token).subscribe(res => {
-      const {
-        persona: {
+    this.adminService.get(`${this.API_URI}/users/detail/${documento}`, this.token)
+      .subscribe(res => {
+        const {
+          persona: {
+            document_type,
+            gender_type,
+            fullname,
+            identification,
+            address,
+            nationality,
+            date_of_birth,
+            phone,
+            phone2,
+            fecha_expedicion,
+            condicion_vulnerable,
+            municipio,
+            departamento,
+            email,
+            email2
+          },
+          carreras } = res.data;
+        this.InfoCarrera = carreras;
+
+        let body = {
           document_type,
           gender_type,
           fullname,
           identification,
           address,
           nationality,
-          date_of_birth,
+          date_of_birth: date_of_birth && formateDateInput(date_of_birth),
           phone,
           phone2,
-          fecha_expedicion,
+          fecha_expedicion: fecha_expedicion && formateDateInput(fecha_expedicion),
           condicion_vulnerable,
           municipio,
           departamento,
           email,
-          email2
-        },
-        carreras } = res.data;
-      this.InfoCarrera = carreras;
-
-      let body = {
-        document_type,
-        gender_type,
-        fullname,
-        identification,
-        address,
-        nationality,
-        date_of_birth: date_of_birth && formateDateInput(date_of_birth),
-        phone,
-        phone2,
-        fecha_expedicion: fecha_expedicion && formateDateInput(fecha_expedicion),
-        condicion_vulnerable,
-        municipio,
-        departamento,
-        email,
-        email2,
-      }
-      this.formDetail.patchValue(body);
-    })
+          email2,
+        }
+        this.formDetail.patchValue(body);
+      })
   }
   closeDisplayFormDetail() {
     this.displayFormCreate = false;
@@ -257,12 +258,16 @@ export class UsuariosComponent implements OnInit {
       }
 
       this.adminService.post(`${this.API_URI}/users/funcionarios/`, body, this.token)
-        .pipe(
-          catchError(error => {
-            console.log(error);
-            throw error;
-          })
-        )
+      .pipe(
+        catchError(error => {
+          if (error?.error?.errors?.error?.identification[0] === "Persons with this identification already exists.") {
+            this.messageService.add({ severity: 'error', summary: 'Notificación', detail: 'El número de documento ya existe.' })
+          } else {
+            this.messageService.add({ severity: 'error', summary: 'Notificación', detail: 'Hubo un Problema' })
+          }
+          throw error;
+        })
+      )
         .subscribe(res => {
           this.formCreate.reset();
           this.closeDisplayFormDetail();

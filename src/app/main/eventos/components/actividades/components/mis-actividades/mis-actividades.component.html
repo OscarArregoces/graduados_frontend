@@ -1,17 +1,25 @@
-<app-card *ngIf="!cargando && !mostrarMensaje" titulo="Mis Actividades">
+<app-card titulo="Mis Actividades" width="95%">
   <div card-body>
+    <div class="w-full border-round-md bg-gray-100 flex flex-column justify-content-center align-content-center p-2">
+      <div class="flex flex-row gap-2">
+        <span *ngFor="let mes of primer_semestre"
+          class="bg-cyan-200 border-round-md p-2 flex justify-content-center align-items-center gap-1 pointer">
+          <i class="pi pi-info-circle"></i>
+          {{mes}}
+        </span>
+      </div>
+      <div class="flex flex-row gap-2">
+        <span *ngFor="let mes of segundo_semestre"
+          class="bg-cyan-200 border-round-md p-2 flex justify-content-center align-items-center gap-1 pointer">
+          <i class="pi pi-info-circle"></i>
+          {{mes}}
+        </span>
+      </div>
+    </div>
+
     <app-custom-info-card [description]="inforCardDescription"></app-custom-info-card>
     <div class="my-3" *ngFor="let actividad of actividades">
-      <app-detail-activity (refreshActivities)="actividades = $event" [actividad]="actividad"></app-detail-activity>
+      <app-detail-activity [actividad]="actividad" (getActividades)="getActividades()"></app-detail-activity>
     </div>
   </div>
 </app-card>
-
-
-<div *ngIf="cargando">
-  <app-spinner></app-spinner>
-</div>
-
-<div *ngIf="!cargando && mostrarMensaje">
-  <app-ups nameModule="actividades"></app-ups>
-</div>

@@ -1,0 +1,137 @@
+<p-dialog header="Detalle Actividad" [(visible)]="displayDetail"
+    [style]="{'width': width,'text-aling': 'center', 'min-height':'80vh'}" [showHeader]="true" [modal]="true"
+    [dismissableMask]="false" (onHide)="closeDisplayDetail.emit()">
+    <div class="grid p-5 shadow-3" style="background-color:#fbf9f8;">
+        <div class="col-12 flex justify-content-between align-items-center">
+            <span class="customTitle">Informacion Actividad</span>
+            <div class="col-12 md:col-6 lg:col-4">
+                <div class="flex gap-1">
+                    <label class="mb-2" [style]="{'font-weight': 'bold'}">Fecha </label>
+                    <span class="">{{ actividad?.fecha_inicio | date:"dd MMMM, yyyy hh:mm a" |
+                        titlecase }}</span>
+                    al
+                    <span class="">{{ actividad?.fecha_final | date:"dd MMMM, yyyy hh:mm a" |
+                        titlecase }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 md:col-6 lg:col-4">
+            <label class="mb-2" [style]="{'font-weight': 'bold'}">Tipo Actividad </label>
+            <input type="text" style="width: 100%;" pInputText [value]="actividad?.tipo_actividad?.name">
+        </div>
+        <div class="col-12 md:col-6 lg:col-4">
+            <label class="mb-2" [style]="{'font-weight': 'bold'}">Area </label>
+            <input type="text" style="width: 100%;" pInputText [value]="actividad?.area?.name">
+        </div>
+        <div class="col-12 md:col-6 lg:col-4">
+            <label class="mb-2" [style]="{'font-weight': 'bold'}">Subarea </label>
+            <input type="text" style="width: 100%;" pInputText [value]="actividad?.subarea?.name">
+        </div>
+        <div class="col-12 md:col-6 lg:col-4">
+            <label class="mb-2" [style]="{'font-weight': 'bold'}">Sede </label>
+            <input type="text" style="width: 100%;" pInputText [value]="actividad?.sede?.name">
+        </div>
+
+        <div class="col-12 md:col-6 lg:col-4">
+            <label class="mb-2" [style]="{'font-weight': 'bold'}">Dependencia </label>
+            <input type="text" style="width: 100%;" pInputText [value]="actividad?.dependencia?.name">
+        </div>
+        <div class="col-12 md:col-6 lg:col-4">
+            <label class="mb-2" [style]="{'font-weight': 'bold'}">Modalidad </label>
+            <input type="text" style="width: 100%;" pInputText [value]="actividad?.modalidad">
+        </div>
+        <div class="col-12 md:col-12 lg:col-12" *ngIf="actividad?.modalidad === 'Presencial'">
+            <label class="mb-2" [style]="{'font-weight': 'bold'}">Dirección </label>
+            <input type="text" style="width: 100%;" pInputText [value]="actividad?.direccion">
+        </div>
+        <div class="col-12 md:col-12 lg:col-12" *ngIf="actividad?.modalidad === 'Virtual'">
+            <label class="mb-2" [style]="{'font-weight': 'bold'}">Enlace Reuión </label>
+            <input type="text" style="width: 100%;" pInputText [value]="actividad?.enlace_reunion">
+        </div>
+        <div class="col-12 md:col-6 lg:col-6" *ngIf="actividad?.modalidad === 'Híbrida'">
+            <label class="mb-2" [style]="{'font-weight': 'bold'}">Dirección </label>
+            <input type="text" style="width: 100%;" pInputText [value]="actividad?.direccion">
+        </div>
+        <div class="col-12 md:col-6 lg:col-6" *ngIf="actividad?.modalidad === 'Híbrida'">
+            <label class="mb-2" [style]="{'font-weight': 'bold'}">Enlace Reuión </label>
+            <input type="text" style="width: 100%;" pInputText [value]="actividad?.enlace_reunion">
+        </div>
+
+        <div class=" col-12 md:col-12 lg:col-6">
+            <div class="flex flex-column">
+                <label class="mb-2" [style]="{'font-weight': 'bold'}">Descripción </label>
+                <textarea [value]="actividad?.descripcion" [rows]="7" [cols]="30" pInputTextarea
+                    [autoResize]="true" style="min-height: 180px;"></textarea>
+            </div>
+        </div>
+        <div class="col-12 md:col-12 lg:col-6">
+            <div class="flex flex-column">
+                <label class="mb-2" [style]="{'font-weight': 'bold'}">Objetivo </label>
+                <textarea [rows]="7" [value]="actividad?.objetivo" [cols]="30" pInputTextarea
+                    [autoResize]="true" style="min-height: 180px;"></textarea>
+            </div>
+        </div>
+        <div class="col-12 p-0 flex flex-column gap-2">
+            <label class="customTitle">Servicos Requeridos</label>
+            <p-table [value]="servicios" responsiveLayout="scroll" *ngIf="servicios.length">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th class="customText">Indice</th>
+                        <th class="customText">Servicio</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-servicio let-rowIndex="rowIndex">
+                    <tr>
+                        <td class="customText">{{rowIndex + 1 }}</td>
+                        <td class="customText">{{servicio.name}}</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+        <div class="col-12 p-0 flex flex-column gap-2">
+            <label class="customTitle">Responsable(s) y Ponente(s)</label>
+            <p-table [value]="responsables" responsiveLayout="scroll" *ngIf="responsables.length">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th class="customText">Indice</th>
+                        <th class="customText">Nombres y Apellidos</th>
+                        <th class="customText">Correo</th>
+                        <th class="customText">Telefono</th>
+                        <th class="customText">Vinculación</th>
+                        <th class="customText">Rol</th>
+                        <th class="customText">Dedicación (Horas)</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-responsable let-rowIndex="rowIndex">
+                    <tr>
+                        <td class="customText">{{rowIndex + 1 }}</td>
+                        <td class="customText">{{responsable.fullname}}</td>
+                        <td class="customText">{{responsable.email}}</td>
+                        <td class="customText">{{responsable.phone ? responsable.phone : "NP"}}</td>
+                        <td class="customText">{{responsable.vinculacion}}</td>
+                        <td class="customText">{{responsable.rol}}</td>
+                        <td class="customText">
+                            {{responsable.dedicacion}}</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+        <div class="col-12">
+            <span class="customTitle">Información Adicional</span>
+        </div>
+        <div class="col-12 md:col-6 lg:col-6">
+            <label class="mb-2" [style]="{'font-weight': 'bold'}">Solicitante </label>
+            <input type="text" style="width: 100%;" pInputText
+                [value]="actividad?.userCreate?.person?.fullname">
+        </div>
+        <div class="col-12 md:col-6 lg:col-6">
+            <label class="mb-2" [style]="{'font-weight': 'bold'}">Estado de la Actividad </label>
+            <input type="text" style="width: 100%;" pInputText [value]="actividad?.estado_actividad?.name">
+            <!-- <span class="tag-ghost tag-final">{{actividad?.estado_actividad?.name}}</span> -->
+        </div>
+        <div class="col-12 flex justify-content-center align-items-center gap-3">
+            <button pButton pRipple type="button" label="Volver" class="p-button-outlined p-button-danger"
+                (click)="closeDisplayDetail.emit()"></button>
+        </div>
+    </div>
+</p-dialog>

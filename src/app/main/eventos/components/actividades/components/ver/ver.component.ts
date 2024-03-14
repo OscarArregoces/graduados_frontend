@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder } from '@angular/forms';
-import { MessageService } from 'primeng/api';
+import { Subscription, catchError } from 'rxjs';
 import { EventosService } from 'src/app/core/services/dashboard/eventos.service';
 import { DataFetchingService } from 'src/app/core/services/main/data-fetching.service';
-import { formateDateOutPut } from 'src/app/helpers/formateDate';
+import { PantallaService } from 'src/app/core/services/pantalla.service';
+import { Actividad, ActividadTable, Responsable, ResponsableVinculacion, Servicio } from 'src/app/models/main/eventos.interface';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -15,123 +16,124 @@ export class VerComponent implements OnInit {
 
   API_URI = environment.API_URI;
 
-  public filterOptions: string[] = ['Facultad', 'Programa', 'Facultad especifica', 'Programa especifico', 'Genero', 'Semestre'];
-  public filterStatus: any[] = [
-    { 'name': 'Activa', 'valor': 'True' },
-    { 'name': 'Finalizada', 'valor': 'False' },
-  ];
-  public filterOrder: any[] = [
-    { 'name': 'Mas reciente', 'valor': '-id' },
-    { 'name': 'Menos reciente', 'valor': 'id' },
-  ];
   public inforCardDescription: string = `
   "La sección 'Ver Actividades' proporciona una visión detallada de todas las actividades disponibles. Desde esta interfaz, los usuarios pueden explorar eventos pasados y futuros, accediendo a información clave como fecha, temática y tipo de actividad. Facilita una visión general de la oferta de eventos en la plataforma.
   `;
 
-  public optionsSelectedFilter: string[] = [];
-  public form = this.fb.group({
-    optionsSelectedStatus: [''],
-    optionsSelectedOrder: [''],
-    initialDate: [''],
-    finalDate: [''],
-  })
-
   public token: any;
-  public visible: boolean = false;
+  public width: string = "";
+  public subscription$!: Subscription;
+  public displayDetail: boolean = false;
+  public displayReporte: boolean = false;
   public loading: boolean = false;
-  public actividad: any;
-  public actividades: any[] = [];
   public itemsBulkDelete: any[] = [];
-  public bulkDelete: any[] = [];
+  public bulkDelete: Actividad[] = [];
+  public actividad: Actividad | null = null;
+  public actividades: ActividadTable[] = [];
+  public responsables: Responsable[] = [];
+  public servicios: Servicio[] = [];
+
 
   constructor(
     private eventosService: EventosService,
     public fb: UntypedFormBuilder,
-    private dataFetchingService: DataFetchingService
+    private dataFetchingService: DataFetchingService,
+    private pantallaService: PantallaService
   ) { }
 
   ngOnInit(): void {
     this.token = localStorage.getItem('token');
-    this.dataFetchingService.getActividades().subscribe(res => this.actividades = res.data)
+    this.getActividades();
+    const [width] = this.pantallaService.calcularEspacioPantalla();
+    this.subscription$ = width.subscribe(width => this.width = width);
   }
 
   getEventValue($event: any): string {
     return $event.target.value;
   }
 
-  showDetalles(actividad: any) {
-    this.visible = true;
-    this.actividad = actividad;
-  }
-
-  closeDetalles() {
-    this.visible = false;
-  }
-
-  onChangeSelectedFilter(event: any) {
-    this.optionsSelectedFilter = event.value
-  }
-
-  onChangeSelectedStatus(event: any) {
-    if (event.value === null) {
-      return this.form.value.optionsSelectedStatus = ''
+  changeDisplayReporte(actividad_id: number) {
+    if (actividad_id) {
+      this.displayReporte = !this.displayReporte;
+      this.eventosService.get(`${this.API_URI}/eventos/detalle/${actividad_id}`, this.token)
+        .pipe(
+          catchError(error => {
+            this.actividad = null;
+            this.responsables = [];
+            this.servicios = [];
+            throw error;
+          })
+        )
+        .subscribe(res => {
+          if (res.data.actividad.length) {
+            this.actividad = res.data.actividad[0];
+            this.servicios = res.data.actividad[0].servicios;
+            this.responsables = res.data.ponentes.externos;
+            res.data.ponentes.vinculacion.forEach((responsable: ResponsableVinculacion) => {
+              this.responsables.push({
+                fullname: responsable.user.fullname,
+                phone: responsable.user.phone,
+                email: responsable.user.email,
+                document: "",
+                rol: responsable.rol,
+                dedicacion: responsable.dedicacion,
+                vinculacion: responsable.vinculacion,
+              })
+            });
+          }
+        }
+        )
     }
-    return this.form.value.optionsSelectedStatus = event.value
+  }
+  changeDisplayDetail(actividad_id: number) {
+    if (actividad_id) {
+      this.displayDetail = !this.displayDetail;
+      this.eventosService.get(`${this.API_URI}/eventos/detalle/${actividad_id}`, this.token)
+        .pipe(
+          catchError(error => {
+            this.actividad = null;
+            this.responsables = [];
+            this.servicios = [];
+            throw error;
+          })
+        )
+        .subscribe(res => {
+          if (res.data.actividad.length) {
+            this.actividad = res.data.actividad[0];
+            this.servicios = res.data.actividad[0].servicios;
+            this.responsables = res.data.ponentes.externos;
+            res.data.ponentes.vinculacion.forEach((responsable: ResponsableVinculacion) => {
+              this.responsables.push({
+                fullname: responsable.user.fullname,
+                phone: responsable.user.phone,
+                email: responsable.user.email,
+                document: "",
+                rol: responsable.rol,
+                dedicacion: responsable.dedicacion,
+                vinculacion: responsable.vinculacion,
+              })
+            });
+          }
+        }
+        )
+    }
+  }
+  closeDisplayDetail() {
+    this.displayDetail = false;
+    this.actividad = null;
+    this.responsables = [];
+    this.servicios = [];
+  }
+  closeDisplayReporte() {
+    this.displayReporte = false;
+    this.responsables = [];
+    this.servicios = [];
   }
 
-  onChangeSelectedOrder(event: any) {
-    if (event.value === null) {
-      return this.form.value.optionsSelectedOrder = ''
-    }
-    return this.form.value.optionsSelectedOrder = event.value
-  }
-
-  onChangeInitialDate(event: any) {
-    console.log(event)
-
-  }
-  onChangeFinalDate(event: any) {
-    console.log(event)
-  }
-
-  filtrar() {
-    let params = new URLSearchParams();
-
-    const {
-      optionsSelectedStatus,
-      optionsSelectedOrder,
-
-      initialDate,
-      finalDate,
-    } = this.form.value;
-
-
-
-    let initialValueStatus = '';
-    let initialValueOrder = '';
-
-    if (this.optionsSelectedFilter.includes('Estado')) {
-      initialValueStatus = optionsSelectedStatus.valor;
-    }
-    if (this.optionsSelectedFilter.includes('Mas reciente/Menos reciente')) {
-      initialValueOrder = optionsSelectedOrder.valor;
-    }
-    if (this.optionsSelectedFilter.includes('Rango de fechas') && (initialDate !== '' && finalDate !== '')) {
-      params.append("startdate", formateDateOutPut(initialDate));
-      params.append("enddate", formateDateOutPut(finalDate));
-    }
-
-    if (initialValueStatus !== undefined && initialValueStatus !== '' && initialValueStatus !== null) params.append("status", initialValueStatus)
-    if (initialValueOrder !== undefined && initialValueOrder !== '' && initialValueOrder !== null) params.append("order", initialValueOrder)
-
-    try {
-      this.eventosService.get(`${this.API_URI}/eventos/inscripciones/egresado/?${params.toString()}`, this.token).subscribe(res => {
-        console.log(res.data)
-        this.actividades = res.data
-      })
-    } catch (error) {
-      console.log(error)
-    }
+  getActividades() {
+    this.eventosService.get(`${this.API_URI}/eventos/reportes/`, this.token).subscribe(res => {
+      this.actividades = res.data;
+    })
   }
 
 

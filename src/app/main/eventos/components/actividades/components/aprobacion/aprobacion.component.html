@@ -3,15 +3,12 @@
         <app-custom-info-card [description]="inforCardDescription"></app-custom-info-card>
         <div class="col-12 md:col-12 lg:col-12">
             <div class="flex flex-column gap-2">
-                <p-card>
                     <p-table #dt [value]="actividades" [(selection)]="itemsBulkDelete" dataKey="id"
                         styleClass="p-datatable-customers" [rowHover]="true" [rows]="50" [showCurrentPageReport]="true"
                         [loading]="loading" responsiveLayout="scroll" [paginator]="true"
                         [rowsPerPageOptions]="[10,25,50]"
                         currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
-                        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} elementos"
-                        [filterDelay]="0"
-                        [globalFilterFields]="['nombre_actividad', 'tipo_actividad.name', 'sede.name','modalidad','dependencia.name']"
+                        [filterDelay]="0" [globalFilterFields]="['nombre_actividad']"
                         responsiveLayout="scroll">
                         <ng-template pTemplate="caption">
                             <div class="table-header">
@@ -24,7 +21,7 @@
                                             <i class="pi pi-search"></i>
                                             <input [style]="{'width':'100%'}" pInputText type="text"
                                                 (input)="dt.filterGlobal(getEventValue($event), 'contains')"
-                                                placeholder="Busqueda global" />
+                                                placeholder="Filtrar por nombre" />
                                         </span>
                                     </div>
                                 </div>
@@ -37,44 +34,7 @@
                                     <p>Indice</p>
                                 </th>
                                 <th pSortableColumn="nombre_actividad">
-                                    <div class="flex justify-content-between align-items-center">
-                                        Nombre
-                                        <p-sortIcon field="nombre_actividad"></p-sortIcon>
-                                        <p-columnFilter type="text" field="nombre_actividad" display="menu"
-                                            class="ml-auto"></p-columnFilter>
-                                    </div>
-                                </th>
-                                <th pSortableColumn="tipo_actividad.name">
-                                    <div class="flex justify-content-between align-items-center">
-                                        Tipo
-                                        <p-sortIcon field="tipo_actividad.name"></p-sortIcon>
-                                        <p-columnFilter type="text" field="tipo_actividad.name" display="menu"
-                                            class="ml-auto"></p-columnFilter>
-                                    </div>
-                                </th>
-                                <th pSortableColumn="sede.name">
-                                    <div class="flex justify-content-between align-items-center">
-                                        Sede
-                                        <p-sortIcon field="sede.name"></p-sortIcon>
-                                        <p-columnFilter type="text" field="sede.name" display="menu"
-                                            class="ml-auto"></p-columnFilter>
-                                    </div>
-                                </th>
-                                <th pSortableColumn="modalidad">
-                                    <div class="flex justify-content-between align-items-center">
-                                        Modalidad
-                                        <p-sortIcon field="modalidad"></p-sortIcon>
-                                        <p-columnFilter type="text" field="modalidad" display="menu"
-                                            class="ml-auto"></p-columnFilter>
-                                    </div>
-                                </th>
-                                <th pSortableColumn="dependencia.name">
-                                    <div class="flex justify-content-between align-items-center">
-                                        Depdendencia
-                                        <p-sortIcon field="dependencia.name"></p-sortIcon>
-                                        <p-columnFilter type="text" field="dependencia.name" display="menu"
-                                            class="ml-auto"></p-columnFilter>
-                                    </div>
+                                    Nombre
                                 </th>
                                 <th style="width: 8rem;text-align: center">
                                     Acciones
@@ -82,29 +42,12 @@
                             </tr>
                         </ng-template>
                         <ng-template pTemplate="body" let-actividad let-rowIndex="rowIndex">
-                            <tr class="p-selectable-row">
+                            <tr>
                                 <td>
                                     {{rowIndex + 1 }}
                                 </td>
                                 <td>
-                                    <span class="p-column-title">Nombre</span>
                                     {{actividad.nombre_actividad}}
-                                </td>
-                                <td>
-                                    <span class="p-column-title">Tipo de actividad</span>
-                                    {{actividad.tipo_actividad.name}}
-                                </td>
-                                <td>
-                                    <span class="p-column-title">Sede</span>
-                                    {{actividad.sede.name}}
-                                </td>
-                                <td>
-                                    <span class="p-column-title">Modalidad</span>
-                                    {{actividad.modalidad}}
-                                </td>
-                                <td>
-                                    <span class="p-column-title">Modalidad</span>
-                                    {{actividad.dependencia.name}}
                                 </td>
                                 <td style="text-align: center">
                                     <button pButton type="button" icon="pi pi-eye" class="p-button-secondary"
@@ -118,8 +61,6 @@
                             </tr>
                         </ng-template>
                     </p-table>
-                </p-card>
-
             </div>
         </div>
 
@@ -136,8 +77,10 @@
                 <div class="col-12 flex justify-content-between align-items-center">
                     <span class="customTitle">Informacion Actividad</span>
                     <div class="flex gap-3">
-                        <span class="tag-ghost tag-inicio">{{ actividad?.fecha_inicio | date:"MMMM dd, yyyy hh:mm a" | titlecase }}</span>
-                        <span class="tag-ghost tag-final">{{ actividad?.fecha_final| date:"MMMM dd, yyyy hh:mm a" | titlecase }}</span>
+                        <span class="tag-ghost tag-inicio">{{ actividad?.fecha_inicio | date:"MMMM dd, yyyy hh:mm a" |
+                            titlecase }}</span>
+                        <span class="tag-ghost tag-final">{{ actividad?.fecha_final| date:"MMMM dd, yyyy hh:mm a" |
+                            titlecase }}</span>
                     </div>
                 </div>
                 <div class="col-12">
@@ -200,8 +143,55 @@
                             [autoResize]="true" style="min-height: 180px;"></textarea>
                     </div>
                 </div>
-
-
+                <div class="col-12 p-0">
+                    <div class="flex flex-column gap-2">
+                        <label class="my-2 customTitle">Servicos Requeridos</label>
+                        <p-table [value]="servicios" responsiveLayout="scroll" *ngIf="servicios.length">
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th class="customText">Indice</th>
+                                    <th class="customText">Servicio</th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-servicio let-rowIndex="rowIndex">
+                                <tr>
+                                    <td class="customText">{{rowIndex + 1 }}</td>
+                                    <td class="customText">{{servicio.name}}</td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </div>
+                </div>
+                <div class="col-12 p-0">
+                    <div class="flex flex-column gap-2">
+                        <label class="my-2 customTitle">Responsable(s) y Ponente(s)</label>
+                        <p-table [value]="responsables" responsiveLayout="scroll" *ngIf="responsables.length">
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th class="customText">Indice</th>
+                                    <th class="customText">Nombres y Apellidos</th>
+                                    <th class="customText">Correo</th>
+                                    <th class="customText">Telefono</th>
+                                    <th class="customText">Vinculación</th>
+                                    <th class="customText">Rol</th>
+                                    <th class="customText">Dedicación (Horas)</th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-responsable let-rowIndex="rowIndex">
+                                <tr>
+                                    <td class="customText">{{rowIndex + 1 }}</td>
+                                    <td class="customText">{{responsable.fullname}}</td>
+                                    <td class="customText">{{responsable.email}}</td>
+                                    <td class="customText">{{responsable.phone ? responsable.phone : "NP"}}</td>
+                                    <td class="customText">{{responsable.vinculacion}}</td>
+                                    <td class="customText">{{responsable.rol}}</td>
+                                    <td class="customText">
+                                        {{responsable.dedicacion}}</td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </div>
+                </div>
                 <div class="col-12">
                     <span class="customTitle">Solicitante</span>
                 </div>
@@ -209,13 +199,14 @@
                     <input type="text" style="width: 100%;" pInputText
                         [value]="actividad?.userCreate?.person?.fullname">
                 </div>
+                <div class="col-12 flex justify-content-center align-items-center gap-3">
+                    <button pButton pRipple type="submit" label="Aprobar" class="p-button-success"
+                        icon="pi pi-check-circle" (click)="handleAprobacion()"></button>
+                    <button pButton pRipple type="button" label="Volver" class="p-button-outlined p-button-danger"
+                        (click)="closeDisplayDetail()"></button>
+                </div>
             </div>
 
         </div>
     </div>
-
-
-    <p *ngFor="let responsable of responsables">
-        {{responsable.fullname}}
-    </p>
 </p-dialog>

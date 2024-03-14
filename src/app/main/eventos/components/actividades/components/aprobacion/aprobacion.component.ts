@@ -1,13 +1,12 @@
-import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder } from '@angular/forms';
 import { Subscription, catchError } from 'rxjs';
 import { EventosService } from 'src/app/core/services/dashboard/eventos.service';
+import { DataFetchingService } from 'src/app/core/services/main/data-fetching.service';
 import { PantallaService } from 'src/app/core/services/pantalla.service';
-import { formateDateInput } from 'src/app/helpers/formateDate';
-import { Actividad, ActividadTable, Responsable, ResponsableVinculacion } from 'src/app/models/main/eventos.interface';
+import { Actividad, ActividadTable, Responsable, ResponsableVinculacion, Servicio } from 'src/app/models/main/eventos.interface';
 import { environment } from 'src/environments/environment';
-// import { DatePipe } from '@angular/common';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-aprobacion',
@@ -21,9 +20,8 @@ export class AprobacionComponent implements OnInit {
   public width: any = "";
   public actividades: ActividadTable[] = [];
   public actividad: Actividad | null = null;
-  public fechaInicio!: any;
-  public fechaFinal!: any;
   public responsables: Responsable[] = [];
+  public servicios: Servicio[] = [];
   public itemsBulkDelete: any[] = [];
   public loading: boolean = false;
   public displayDetail: boolean = false;
@@ -35,14 +33,14 @@ export class AprobacionComponent implements OnInit {
     private eventosService: EventosService,
     private fb: UntypedFormBuilder,
     private pantallaService: PantallaService,
-    private datePipe: DatePipe
+    private dataFetchingService: DataFetchingService
   ) { }
 
   ngOnInit(): void {
     this.token = localStorage.getItem("token");
-    this.getActividades();
     const [width] = this.pantallaService.calcularEspacioPantalla();
     this.subscription$ = width.subscribe(width => this.width = width);
+    this.dataFetchingService.getActividades().subscribe(res => this.actividades = res.data);
   }
 
   getEventValue($event: any): string {
@@ -61,16 +59,8 @@ export class AprobacionComponent implements OnInit {
         )
         .subscribe(res => {
           if (res.data.actividad.length) {
-
-            // Supongamos que recibes la cadena de fecha y hora como un parámetro llamado 'fechaHoraString'
-            const fechaHora: Date = new Date();
-
-            // Utiliza DatePipe para formatear la fecha como desees
-            this.fechaInicio = this.datePipe.transform(res.data.actividad[0].fechaInicio, 'dd/MM/yyyy HH:mm:ss');
-
-            // this.fechaFinal = this.datePipe.transform(new Date(res.data.actividad[0].fecha_final), 'dd/MM/yyyy HH:mm:ss');
-
             this.actividad = res.data.actividad[0];
+            this.servicios = res.data.actividad[0].servicios;
             this.responsables = res.data.ponentes.externos;
             res.data.ponentes.vinculacion.forEach((responsable: ResponsableVinculacion) => {
               this.responsables.push({
@@ -93,15 +83,35 @@ export class AprobacionComponent implements OnInit {
     this.actividad = null;
   }
 
-  getActividades() {
-    this.eventosService.get(`${this.API_URI}/eventos/`, this.token)
+  handleAprobacion() {
+    this.eventosService.put(`${this.API_URI}/eventos/aprobacion/${this.actividad?.id}/`, {}, this.token)
       .pipe(
         catchError(error => {
+          Swal.fire({
+            position: "top-end",
+            icon: "error",
+            title: "Oops...",
+            text: "Hubo un problema",
+            showConfirmButton: false,
+            timer: 1500,
+            allowOutsideClick: false,
+          });
           throw error;
         })
       )
       .subscribe(res => {
-        this.actividades = res.data;
+        this.dataFetchingService.getActividades().subscribe(res => this.actividades = res.data);
+        this.closeDisplayDetail()
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          title: "Notificación",
+          text: "¡La actividad ha sido aprobada satisfactoriamente!",
+          showConfirmButton: false,
+          timer: 1500,
+          allowOutsideClick: false,
+        });
       })
+
   }
 }

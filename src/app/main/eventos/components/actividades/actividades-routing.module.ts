@@ -7,6 +7,7 @@ import { EditarComponent } from './components/editar/editar.component';
 import { EliminarComponent } from './components/eliminar/eliminar.component';
 import { MisActividadesComponent } from './components/mis-actividades/mis-actividades.component';
 import { AprobacionComponent } from './components/aprobacion/aprobacion.component';
+import { AsistenciasComponent } from './components/asistencias/asistencias.component';
 
 const routes: Routes = [
   {
@@ -32,6 +33,10 @@ const routes: Routes = [
   {
     path: 'aprobacion',
     component: AprobacionComponent
+  },
+  {
+    path: 'asistencias',
+    component: AsistenciasComponent
   },
 ];
 

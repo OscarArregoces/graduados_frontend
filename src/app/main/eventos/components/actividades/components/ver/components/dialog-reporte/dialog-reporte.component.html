@@ -1,0 +1,112 @@
+<!-- <img src="assets/images/Uniguaijra_lateral.png" alt="Uniguajira" style="height: auto; width: auto;"> -->
+
+<p-dialog header="Reporte Actividad" [(visible)]="display"
+    [style]="{'width': '80%','text-aling': 'center', 'min-height':'80vh'}" [showHeader]="true" [modal]="true"
+    [dismissableMask]="false" (onHide)="closeDisplay.emit()">
+
+    <div class="grid my-2 shadow-3">
+        <div class="col-12 text-center" style="background-color:#cfcfcf;">
+            <span class="font-bold">DATOS GENERALES</span>
+        </div>
+        <div class="col-12">
+            <div class="grid">
+                <div class="col-12 flex flex-column justify-content-center align-items-start">
+                    <label class="" [style]="{'font-weight': 'bold'}">Nombre de Actividad </label>
+                    <span>{{actividad?.nombre_actividad}}</span>
+                </div>
+                <div class="col-7">
+                    <label class="mb-2" [style]="{'font-weight': 'bold'}">Fecha </label>
+                    {{ actividad?.fecha_inicio | date:"dd MMMM, yyyy hh:mm a" |
+                    titlecase }}
+                </div>
+                <div class="col-5">
+                    <label [style]="{'font-weight': 'bold'}">No. 10725</label>
+                </div>
+                <div class="col-7 flex flex-column justify-content-center align-items-start">
+                    <div class="flex flex-column justify-content-center align-items-start">
+                        <label [style]="{'font-weight': 'bold'}">Tipo de Actividad </label>
+                        <span>{{actividad?.tipo_actividad?.name}}</span>
+                    </div>
+                    <div class="flex flex-column justify-content-center align-items-start">
+                        <label [style]="{'font-weight': 'bold'}">Area </label>
+                        <span>{{actividad?.area?.name}}</span>
+                    </div>
+                    <div class="flex flex-column justify-content-center align-items-start">
+                        <label [style]="{'font-weight': 'bold'}">Subarea </label>
+                        <span>{{actividad?.subarea?.name}}</span>
+                    </div>
+                </div>
+                <div class="col-5 flex flex-column justify-content-center align-items-start">
+                    <label class="" [style]="{'font-weight': 'bold'}">Estado de Actividad </label>
+                    <span>{{actividad?.estado_actividad?.name}}</span>
+                </div>
+                <div class="col-12 flex flex-column justify-content-center align-items-start">
+                    <label class="" [style]="{'font-weight': 'bold'}">Objetivo </label>
+                    <span>{{actividad?.objetivo}}</span>
+                </div>
+                <div class="col-12 flex flex-column justify-content-center align-items-start">
+                    <label class="" [style]="{'font-weight': 'bold'}">Descripción </label>
+                    <span>{{actividad?.descripcion}}</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 text-center" style="background-color:#cfcfcf;">
+            <span class="font-bold">RESPONSABLES</span>
+        </div>
+        <div class="col-12">
+            <p-table [value]="responsables" responsiveLayout="scroll" *ngIf="responsables.length">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th class="customText">Indice</th>
+                        <th class="customText">Nombres y Apellidos</th>
+                        <th class="customText">Correo</th>
+                        <th class="customText">Telefono</th>
+                        <th class="customText">Vinculación</th>
+                        <th class="customText">Rol</th>
+                        <th class="customText">Dedicación (Horas)</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-responsable let-rowIndex="rowIndex">
+                    <tr>
+                        <td class="customText">{{rowIndex + 1 }}</td>
+                        <td class="customText">{{responsable.fullname}}</td>
+                        <td class="customText">{{responsable.email}}</td>
+                        <td class="customText">{{responsable.phone ? responsable.phone : "NP"}}</td>
+                        <td class="customText">{{responsable.vinculacion}}</td>
+                        <td class="customText">{{responsable.rol}}</td>
+                        <td class="customText">
+                            {{responsable.dedicacion}}</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+        <div class="col-12 text-center" style="background-color:#cfcfcf;">
+            <span class="font-bold">SOLICITUDES DE APOYO LOGÍSTICO</span>
+        </div>
+        <div class="col-12">
+            <p-table [value]="servicios" responsiveLayout="scroll" *ngIf="servicios.length">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th class="customText">Indice</th>
+                        <th class="customText">Servicio</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-servicio let-rowIndex="rowIndex">
+                    <tr>
+                        <td class="customText">{{rowIndex + 1 }}</td>
+                        <td class="customText">{{servicio.name}}</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+        <div class="col-12 text-center" style="background-color:#cfcfcf;">
+            <span class="font-bold">POBLACIÓN BENEFICIADO</span>
+        </div>
+        <div class="col-12 flex justify-content-center align-items-center gap-3">
+            <button pButton pRipple type="button" label="Volver" class="p-button-outlined p-button-danger"
+                (click)="closeDisplay.emit()"></button>
+        </div>
+    </div>
+</p-dialog>
+
+<!-- {{ actividad?.fecha_inicio | date:"MMMM dd, yyyy hh:mm a" |titlecase }} -->

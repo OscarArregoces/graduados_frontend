@@ -1,17 +1,15 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, UntypedFormBuilder, Validators } from '@angular/forms';
+import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { Subscription, catchError } from 'rxjs';
 import { EventosService } from 'src/app/core/services/dashboard/eventos.service';
 import { DataFetchingService } from 'src/app/core/services/main/data-fetching.service';
 import { PantallaService } from 'src/app/core/services/pantalla.service';
-import { formateDateOutPut } from 'src/app/helpers/formateDate';
-import { formateHours12 } from 'src/app/helpers/formateHours';
 import { ValidForm, ValidarFechaAnterior } from 'src/app/helpers/validForms';
-import { verifyDate } from 'src/app/helpers/verifyDate';
 import { Sede } from 'src/app/models/main/Inicio.interface';
 import { Area, Dependencia, Modalidad, Responsable, Servicio, Subarea, TipoActividad } from 'src/app/models/main/eventos.interface';
 import { environment } from 'src/environments/environment';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-crear',
@@ -27,19 +25,20 @@ export class CrearComponent implements OnInit, OnDestroy {
     { id: 2, name: 'Virtual' },
     { id: 3, name: 'Híbrida ' },
   ];
+  
+  public token: any;
+  public width: string = '';
+  public displayFormPonentes: boolean = false;
+  public displayVinculacion: boolean = false;
+  public vinculacionSelected: string | null = null;
   public sedes: Sede[] = [];
   public dependencias: Dependencia[] = [];
   public servicios: Servicio[] = [];
   public subscription$!: Subscription;
-  public width: string = '';
-  public responsables: Responsable[] = [];
-  public token: any;
   public areas: Area[] = [];
+  public responsables: Responsable[] = [];
   public subareas: Subarea[] = [];
   public tipo_actividades: TipoActividad[] = [];
-  public displayFormPonentes: boolean = false;
-  public displayVinculacion: boolean = false;
-  public vinculacionSelected: string | null = null;
 
   public inforCardDescription: string = `
   Este formulario te permite registrar a los responsables de la actividad, asignándoles roles y tipos de vinculación específicos. Selecciona cuidadosamente la combinación de rol y tipo de vinculación que mejor describa la participación de cada responsable en la actividad.
@@ -51,14 +50,15 @@ export class CrearComponent implements OnInit, OnDestroy {
     subarea: [{ value: '', disabled: true }, Validators.required],
     fecha_inicio: ['', [Validators.required, ValidarFechaAnterior]],
     fecha_final: ['', [Validators.required, ValidarFechaAnterior]],
-    descripcion: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(600)]],
-    objetivo: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(300)]],
+    descripcion: ['', [Validators.required, Validators.maxLength(500)]],
+    objetivo: ['', [Validators.required, Validators.maxLength(256)]],
     servicios: ['', [Validators.required]],
     modalidad: ['', Validators.required],
     sede: ['', [Validators.required]],
     dependencia: ['', [Validators.required]],
-    enlace_reunion: [''],
-    direccion: ['', [Validators.minLength(1), Validators.maxLength(150)]],
+    enlace_reunion: ['', Validators.maxLength(500)],
+    direccion: ['', [Validators.maxLength(256)]],
+    estado_actividad: [1, [Validators.maxLength(256)]],
 
   });
 
@@ -91,7 +91,7 @@ export class CrearComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
-    ValidForm(this.form)
+    ValidForm(this.form);
     if (this.responsables.length === 0) {
       return this.messageService.add({ severity: 'warn', summary: 'Aviso', detail: 'Agregue un responsable' })
     }
@@ -111,6 +111,7 @@ export class CrearComponent implements OnInit, OnDestroy {
         dependencia,
         enlace_reunion,
         direccion,
+        estado_actividad
       } = this.form.value;
 
       let body = {
@@ -129,6 +130,7 @@ export class CrearComponent implements OnInit, OnDestroy {
           dependencia: dependencia.id,
           enlace_reunion: enlace_reunion ? enlace_reunion : "",
           direccion: direccion ? direccion : "",
+          estado_actividad
         },
         ponentes: {
           vinculacion: this.responsables.filter(responsable => responsable.vinculacion === "Graduado" || responsable.vinculacion === "Administrativo"),
@@ -138,38 +140,32 @@ export class CrearComponent implements OnInit, OnDestroy {
       this.eventosService.post(`${this.API_URI}/eventos/`, body, this.token)
         .pipe(
           catchError(error => {
+            Swal.fire({
+              position: "top-end",
+              icon: "error",
+              title: "Oops...",
+              text: "Hubo un problema",
+              showConfirmButton: false,
+              timer: 1500,
+              allowOutsideClick: false,
+            });
             throw error
           })
         )
         .subscribe(res => {
           this.form.reset();
           this.responsables = [];
-          this.messageService.add({ severity: 'success', summary: 'Notificación', detail: 'Actividada Solicitada' })
+          Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: "Notificación",
+            text: "¡La actividad ha sido solicitada satisfactoriamente!",
+            showConfirmButton: false,
+            timer: 1500,
+            allowOutsideClick: false,
+          });
         })
-
     }
-
-
-
-    // this.form.reset();
-
-    // ValidForm(this.formPonentes);
-    // if (this.formPonentes.valid) {}
-    // const { area, subArea, nombre_actividad, tipo_actividad, responsable, lugar, cupos, descripcion, objectivo, fecha, hora, publico } = this.form.value;
-    // const fullHour12 = formateHours12(hora);
-    // const fullDate = formateDateOutPut(fecha);
-    // if (verifyDate(fullDate, fullHour12)) {
-    //   return this.messageService.add({ severity: 'warn', summary: 'Notificación', detail: 'No puedes colocar una fecha anterior a la fecha actual' })
-    // }
-
-    // try {
-    //   this.eventosService.post(`${this.API_URI}/eventos/create/`, body, this.token).subscribe(r => {
-    //     this.form.reset();
-    //     this.messageService.add({ severity: 'success', summary: 'Notificación', detail: 'Creado correctamente' })
-    //   })
-    // } catch (error) {
-    //   return this.messageService.add({ severity: 'error', summary: 'Notificación', detail: 'Hubo un problema en la petición' })
-    // }
   }
 
 

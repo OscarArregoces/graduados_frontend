@@ -12,6 +12,10 @@ export interface Servicio {
     id: number;
     name: string;
 }
+export interface EstadoEvento {
+    id: number;
+    name: string;
+}
 export interface Responsable {
     id?: number;
     fullname: string;
@@ -39,10 +43,6 @@ export interface TipoActividad {
 export interface ActividadTable {
     id: number;
     nombre_actividad: string;
-    tipo_actividad: TipoActividad;
-    dependencia: Dependencia;
-    sede: Sede;
-    modalidad: string;
 }
 export interface Actividad {
     id: number;
@@ -65,6 +65,7 @@ export interface Actividad {
     modalidad: string;
     enlace_reunion: string;
     direccion: string;
+    estado_actividad: EstadoEvento;
 }
 
 export interface ResponsableVinculacion {
@@ -76,4 +77,14 @@ export interface ResponsableVinculacion {
     rol: string;
     vinculacion: string;
     dedicacion: string;
+}
+
+export interface MiActividad {
+    actividad: Actividad[];
+    confirmacion: boolean;
+    asistencia: boolean;
+    ponentes: {
+        vinculacion: ResponsableVinculacion[],
+        externos: Responsable[]
+    };
 }

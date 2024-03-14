@@ -1,0 +1,49 @@
+.option {
+    width: 40vw;
+    border-radius: 10px;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 25px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.option:hover {
+    transform: scale(1.05);
+}
+
+.option.option-qr {
+    background-color: #9fc6df;
+}
+
+.option.option-search {
+    background-color: #feedaf;
+}
+
+.option .option-legend {
+    font-family: Roboto, sans-serif;
+    font-weight: 400;
+    font-size: 2rem;
+    line-height: 1.625;
+}
+
+
+/* @media (width < 800px) {
+    .option {
+        width: 40vw;
+        border-radius: 10px;
+        height: 400px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 25px;
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+    }
+} */

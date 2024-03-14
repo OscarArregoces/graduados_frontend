@@ -3,6 +3,18 @@
     border: 1px solid #f16357;
 }
 
+/* ::ng-deep .p-datatable{
+    .p-datatable-thead tr th{
+        border: none;
+        border-bottom: 1px solid #dee2e6;
+        color: #535050;
+    }
+    .p-datatable-tbody tr td{
+        border: none;
+        border-bottom: 1px solid #dee2e6;
+    }
+} */
+
 .customTitle {
     line-height: 1.625;
     font-weight: 400;
@@ -29,37 +41,16 @@
 
 .tag-ghost {
     padding: 10px;
-    border-radius: 10px;
-}
-
-.tag-inicio {
-    background-color: lightgreen;
-}
-
-.tag-final {
-    background-color: lightcoral;
-}
-
-::ng-deep.swal2-container {
-    z-index: 1000000;
-}
-
-:host ::ng-deep .p-chip.custom-chip {
-    background-color: #d5ebda;
-    padding: 5px;
-    border-radius: 5px;
-    color: #1b5e20;
+    border-radius: 2px;
     font-weight: bold;
 }
 
-/* ::ng-deep .p-datatable{
-    .p-datatable-thead tr th{
-        border: none;
-        border-bottom: 1px solid #dee2e6;
-        color: #535050;
-    }
-    .p-datatable-tbody tr td{
-        border: none;
-        border-bottom: 1px solid #dee2e6;
-    }
-} */
+.tag-inicio {
+    background-color: #c8e6c9;
+    color: #256029;
+}
+
+.tag-final {
+    background-color: #ffcdd2;
+    color: #c63737;
+}

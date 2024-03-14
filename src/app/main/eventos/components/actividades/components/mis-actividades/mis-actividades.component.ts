@@ -1,5 +1,6 @@
 import { Component, DoCheck, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { EventosService } from 'src/app/core/services/dashboard/eventos.service';
+import { Actividad, MiActividad } from 'src/app/models/main/eventos.interface';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -12,12 +13,27 @@ export class MisActividadesComponent implements OnInit {
   API_URI = environment.API_URI;
   token: string = '';
 
-  public actividades: any[] = [];
-  public cargando: boolean = true;
-  public mostrarMensaje: boolean = false;
+  public actividades: MiActividad[] = [];
   public inforCardDescription: string = `
   Mis Actividades' ofrece a los usuarios en sesión una vista personalizada de las actividades a las que han sido invitados. Desde esta interfaz, los usuarios pueden acceder rápidamente a detalles específicos de los eventos a los que planean asistir, simplificando su experiencia en la plataforma.
   `;
+
+  public primer_semestre: string[] = [
+    "Enero",
+    "Febrero",
+    "Marzo",
+    "Abril",
+    "Mayo",
+    "Junio",
+  ];
+  public segundo_semestre: string[] = [
+    "Julio",
+    "Agosto",
+    "Septiembre",
+    "Octubre",
+    "Noviembre",
+    "Diciembre",
+  ];
 
   constructor(
     private eventosService: EventosService
@@ -25,22 +41,11 @@ export class MisActividadesComponent implements OnInit {
 
   ngOnInit(): void {
     this.token = localStorage.getItem('token')!;
-    this.traerActividades();
+    this.getActividades()
   }
-  traerActividades() {
-    try {
-      this.eventosService.get(`${this.API_URI}/eventos/inscripciones/egresado/`, this.token).subscribe(res => {
-        console.log(res)
-        this.actividades = res.data;
-        this.cargando = false;
-        this.mostrarMensaje = this.actividades.length === 0;
+  getActividades() {
+    this.eventosService.get(`${this.API_URI}/eventos/mis-actividades/`, this.token).subscribe(res => this.actividades = res.data)
+  }
 
-      })
-    } catch (error) {
-      console.log('Error en consulta', error)
-      this.cargando = false;
-      this.mostrarMensaje = true;
-    }
-  }
 
 }

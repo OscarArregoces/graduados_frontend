@@ -15,15 +15,7 @@
     }
 } */
 
-.customTitle {
-    line-height: 1.625;
-    font-weight: 400;
-    font-size: 1.5rem;
-    font-family: Roboto, sans-serif;
-    color: #616161;
-}
-
-.customText {
+.customLabel {
     line-height: 1.625;
     font-weight: 400;
     font-size: 1rem;
@@ -37,25 +29,4 @@
     font-size: 1rem;
     font-family: Roboto, sans-serif;
     color: #000000;
-}
-
-.tag-ghost {
-    padding: 10px;
-    border-radius: 10px;
-}
-
-.tag-inicio {
-    background-color: lightgreen;
-}
-
-.tag-final {
-    background-color: lightcoral;
-}
-
-:host ::ng-deep .p-chip.custom-chip {
-    background-color: #d5ebda;
-    padding: 5px;
-    border-radius: 5px;
-    color: #1b5e20;
-    font-weight: bold;
 }

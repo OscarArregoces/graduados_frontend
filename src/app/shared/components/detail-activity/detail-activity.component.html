@@ -1,79 +1,102 @@
 <div id="card-custom">
     <div id="card-header">
-        <div class="p-inputgroup">
-            <span style="background-color: #f16357; border:1px solid #f16357; color: white;"
-                class="p-inputgroup-addon">
+        <div class="p-inputgroup flex justify-content-start align-items-center">
+            <span style="background-color: #357b89; border:1px solid #357b89; color: white;" class="p-inputgroup-addon">
                 <i class="pi pi-book"></i>
+            </span>
+            <span class="text-white font-bold">
+                {{currentActividad?.nombre_actividad}}
             </span>
         </div>
     </div>
-    <div id="card-body" class="grid">
-        <div class="col-12 md:col-4 lg:col-3 flex justify-content-center align-items-center">
-            <img appImgError src="assets/images/logo.png" title="Logo Uniguajira" alt="Logo Uniguajira">
-        </div>
-        <div class="col-12 md:col-8 lg:col-9">
-            <div class="grid flex justify-content-end">
-                <div class="col-12 md:col-12 lg:col-12 text-center">
-                    <h3>{{ actividad.nombre_actividad}}</h3>
+    <div class="grid p-2">
+        <div class="col-12 flex justify-content-between align-items-center">
+            <div class="flex flex-column justify-content-center align-items-start">
+                <div class="flex flex-column justify-content-center align-items-start">
+                    <label class="customLabel">Area</label>
+                    <span class="customText">
+                        {{currentActividad?.area?.name}}
+                    </span>
+                </div>
+                <div class="flex flex-column justify-content-center align-items-start">
+                    <label class="customLabel">Subarea</label>
+                    <span class="customText">
+                        {{currentActividad?.subarea?.name}}
+                    </span>
+                </div>
+                <div class="flex flex-column justify-content-center align-items-start">
+                    <label class="customLabel">Tipo Actividad</label>
+                    <span class="customText">
+                        <span class="customText">
+                            {{currentActividad?.tipo_actividad?.name}}
+                        </span>
+                    </span>
+                </div>
+            </div>
+            <div class="flex flex-column justify-content-center align-items-start">
+                <div class="flex flex-column justify-content-center align-items-start">
+                    <label class="customLabel">Modalidad</label>
+                    <span class="customText">
+                        {{currentActividad?.modalidad}}
+                    </span>
+                </div>
+                <div class="flex flex-column justify-content-center align-items-start"
+                    *ngIf="currentActividad?.modalidad ==='Presencial' || currentActividad?.modalidad === 'Híbrida'">
+                    <label class="customLabel">Dirección</label>
+                    <span class="customText">
+                        {{currentActividad?.direccion}}
+                    </span>
+                </div>
+                <div class="flex flex-row justify-content-start align-items-center"
+                    *ngIf="currentActividad?.modalidad ==='Virtual' || currentActividad?.modalidad === 'Híbrida'">
+                    <label class="customLabel">Enlace de reunión</label>
+                    <button pButton pRipple type="button" icon="pi pi-link"
+                        class="p-button-rounded p-button-secondary p-button-text"
+                        (click)="redirigirAEnlace(currentActividad?.enlace_reunion)">
+                    </button>
+                </div>
+            </div>
+
+            <div class="flex flex-column justify-content-center align-items-start">
+                <div class="flex flex-column justify-content-center align-items-start">
+                    <label class="customLabel">Fecha Inicio</label>
+                    <span class="customText">
+                        {{currentActividad?.fecha_inicio | date:"MMMM dd, yyyy hh:mm a" | titlecase }}
+                    </span>
+                </div>
+                <div class="flex flex-column justify-content-center align-items-start">
+                    <label class="customLabel">Fecha Final</label>
+                    <span class="customText">
+                        {{currentActividad?.fecha_final | date:"MMMM dd, yyyy hh:mm a" | titlecase }}
+                    </span>
+                </div>
+                <div class="flex flex-column justify-content-center align-items-start">
+                    <label class="customLabel">Sede</label>
+                    <span class="customText">
+                        <span class="customText">
+                            {{currentActividad?.sede?.name}}
+                        </span>
+                    </span>
                 </div>
             </div>
         </div>
-        <div class="col-12 md:col-12 lg:col-12">
-            <div class="grid">
-                <div class="col-12 md:col-12 lg:col-10">
-                    <div>
-                        <strong>Tipo de actividad:</strong> {{ actividad.tipo_actividad.name}}
-                    </div>
-                    <div>
-                        <strong>Responsable:</strong> {{ actividad.responsable}}
-                    </div>
-                    <div>
-                        <strong>Lugar:</strong> {{ actividad.lugar}}
-                    </div>
-                </div>
-
-                <div class="col-12 md:col-12 lg:col-2 ">
-                    <div class="lg:mx-2">
-                        <strong>Fecha:</strong> {{ actividad.fecha}}
-                    </div>
-                    <div class="lg:mx-2">
-                        <strong>Cupos: </strong> {{ actividad.cupos}}
-                    </div>
-                </div>
-            </div>
+        <div class="col-12 flex flex-column justify-content-center align-items-start">
+            <label class="customLabel">Objetivo de la actividad</label>
+            <span class="customText">
+                {{currentActividad?.objetivo}}
+            </span>
         </div>
-        <div class="col-12 md:col-12 lg:col-12">
-            <!-- <h4>Objetivo:</h4> -->
-          <p>
-            {{ actividad.objectivo}}
-          </p>
+        <div class="col-12 flex flex-column justify-content-center align-items-start">
+            <label class="customLabel">Descripición de la actividad</label>
+            <span class="customText">
+                {{currentActividad?.descripcion}}
+            </span>
         </div>
-        <div class="col-12 md:col-12 lg:col-12">
-            <!-- <h4>Descripcion:</h4> -->
-            <p>
-                {{ actividad.descripcion}}
-            </p>
-        </div>
-
-        <div class="col-12 md:col-6 lg:col-6">
-            <p-chip [label]="actividad.subArea.area.name" icon="pi pi-th-large" styleClass="m-2"></p-chip>
-            <p-chip [label]="actividad.subArea.name" icon="pi pi-th-large" styleClass="m-2"></p-chip>
-        </div>
-        <div class="col-12 md:col-6 lg:col-6">
-            <div class="lg:flex lg:justify-content-end sm:flex sm:justify-content-end">
-                <div *ngIf="!actividad.asistire && !actividad.fecha_pasada else elseBlock">
-                    <button pButton type="button" label="Asistiré" icon="pi pi-arrow-circle-right"
-                        class="p-button m-2" (click)="handleBtnAsistire(actividad.id)"></button>
-                </div>
-                <ng-template #elseBlock class="mx-2 ">
-                    <button pButton type="button" [label]="!actividad.fecha_pasada ? 'Activa': 'Finalizada' "
-                        [class]="!actividad.fecha_pasada ? 'p-button-success m-2': 'p-button-danger m-2 '"></button>
-                    <button *ngIf="actividad.fecha_pasada" pButton type="button" [icon]=" actividad.confirm_asistencia ? 'pi pi-check-circle' : 'pi pi-times-circle'" [label]="actividad.confirm_asistencia ? 'Asistio': 'No asistió' "
-                        [class]="actividad.confirm_asistencia ? 'p-button-success m-2': 'p-button-danger m-2 '"></button>
-                   
-                </ng-template>
-
-            </div>
+        <div class="col-12 flex justify-content-end align-items-center">
+            <button pButton pRipple type="button" 
+            [icon]="!actividad?.confirmacion ? 'pi pi-arrow-circle-right' : 'pi pi-thumbs-up'"
+            [label]="actividad?.confirmacion ?  'Ya estas inscrito' : 'Asistiré'"
+            (click)="!actividad?.confirmacion &&  handleClickAsistire()"></button>
         </div>
 
     </div>

@@ -107,7 +107,7 @@
                 <div class="flex flex-column gap-2">
                     <label class="customLabel">Descripción</label>
                     <textarea formControlName="descripcion" placeholder="Describe brevemente los aspectos importantes"
-                        [rows]="7" [cols]="30" pInputTextarea [maxlength]="600" [autoResize]="true"></textarea>
+                        [rows]="7" [cols]="30" pInputTextarea [maxlength]="500" [autoResize]="true"></textarea>
                 </div>
             </div>
             <div class="col-12 md:col-12 lg:col-6">
@@ -116,7 +116,7 @@
                         <label class="customLabel">Objetivo</label>
                         <textarea formControlName="objetivo"
                             placeholder="Finalidad con la que se llevará a cabo esta actividad" [rows]="7" [cols]="30"
-                            pInputTextarea [maxlength]="300" [autoResize]="true"></textarea>
+                            pInputTextarea [maxlength]="256" [autoResize]="true"></textarea>
                     </div>
                     <div *ngIf="form.get('objetivo')?.hasError('required') && form.get('objetivo')?.touched"
                         class="text-red-500 my-1 text-left">
@@ -205,7 +205,7 @@
                 <label class="customLabel">Enlace de la Reunión</label>
                 <div class="p-inputgroup">
                     <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill" style="color:#f16357;"></i></span>
-                    <input type="text" [maxlength]="256" pInputText formControlName="enlace_reunion" />
+                    <input type="text" [maxlength]="500" pInputText formControlName="enlace_reunion" />
                 </div>
                 <div *ngIf="form.get('modalidad')?.hasError('required') && form.get('modalidad')?.touched"
                     class="text-red-500 my-1 text-left">
@@ -238,7 +238,7 @@
                             <td class="customText">{{responsable.fullname}}</td>
                             <td class="customText">{{responsable.document}}</td>
                             <td class="customText">{{responsable.email}}</td>
-                            <td class="customText">{{responsable.phone}}</td>
+                            <td class="customText">{{responsable.phone ? responsable.phone : "NP"}}</td>
                             <td class="customText">{{responsable.vinculacion}}</td>
                             <td class="customText">{{responsable.rol}}</td>
                             <td class="customText">

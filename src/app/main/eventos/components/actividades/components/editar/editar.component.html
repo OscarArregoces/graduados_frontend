@@ -1,4 +1,4 @@
-<app-card titulo="Actividades" width="80%">
+<app-card titulo="Actividades" width="95%">
     <div card-body class="grid">
         <app-custom-info-card [description]="inforCardDescription"></app-custom-info-card>
         <div class="col-12 md:col-12 lg:col-12">
@@ -11,7 +11,7 @@
                         [paginator]="true"
                         currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} elementos"
                         [filterDelay]="0"
-                        [globalFilterFields]="['nombre_actividad', 'tipo_actividad.name', 'responsable']"
+                        [globalFilterFields]="['nombre_actividad']"
                         responsiveLayout="scroll">
                         <ng-template pTemplate="caption">
                             <div class="table-header">
@@ -48,39 +48,8 @@
                                             class="ml-auto"></p-columnFilter>
                                     </div>
                                 </th>
-                                <th pSortableColumn="tipo_actividad.name">
-                                    <div class="flex justify-content-between align-items-center">
-                                        Tipo
-                                        <p-sortIcon field="tipo_actividad.name"></p-sortIcon>
-                                        <p-columnFilter type="text" field="tipo_actividad.name" display="menu"
-                                            class="ml-auto"></p-columnFilter>
-                                    </div>
-                                </th>
-                                <th pSortableColumn="responsable">
-                                    <div class="flex justify-content-between align-items-center">
-                                        Responsable
-                                        <p-sortIcon field="responsable"></p-sortIcon>
-                                        <p-columnFilter type="text" field="responsable" display="menu"
-                                            class="ml-auto"></p-columnFilter>
-                                    </div>
-                                </th>
-                                <th pSortableColumn="fecha">
-                                    <div class="flex justify-content-between align-items-center">
-                                        Fecha
-                                        <p-sortIcon field="fecha"></p-sortIcon>
-                                    </div>
-                                </th>
-
-                                <th pSortableColumn="cupos">
-                                    <div class="flex justify-content-between align-items-center">
-                                        Cupos
-                                        <p-sortIcon field="cupos"></p-sortIcon>
-                                        <p-columnFilter type="text" field="cupos" display="menu"
-                                            class="ml-auto"></p-columnFilter>
-                                    </div>
-                                </th>
                                 <th style="width: 8rem;text-align: center">
-                                    Editar
+                                    Actualizar
                                 </th>
                             </tr>
                         </ng-template>
@@ -95,23 +64,6 @@
                                 <td>
                                     <span class="p-column-title">Nombre de la actividad</span>
                                     {{actividad.nombre_actividad}}
-                                </td>
-                                <td>
-                                    <span class="p-column-title">Tipo de actividad</span>
-                                    {{actividad.tipo_actividad.name}}
-                                </td>
-
-                                <td>
-                                    <span class="p-column-title">Responsable</span>
-                                    {{actividad.responsable}}
-                                </td>
-                                <td>
-                                    <span class="p-column-title">Fecha</span>
-                                    {{actividad.fecha}}
-                                </td>
-                                <td>
-                                    <span class="p-column-title">Cupos</span>
-                                    {{actividad.cupos}}
                                 </td>
                                 <td style="text-align: center">
                                     <button pButton type="button" icon="pi pi-pencil" class="p-button-warning"

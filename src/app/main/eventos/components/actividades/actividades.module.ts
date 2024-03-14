@@ -33,6 +33,11 @@ import { DividerModule } from 'primeng/divider';
 import { MessageModule } from 'primeng/message';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TagModule } from 'primeng/tag';
+import { PanelModule } from 'primeng/panel';
+import { DialogSeguimientoComponent } from './components/ver/components/dialog-seguimiento/dialog-seguimiento.component';
+import { DialogReporteComponent } from './components/ver/components/dialog-reporte/dialog-reporte.component';
+import { DialogGraficoComponent } from './components/ver/components/dialog-grafico/dialog-grafico.component';
+import { AsistenciasComponent } from './components/asistencias/asistencias.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +49,12 @@ import { TagModule } from 'primeng/tag';
     MisActividadesComponent,
     AprobacionComponent,
     FormVinculacionComponent,
-    FormExternoComponent
+    FormExternoComponent,
+    DialogSeguimientoComponent,
+    DialogReporteComponent,
+    DialogGraficoComponent,
+    AsistenciasComponent,
+
   ],
   imports: [
     CommonModule,
@@ -71,7 +81,8 @@ import { TagModule } from 'primeng/tag';
     DividerModule,
     MessageModule,
     ProgressSpinnerModule,
-    TagModule
+    TagModule,
+    PanelModule
   ],
   providers: [
     DatePipe

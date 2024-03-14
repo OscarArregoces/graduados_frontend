@@ -1,4 +1,4 @@
-<app-card titulo="Actividades" width="80%">
+<app-card titulo="Actividades" width="95%">
     <div card-body class="grid">
         <app-custom-info-card [description]="inforCardDescription"></app-custom-info-card>
         <div class="col-12">
@@ -7,16 +7,13 @@
         </div>
         <div class="col-12 md:col-12 lg:col-12">
             <div class="flex flex-column gap-2">
-
                 <p-card>
                     <p-table #dt [value]="actividades" [(selection)]="itemsBulkDelete" dataKey="id"
                         styleClass="p-datatable-customers" [rowHover]="true" [rows]="10" [showCurrentPageReport]="true"
                         [rowsPerPageOptions]="[10,25,50]" [loading]="loading" responsiveLayout="scroll"
                         [paginator]="true"
                         currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} elementos"
-                        [filterDelay]="0"
-                        [globalFilterFields]="['nombre_actividad', 'tipo_actividad.name', 'responsable']"
-                        responsiveLayout="scroll">
+                        [filterDelay]="0" [globalFilterFields]="['nombre_actividad']" responsiveLayout="scroll">
                         <ng-template pTemplate="caption">
                             <div class="table-header">
                                 <div class="grid" [style]="{'display': 'flex', 'justify-content': 'space-between'}">
@@ -52,43 +49,8 @@
                                             class="ml-auto"></p-columnFilter>
                                     </div>
                                 </th>
-                                <th pSortableColumn="tipo_actividad.name">
-                                    <div class="flex justify-content-between align-items-center">
-                                        Tipo
-                                        <p-sortIcon field="tipo_actividad.name"></p-sortIcon>
-                                        <p-columnFilter type="text" field="tipo_actividad.name" display="menu"
-                                            class="ml-auto"></p-columnFilter>
-                                    </div>
-                                </th>
-                                <th pSortableColumn="responsable">
-                                    <div class="flex justify-content-between align-items-center">
-                                        Responsable
-                                        <p-sortIcon field="responsable"></p-sortIcon>
-                                        <p-columnFilter type="text" field="responsable" display="menu"
-                                            class="ml-auto"></p-columnFilter>
-                                    </div>
-                                </th>
-                                <th pSortableColumn="fecha">
-                                    <div class="flex justify-content-between align-items-center">
-                                        Fecha
-                                        <p-sortIcon field="fecha"></p-sortIcon>
-                                        <p-columnFilter type="text" field="fecha" display="menu"
-                                            class="ml-auto"></p-columnFilter>
-                                    </div>
-                                </th>
-                                <th pSortableColumn="cupos">
-                                    <div class="flex justify-content-between align-items-center">
-                                        Cupos
-                                        <p-sortIcon field="cupos"></p-sortIcon>
-                                        <p-columnFilter type="text" field="cupos" display="menu"
-                                            class="ml-auto"></p-columnFilter>
-                                    </div>
-                                </th>
                                 <th style="width: 8rem;text-align: center">
-                                    Detalles
-                                </th>
-                                <th style="width: 8rem;text-align: center">
-                                    Eliminar
+                                    Acciones
                                 </th>
                             </tr>
                         </ng-template>
@@ -104,27 +66,9 @@
                                     <span class="p-column-title">Nombre de la actividad</span>
                                     {{actividad.nombre_actividad}}
                                 </td>
-                                <td>
-                                    <span class="p-column-title">Tipo de actividad</span>
-                                    {{actividad.tipo_actividad.name}}
-                                </td>
-                                <td>
-                                    <span class="p-column-title">Fecha</span>
-                                    {{actividad.fecha}}
-                                </td>
-                                <td>
-                                    <span class="p-column-title">Responsable</span>
-                                    {{actividad.responsable}}
-                                </td>
-                                <td>
-                                    <span class="p-column-title">Cupos</span>
-                                    {{actividad.cupos}}
-                                </td>
-                                <td style="text-align: center">
+                                <td class="flex justify-content-center align-items-center gap-2">
                                     <button pButton type="button" icon="pi pi-eye" class="p-button-secondary"
                                         (click)="showDetalles(actividad)"></button>
-                                </td>
-                                <td>
                                     <p-confirmPopup></p-confirmPopup>
                                     <button (click)="confirm($event, actividad.id)" pButton type="button"
                                         icon="pi pi-trash" class="p-button-danger"></button>
