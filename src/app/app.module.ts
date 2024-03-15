@@ -53,6 +53,9 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { FileUploadModule } from 'primeng/fileupload';
 // import { MantenimientoComponent } from './main/mantenimiento/mantenimiento.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { SharedModule } from './shared/shared.module';
+
+
 
 @NgModule({
   declarations: [
@@ -111,6 +114,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     FieldsetModule,
     FileUploadModule,
     InputTextareaModule,
+
+    SharedModule
 
 
   ],

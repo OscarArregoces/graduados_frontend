@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { PrivateLayoutRoutingModule } from './private-layout-routing.module';
 import { PrivateLayoutComponent } from './private-layout.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { DashboardRoutingModule } from 'src/app/main/dashboard/dashboard-routing.module';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -40,37 +40,38 @@ import { CarouselModule } from 'primeng/carousel';
 import { FieldsetModule } from 'primeng/fieldset';
 import { FileUploadModule } from 'primeng/fileupload';
 import { InputTextareaModule } from 'primeng/inputtextarea';
-import {AutoCompleteModule} from 'primeng/autocomplete';
-import {SlideMenuModule} from 'primeng/slidemenu';
-import {ConfirmDialogModule} from 'primeng/confirmdialog';
+import { AutoCompleteModule } from 'primeng/autocomplete';
+import { SlideMenuModule } from 'primeng/slidemenu';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { LandingComponent } from './landing/landing.component';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { MenuComponent } from './menu/menu.component';
-import {BadgeModule} from 'primeng/badge';
-import {DataViewModule} from 'primeng/dataview';
-import {AccordionModule} from 'primeng/accordion';
-import {MultiSelectModule} from 'primeng/multiselect';
-import {StyleClassModule} from 'primeng/styleclass';
-import {OverlayPanelModule} from 'primeng/overlaypanel';
-import {TabMenuModule} from 'primeng/tabmenu';
-import {TabViewModule} from 'primeng/tabview';
-import {ScrollTopModule} from 'primeng/scrolltop';
-import {StepsModule} from 'primeng/steps';
+import { BadgeModule } from 'primeng/badge';
+import { DataViewModule } from 'primeng/dataview';
+import { AccordionModule } from 'primeng/accordion';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { StyleClassModule } from 'primeng/styleclass';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { TabMenuModule } from 'primeng/tabmenu';
+import { TabViewModule } from 'primeng/tabview';
+import { ScrollTopModule } from 'primeng/scrolltop';
+import { StepsModule } from 'primeng/steps';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import {PasswordModule} from 'primeng/password';
+import { PasswordModule } from 'primeng/password';
 
 import { SharedModule } from 'src/app/shared/shared.module';
+import { SpinerInterceptor } from 'src/app/core/interceptors/spiner.interceptor';
 
 @NgModule({
   declarations: [
-    PrivateLayoutComponent, 
+    PrivateLayoutComponent,
     LandingComponent,
     MenuComponent,
-    
+
   ],
   imports: [
     CommonModule,
-    
+
     PrivateLayoutRoutingModule,
 
     ReactiveFormsModule,
@@ -78,7 +79,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
     DashboardRoutingModule,
 
     SharedModule,
-  
+
     AccordionModule,
     HttpClientModule,
     FormsModule,
@@ -136,6 +137,10 @@ import { SharedModule } from 'src/app/shared/shared.module';
     ConfirmDialogModule,
     BadgeModule
   ],
-  providers: [DynamicDialogRef,DynamicDialogConfig]
+  providers: [
+    DynamicDialogRef,
+    DynamicDialogConfig,
+    { provide: HTTP_INTERCEPTORS, useClass: SpinerInterceptor, multi: true }
+  ]
 })
 export class PrivateLayoutModule { }

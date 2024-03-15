@@ -1,4 +1,4 @@
-<app-card *ngIf="itemsMenu.length > 0; else elseBlockItemsMenu" titulo="Emprendimientos">
+<app-card *ngIf="itemsMenu.length > 0;" titulo="Emprendimientos">
     <div card-body class="grid">
         <div class="col-12">
             <p-carousel [value]="emprendimientosDestacados" styleClass="custom-carousel" [numVisible]="3"
@@ -75,9 +75,7 @@
     </div>
 </app-card>
 
-<ng-template #elseBlockItemsMenu>
-    <app-spinner></app-spinner>
-</ng-template>
+
 <ng-template #elseBlockEmprendimientos>
     <div class="w-full">
         <p class="text-center">Aun no hay emprendimientos creados.</p>

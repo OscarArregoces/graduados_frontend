@@ -126,7 +126,7 @@
     [dismissableMask]="true">
 
     <app-card-dialog titulo="Detalles">
-        <form [formGroup]="form" *ngIf="capacitaciones.length > 0; else elseBlock">
+        <form [formGroup]="form" *ngIf="capacitaciones.length > 0;">
             <div class="grid">
                 <div class="col-12 md:col-6 lg:col-6">
                     <div class="flex flex-column gap-2">
@@ -306,8 +306,5 @@
     </app-card-dialog>
 </p-dialog>
 
-<ng-template #elseBlock>
-    <app-spinner></app-spinner>
-</ng-template>
 
 <p-toast></p-toast>

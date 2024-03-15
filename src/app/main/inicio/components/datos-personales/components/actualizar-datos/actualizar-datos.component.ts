@@ -34,7 +34,6 @@ export class ActualizarDatosComponent implements OnInit, OnDestroy {
   public tiposDocumento: TipoDocumento[] = [];
   public InfoCarrera: InfoCarrera[] = [];
   private _idPerson: null | number = null;
-  public isLoading: boolean = false;
 
   public formPersona = this.fb.group({
     document_type: ['', [Validators.minLength(5), Validators.maxLength(100)]],
@@ -81,7 +80,6 @@ export class ActualizarDatosComponent implements OnInit, OnDestroy {
   onSubmit() {
     ValidForm(this.formPersona);
     if (this.formPersona.valid) {
-      this.isLoading = true;
       const {
         document_type,
         gender_type,
@@ -122,13 +120,11 @@ export class ActualizarDatosComponent implements OnInit, OnDestroy {
       this.inicioService.put(`${this.API_URI}/persons/actualizar-datos/${this._idPerson}/`, body, this.token)
         .pipe(
           catchError(error => {
-            this.isLoading = false;
             this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error en consulta ' });
             throw error;
           })
         )
         .subscribe(res => {
-          this.isLoading = false;
           this._idPerson = null;
           Swal.fire({
             position: "top-end",
@@ -138,6 +134,7 @@ export class ActualizarDatosComponent implements OnInit, OnDestroy {
             showConfirmButton: false,
             timer: 2500,
             allowOutsideClick: false,
+            timerProgressBar: true
           });
           this.traerInfoUsuario();
         })
@@ -146,17 +143,14 @@ export class ActualizarDatosComponent implements OnInit, OnDestroy {
   }
 
   traerInfoUsuario() {
-    this.isLoading = true;
     this.inicioService.get(`${this.API_URI}/persons/perfil`, this.token)
       .pipe(
         catchError(error => {
-          this.isLoading = false;
           this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error en consulta' });
           throw error;
         })
       )
       .subscribe(res => {
-        this.isLoading = false;
         const {
           persona: {
             document_type,

@@ -1,4 +1,4 @@
-<app-card width="95%" titulo="Actualizar Datos" *ngIf="!isLoading; else elseBlock">
+<app-card width="95%" titulo="Actualizar Datos">
     <p-tabView card-body>
         <p-tabPanel header="Datos Personales">
             <form [formGroup]="formPersona">
@@ -366,7 +366,3 @@
         </p-tabPanel>
     </p-tabView>
 </app-card>
-
-<ng-template #elseBlock>
-    <app-spinner></app-spinner>
-</ng-template>

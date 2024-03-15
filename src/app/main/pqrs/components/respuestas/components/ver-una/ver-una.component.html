@@ -1,4 +1,4 @@
-<app-card *ngIf="solicitud.length > 0; else elseBlock" titulo="Detalles">
+<app-card *ngIf="solicitud.length > 0;" titulo="Detalles">
     <div card-body>
         <div id="card-custom" class="my-3">
             <div id="card-header">
@@ -142,9 +142,7 @@
 
 </app-card>
 
-<ng-template #elseBlock>
-    <app-spinner></app-spinner>
-</ng-template>
+
 
 <ng-template #elseBlockRespuestas>
     <div class="text-center">

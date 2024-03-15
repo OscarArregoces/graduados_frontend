@@ -1,4 +1,4 @@
-<ng-container *ngIf="data.length; else elseBlock">
+<ng-container *ngIf="data.length; ">
 
     <!-- <a *ngIf="urlFilterFacultad" href="http://{{API_URI}}/reportes/encuestas/facultad/{{urlFilterFacultad}}/generar/" Target="_blank"> -->
     <a *ngIf="urlFilterFacultad" href="http://{{API_URI}}/reportes/encuestas/facultad/1/generar/" Target="_blank">
@@ -54,7 +54,3 @@
 
 
 </ng-container>
-
-<ng-template #elseBlock>
-    <app-spinner></app-spinner>
-</ng-template>
