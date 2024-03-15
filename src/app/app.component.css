@@ -1,7 +1,9 @@
 body {
   margin: 0;
 }
-
+::ng-deep.swal2-container {
+  z-index: 1000000;
+}
 .sect {
   width: 100%;
   min-height: 500px;

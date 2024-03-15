@@ -37,7 +37,8 @@
                             </th>
                             <th style="width: 3rem;text-align: center" title="Seguimiento"> SEG </th>
                             <th style="width: 3rem;text-align: center" title="Reporte"> REP </th>
-                            <th style="width: 3rem;text-align: center" title="Grafico"> GRA </th>
+                            <th style="width: 3rem;text-align: center" title="Asistencia"> ASI </th>
+                            <th style="width: 3rem;text-align: center" title="Evidencia"> EVI </th>
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-actividad let-rowIndex="rowIndex">
@@ -58,8 +59,12 @@
                                     (click)="changeDisplayReporte(actividad.id)"></button>
                             </td>
                             <td style="text-align: center;">
-                                <button type="button" pButton pRipple icon="pi pi-chart-bar" class="p-button-help mr-2"
-                                    tooltipPosition="bottom" title="Grafico"></button>
+                                <button type="button" pButton pRipple icon="pi pi-list" class="p-button-success mr-2"
+                                    tooltipPosition="bottom" title="Asistencia"></button>
+                            </td>
+                            <td style="text-align: center;">
+                                <button type="button" pButton pRipple icon="pi pi-folder-open" class="p-button-warning mr-2"
+                                    tooltipPosition="bottom" title="Evidencia"></button>
                             </td>
                         </tr>
                     </ng-template>

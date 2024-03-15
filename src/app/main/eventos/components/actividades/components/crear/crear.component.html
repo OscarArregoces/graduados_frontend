@@ -107,7 +107,7 @@
                 <div class="flex flex-column gap-2">
                     <label class="customLabel">Descripción</label>
                     <textarea formControlName="descripcion" placeholder="Describe brevemente los aspectos importantes"
-                        [rows]="7" [cols]="30" pInputTextarea [maxlength]="500" [autoResize]="true"></textarea>
+                        [rows]="10" [cols]="30" pInputTextarea [maxlength]="500" [autoResize]="true"></textarea>
                 </div>
             </div>
             <div class="col-12 md:col-12 lg:col-6">
@@ -115,7 +115,7 @@
                     <div class="flex flex-column gap-2">
                         <label class="customLabel">Objetivo</label>
                         <textarea formControlName="objetivo"
-                            placeholder="Finalidad con la que se llevará a cabo esta actividad" [rows]="7" [cols]="30"
+                            placeholder="Finalidad con la que se llevará a cabo esta actividad" [rows]="10" [cols]="30"
                             pInputTextarea [maxlength]="256" [autoResize]="true"></textarea>
                     </div>
                     <div *ngIf="form.get('objetivo')?.hasError('required') && form.get('objetivo')?.touched"

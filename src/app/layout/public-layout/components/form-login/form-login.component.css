@@ -11,9 +11,6 @@
 
   } */
 
-::ng-deep.swal2-container {
-  z-index: 1000000;
-}
 
 @media only screen and (max-width: 430px) {
   #campus_img {

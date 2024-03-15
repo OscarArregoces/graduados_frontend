@@ -3,7 +3,7 @@
         <div class="grid">
             <app-custom-info-card [description]="inforCardDescription"></app-custom-info-card>
             <div class="col-12 flex justify-content-between align-items-center">
-                <button pButton pRipple type="button" label="Volver" (click)="resetOptionSelected.emit()"
+                <button pButton pRipple type="button" label="Volver" (click)="handleClickVolver()"
                     class="p-button-outlined p-button-secondary"></button>
             </div>
             <div class="col-12">
@@ -21,7 +21,7 @@
                                     formControlName="id_actividad" pInputText [maxlength]="100" />
                             </div>
                         </div>
-                        <button pButton pRipple type="button" icon="pi pi-search" label="Buscar"
+                        <button pButton pRipple type="submit" icon="pi pi-search" label="Buscar"
                             class="p-button-raised p-button-secondary" (click)="handleSearchActividad()"></button>
                     </div>
                     <div *ngIf="formActividad.get('id_actividad')?.hasError('required') && formActividad.get('id_actividad')?.touched"
@@ -96,13 +96,12 @@
                         ">
                                 <div class="w-full">
                                     <div class="p-inputgroup my-1">
-                                        <span class="p-inputgroup-addon" style="color:#f16357;"><i
-                                                class="pi pi-filter-fill"></i></span>
+                                        <span class="p-inputgroup-addon"><i class="pi pi-filter-fill"></i></span>
                                         <input type="number" style="width: 100%;" placeholder="No. Documento"
                                             formControlName="document" pInputText [maxlength]="100" />
                                     </div>
                                 </div>
-                                <button pButton pRipple type="button" icon="pi pi-search" label="Buscar"
+                                <button pButton pRipple type="submit" icon="pi pi-search" label="Buscar"
                                     class="p-button-raised p-button-secondary" (click)="onSubmitSearchUser()"></button>
                             </div>
                             <div *ngIf="formUser.get('document')?.hasError('required') && formUser.get('document')?.touched"
@@ -139,8 +138,8 @@
                         </div>
 
                         <div class="col-12 flex justify-content-center aling-items-center" *ngIf="persona">
-                            <button pButton pRipple type="submit" label="Registrar Asistencia"
-                                class="p-button"></button>
+                            <button pButton pRipple type="submit" label="Registrar Asistencia" class="p-button"
+                                (click)="onSubmitAsistenciaBusqueda()"></button>
                         </div>
 
                     </div>
@@ -191,10 +190,39 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-12 md:col-6 lg:col-6">
+                                    <div class="flex flex-column gap-2">
+                                        <label class="customLabel">No. Documento</label>
+                                        <div class="p-inputgroup">
+                                            <span class="p-inputgroup-addon"><i class="pi pi-id-card"></i></span>
+                                            <input type="number" [maxlength]="30" pInputText
+                                                formControlName="document" placeholder="Escribe aqui..." />
+                                        </div>
+                                        <div *ngIf="formExterno.get('document')?.hasError('required') && formExterno.get('document')?.touched"
+                                            class="text-red-500 my-1 text-left">
+                                            Campo requerido
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-6 lg:col-6">
+                                    <div class="flex flex-column gap-2">
+                                        <label class="customLabel">Vinculación</label>
+                                        <div class="p-inputgroup">
+                                            <span class="p-inputgroup-addon"><i class="pi pi-tag"></i></span>
+                                            <p-dropdown [style]="{'width':'100%'}" [options]="tipoVinculacion"
+                                                placeholder="Selecciona una opcion"
+                                                formControlName="vinculacion"></p-dropdown>
+                                        </div>
+                                        <div *ngIf="formExterno.get('vinculacion')?.hasError('required') && formExterno.get('vinculacion')?.touched"
+                                            class="text-red-500 my-1 text-left">
+                                            Campo requerido
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="col-12">
                                     <div class="flex justify-content-center aling-items-center my-3">
                                         <button pButton pRipple type="submit" label="Registrar Asistencia"
-                                            class="p-button"></button>
+                                            class="p-button" (click)="onSubmitAsistenciaExterno()"></button>
                                     </div>
                                 </div>
 

@@ -71,9 +71,6 @@ export class BusquedaQrComponent implements OnInit {
       allowOutsideClick: false,
       timerProgressBar: true,
     });
-    // this.eventosService.get(api, this.token).subscribe(res => {
-    //   console.log(res.data);
-    // })
   }
 
   verifyConfirm(data: any): boolean {

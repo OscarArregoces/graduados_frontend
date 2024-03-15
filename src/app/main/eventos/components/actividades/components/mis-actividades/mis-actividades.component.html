@@ -1,25 +1,22 @@
 <app-card titulo="Mis Actividades" width="95%">
   <div card-body>
-    <!-- <div class="w-full border-round-md bg-gray-100 flex flex-column justify-content-center align-content-center p-2">
-      <div class="flex flex-row gap-2">
-        <span *ngFor="let mes of primer_semestre"
-          class="bg-cyan-200 border-round-md p-2 flex justify-content-center align-items-center gap-1 pointer">
+    <div class="w-full border-round-sm flex flex-column justify-content-center align-content-center p-5"
+      style="background-color: #f5f5f5;">
+      <div class="flex flex-row justify-content-center align-items-center gap-2">
+        <span *ngFor="let mes of meses"
+          class="bg-pink-200 border-round-md p-2 flex justify-content-center align-items-center gap-1 pointer">
           <i class="pi pi-info-circle"></i>
           {{mes}}
         </span>
       </div>
-      <div class="flex flex-row gap-2">
-        <span *ngFor="let mes of segundo_semestre"
-          class="bg-cyan-200 border-round-md p-2 flex justify-content-center align-items-center gap-1 pointer">
-          <i class="pi pi-info-circle"></i>
-          {{mes}}
-        </span>
-      </div>
-    </div> -->
-
+    </div>
     <app-custom-info-card [description]="inforCardDescription"></app-custom-info-card>
     <div class="my-3" *ngFor="let actividad of actividades">
       <app-detail-activity [actividad]="actividad" (getActividades)="getActividades()"></app-detail-activity>
+    </div>
+
+    <div class="flex justify-content-center align-items-center" *ngIf="actividades.length === 0">
+      <p-message severity="info" text="Parece que aún no tienes actividades"></p-message>
     </div>
   </div>
 </app-card>

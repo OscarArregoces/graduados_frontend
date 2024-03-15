@@ -83,8 +83,9 @@ export class AprobacionComponent implements OnInit {
     this.actividad = null;
   }
 
-  handleAprobacion() {
-    this.eventosService.put(`${this.API_URI}/eventos/aprobacion/${this.actividad?.id}/`, {}, this.token)
+  handleSubmit(actividad_status: number) {
+    const customMessage = actividad_status === 2 ? "¡La actividad ha sido aprobada satisfactoriamente!" : "¡La actividad ha sido rechazada satisfactoriamente!"
+    this.eventosService.put(`${this.API_URI}/eventos/aprobacion/${this.actividad?.id}/`, { "actividad_status": actividad_status }, this.token)
       .pipe(
         catchError(error => {
           Swal.fire({
@@ -106,7 +107,7 @@ export class AprobacionComponent implements OnInit {
           position: "top-end",
           icon: "success",
           title: "Notificación",
-          text: "¡La actividad ha sido aprobada satisfactoriamente!",
+          text: customMessage,
           showConfirmButton: false,
           timer: 1500,
           allowOutsideClick: false,

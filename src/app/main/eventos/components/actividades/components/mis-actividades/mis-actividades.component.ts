@@ -18,15 +18,13 @@ export class MisActividadesComponent implements OnInit {
   Mis Actividades' ofrece a los usuarios en sesión una vista personalizada de las actividades a las que han sido invitados. Desde esta interfaz, los usuarios pueden acceder rápidamente a detalles específicos de los eventos a los que planean asistir, simplificando su experiencia en la plataforma.
   `;
 
-  public primer_semestre: string[] = [
+  public meses: string[] = [
     "Enero",
     "Febrero",
     "Marzo",
     "Abril",
     "Mayo",
     "Junio",
-  ];
-  public segundo_semestre: string[] = [
     "Julio",
     "Agosto",
     "Septiembre",
@@ -34,6 +32,7 @@ export class MisActividadesComponent implements OnInit {
     "Noviembre",
     "Diciembre",
   ];
+
 
   constructor(
     private eventosService: EventosService

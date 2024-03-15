@@ -2,7 +2,8 @@
   position: fixed;
   height: 100% !important;
   width: 100% !important;
-  background-color: rgba(74, 74, 74, 0.596);
+  /* background-color: rgba(74, 74, 74, 0.596); */
+  background-color: rgba(0, 0, 0, .5);
   z-index: 1000000;
   display: flex;
   justify-content: center;
@@ -10,7 +11,7 @@
 }
 
 .loader {
-  color: #9d5752;
+  color: #ffffff;
   font-size: 45px;
   text-indent: -9999em;
   overflow: hidden;

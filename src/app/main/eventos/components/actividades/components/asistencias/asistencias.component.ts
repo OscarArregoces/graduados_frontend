@@ -8,7 +8,7 @@ import { OptionAsistencia } from 'src/app/models/main/eventos.interface';
 })
 export class AsistenciasComponent implements OnInit {
 
-  public optionSelected: OptionAsistencia | null = 2;
+  public optionSelected: OptionAsistencia | null = null;
 
   constructor() { }
 

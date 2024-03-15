@@ -3,64 +3,62 @@
         <app-custom-info-card [description]="inforCardDescription"></app-custom-info-card>
         <div class="col-12 md:col-12 lg:col-12">
             <div class="flex flex-column gap-2">
-                    <p-table #dt [value]="actividades" [(selection)]="itemsBulkDelete" dataKey="id"
-                        styleClass="p-datatable-customers" [rowHover]="true" [rows]="50" [showCurrentPageReport]="true"
-                        [loading]="loading" responsiveLayout="scroll" [paginator]="true"
-                        [rowsPerPageOptions]="[10,25,50]"
-                        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
-                        [filterDelay]="0" [globalFilterFields]="['nombre_actividad']"
-                        responsiveLayout="scroll">
-                        <ng-template pTemplate="caption">
-                            <div class="table-header">
-                                <div class="grid" [style]="{'display': 'flex', 'justify-content': 'space-between'}">
-                                    <div class="col-12 md:col-6 lg:col-6" [style]="{'font-size': '20px'}">
-                                        Lista de Actividades
-                                    </div>
-                                    <div class="col-12 md:col-6 lg:col-3">
-                                        <span [style]="{'width':'100%'}" class="p-input-icon-left">
-                                            <i class="pi pi-search"></i>
-                                            <input [style]="{'width':'100%'}" pInputText type="text"
-                                                (input)="dt.filterGlobal(getEventValue($event), 'contains')"
-                                                placeholder="Filtrar por nombre" />
-                                        </span>
-                                    </div>
+                <p-table #dt [value]="actividades" [(selection)]="itemsBulkDelete" dataKey="id"
+                    styleClass="p-datatable-customers" [rowHover]="true" [rows]="50" [showCurrentPageReport]="true"
+                    [loading]="loading" responsiveLayout="scroll" [paginator]="true" [rowsPerPageOptions]="[10,25,50]"
+                    currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros" [filterDelay]="0"
+                    [globalFilterFields]="['nombre_actividad']" responsiveLayout="scroll">
+                    <ng-template pTemplate="caption">
+                        <div class="table-header">
+                            <div class="grid" [style]="{'display': 'flex', 'justify-content': 'space-between'}">
+                                <div class="col-12 md:col-6 lg:col-6" [style]="{'font-size': '20px'}">
+                                    Lista de Actividades
                                 </div>
-
+                                <div class="col-12 md:col-6 lg:col-3">
+                                    <span [style]="{'width':'100%'}" class="p-input-icon-left">
+                                        <i class="pi pi-search"></i>
+                                        <input [style]="{'width':'100%'}" pInputText type="text"
+                                            (input)="dt.filterGlobal(getEventValue($event), 'contains')"
+                                            placeholder="Filtrar por nombre" />
+                                    </span>
+                                </div>
                             </div>
-                        </ng-template>
-                        <ng-template pTemplate="header">
-                            <tr>
-                                <th style="width: 5rem">
-                                    <p>Indice</p>
-                                </th>
-                                <th pSortableColumn="nombre_actividad">
-                                    Nombre
-                                </th>
-                                <th style="width: 8rem;text-align: center">
-                                    Acciones
-                                </th>
-                            </tr>
-                        </ng-template>
-                        <ng-template pTemplate="body" let-actividad let-rowIndex="rowIndex">
-                            <tr>
-                                <td>
-                                    {{rowIndex + 1 }}
-                                </td>
-                                <td>
-                                    {{actividad.nombre_actividad}}
-                                </td>
-                                <td style="text-align: center">
-                                    <button pButton type="button" icon="pi pi-eye" class="p-button-secondary"
-                                        (click)="changeDisplayDetail(actividad.id)"></button>
-                                </td>
-                            </tr>
-                        </ng-template>
-                        <ng-template pTemplate="emptymessage">
-                            <tr>
-                                <td colspan="8">No hay datos que mostrar</td>
-                            </tr>
-                        </ng-template>
-                    </p-table>
+
+                        </div>
+                    </ng-template>
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th style="width: 5rem">
+                                <p>Indice</p>
+                            </th>
+                            <th pSortableColumn="nombre_actividad">
+                                Nombre
+                            </th>
+                            <th style="width: 8rem;text-align: center">
+                                Acciones
+                            </th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-actividad let-rowIndex="rowIndex">
+                        <tr>
+                            <td>
+                                {{rowIndex + 1 }}
+                            </td>
+                            <td>
+                                {{actividad.nombre_actividad}}
+                            </td>
+                            <td style="text-align: center">
+                                <button pButton type="button" icon="pi pi-eye" class="p-button-secondary"
+                                    (click)="changeDisplayDetail(actividad.id)"></button>
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td colspan="8">No hay datos que mostrar</td>
+                        </tr>
+                    </ng-template>
+                </p-table>
             </div>
         </div>
 
@@ -74,13 +72,17 @@
     <div class="grid">
         <div class="col-12">
             <div class="grid p-5 my-2 shadow-3" style="background-color:#fbf9f8;">
-                <div class="col-12 flex justify-content-between align-items-center">
+                <div class="col-12 flex flex-column justify-content-start align-items-start">
                     <span class="customTitle">Informacion Actividad</span>
-                    <div class="flex gap-3">
-                        <span class="tag-ghost tag-inicio">{{ actividad?.fecha_inicio | date:"MMMM dd, yyyy hh:mm a" |
-                            titlecase }}</span>
-                        <span class="tag-ghost tag-final">{{ actividad?.fecha_final| date:"MMMM dd, yyyy hh:mm a" |
-                            titlecase }}</span>
+                    <div class="flex flex-column justify-content-center align-items-start">
+                        <label class="mb-2" [style]="{'font-weight': 'bold'}">Fecha </label>
+                        <div class="flex flex-row justify-content-center align-items-center gap-1">
+                            <span class="">{{ actividad?.fecha_inicio | date:"dd MMMM, yyyy hh:mm a" |
+                                titlecase }}</span>
+                            al
+                            <span class="">{{ actividad?.fecha_final | date:"dd MMMM, yyyy hh:mm a" |
+                                titlecase }}</span>
+                        </div>
                     </div>
                 </div>
                 <div class="col-12">
@@ -201,8 +203,10 @@
                 </div>
                 <div class="col-12 flex justify-content-center align-items-center gap-3">
                     <button pButton pRipple type="submit" label="Aprobar" class="p-button-success"
-                        icon="pi pi-check-circle" (click)="handleAprobacion()"></button>
-                    <button pButton pRipple type="button" label="Volver" class="p-button-outlined p-button-danger"
+                        icon="pi pi-check-circle" (click)="handleSubmit(2)"></button>
+                    <button pButton pRipple type="submit" label="Rechazar" class="p-button-danger"
+                        icon="pi pi-times-circle" (click)="handleSubmit(3)"></button>
+                    <button pButton pRipple type="button" label="Volver" class="p-button-outlined p-button-secondary"
                         (click)="closeDisplayDetail()"></button>
                 </div>
             </div>
