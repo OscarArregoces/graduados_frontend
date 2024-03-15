@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { ActividadesRoutingModule } from './actividades-routing.module';
 import { ActividadesComponent } from './actividades.component';
@@ -11,10 +12,15 @@ import { MisActividadesComponent } from './components/mis-actividades/mis-activi
 import { AprobacionComponent } from './components/aprobacion/aprobacion.component';
 import { FormVinculacionComponent } from './components/crear/components/form-vinculacion/form-vinculacion.component';
 import { FormExternoComponent } from './components/crear/components/form-externo/form-externo.component';
+import { DialogSeguimientoComponent } from './components/ver/components/dialog-seguimiento/dialog-seguimiento.component';
+import { DialogReporteComponent } from './components/ver/components/dialog-reporte/dialog-reporte.component';
+import { DialogGraficoComponent } from './components/ver/components/dialog-grafico/dialog-grafico.component';
+import { AsistenciasComponent } from './components/asistencias/asistencias.component';
+import { BusquedaQrComponent } from './components/asistencias/components/busqueda-qr/busqueda-qr.component';
+import { BusquedaManualComponent } from './components/asistencias/components/busqueda-manual/busqueda-manual.component';
 
 import { SharedModule } from 'src/app/shared/shared.module';
 
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
@@ -34,10 +40,8 @@ import { MessageModule } from 'primeng/message';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TagModule } from 'primeng/tag';
 import { PanelModule } from 'primeng/panel';
-import { DialogSeguimientoComponent } from './components/ver/components/dialog-seguimiento/dialog-seguimiento.component';
-import { DialogReporteComponent } from './components/ver/components/dialog-reporte/dialog-reporte.component';
-import { DialogGraficoComponent } from './components/ver/components/dialog-grafico/dialog-grafico.component';
-import { AsistenciasComponent } from './components/asistencias/asistencias.component';
+
+import { NgxScannerQrcodeModule } from 'ngx-scanner-qrcode';
 
 @NgModule({
   declarations: [
@@ -54,6 +58,8 @@ import { AsistenciasComponent } from './components/asistencias/asistencias.compo
     DialogReporteComponent,
     DialogGraficoComponent,
     AsistenciasComponent,
+    BusquedaQrComponent,
+    BusquedaManualComponent,
 
   ],
   imports: [
@@ -82,7 +88,8 @@ import { AsistenciasComponent } from './components/asistencias/asistencias.compo
     MessageModule,
     ProgressSpinnerModule,
     TagModule,
-    PanelModule
+    PanelModule,
+    NgxScannerQrcodeModule
   ],
   providers: [
     DatePipe

@@ -1,0 +1,23 @@
+@media only screen and (min-width: 320px) {
+    ngx-scanner-qrcode {
+        width: 100%;
+    }
+}
+
+@media only screen and (min-width: 768px) {
+    ngx-scanner-qrcode {
+        width: 100%;
+    }
+}
+@media only screen and (min-width: 1280px) {
+    ngx-scanner-qrcode{
+        max-width: 800px;
+    }
+}
+
+.alert-p{
+    color: red !important;
+}
+.custom-alert{
+    color: blue !important;
+}

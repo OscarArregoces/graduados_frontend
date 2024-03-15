@@ -26,6 +26,14 @@ export interface Responsable {
     dedicacion: string;
     vinculacion: string;
 }
+export interface UserEvento {
+    id?: number;
+    email: string;
+    fullname: string;
+    funcionario: boolean;
+    graduado: boolean;
+    phone: string;
+}
 
 export interface Area {
     id: number;
@@ -87,4 +95,9 @@ export interface MiActividad {
         vinculacion: ResponsableVinculacion[],
         externos: Responsable[]
     };
+}
+
+export enum OptionAsistencia {
+    MethodQr = 1,
+    MethodSearch = 2
 }

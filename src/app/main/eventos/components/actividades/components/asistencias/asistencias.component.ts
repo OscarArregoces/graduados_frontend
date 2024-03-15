@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { OptionAsistencia } from 'src/app/models/main/eventos.interface';
 
 @Component({
   selector: 'app-asistencias',
@@ -7,9 +8,20 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AsistenciasComponent implements OnInit {
 
+  public optionSelected: OptionAsistencia | null = 2;
+
   constructor() { }
 
   ngOnInit(): void {
   }
+
+  handleMethodQr() {
+    this.optionSelected = OptionAsistencia.MethodQr;
+  }
+  handleMethodSearch() {
+    this.optionSelected = OptionAsistencia.MethodSearch;
+  }
+
+  resetOptionSelected() { this.optionSelected = null; }
 
 }
