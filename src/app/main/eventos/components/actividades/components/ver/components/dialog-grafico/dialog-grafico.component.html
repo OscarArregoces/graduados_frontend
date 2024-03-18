@@ -1,1 +1,75 @@
-<p>dialog-grafico works!</p>
+<p-dialog header="Grafico Asistencias Actividad" [(visible)]="display"
+    [style]="{'width': width,'text-aling': 'center', 'min-height':'80vh','background-color':'#f4f4f4'}"
+    [showHeader]="true" [modal]="true" [dismissableMask]="false" [maximizable]="true" (onHide)="closeDisplay.emit()">
+
+    <div class="grid border-1 border-gray-100">
+        <div class="col-12">
+            <p-chart type="doughnut" [data]="data" [options]="options"></p-chart>
+            <!-- <p-chart type="bar" [data]="data" [options]="options"></p-chart> -->
+            <p class="customText my-3">
+                Este gráfico muestra la distribución de asistentes según su tipo. Se representa el número de asistentes
+                para cada categoría, como graduados, funcionarios, docentes catedráticos, estudiantes e invitados
+                externos. Los colores vibrantes se utilizan para resaltar cada categoría, lo que facilita la
+                identificación visual. Los datos proporcionan una visión general de la composición de los asistentes en
+                el evento.
+
+            </p>
+        </div>
+
+        <div class="col-12 mb-2">
+            <div class="text-center" style="background-color:#cfcfcf;">
+                <span class="customTitle">Población Beneficiada</span>
+            </div>
+            <div *ngIf="asistenciaGrafico && asistenciaGrafico?.conteo?.length">
+                <p-table [value]="asistenciaGrafico.conteo" responsiveLayout="scroll">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th class="customLabel" style="width: 40px;">Indice</th>
+                            <th class="customLabel">Tipo</th>
+                            <th class="customLabel">Cantidad</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-asistencia let-rowIndex="rowIndex">
+                        <tr>
+                            <td class="customText">{{rowIndex + 1 }}</td>
+                            <td class="customText">
+                                {{asistencia.name === "graduados" ? "Graduados" : asistencia.name === "funcionarios" ?
+                                "Funcionarios" : asistencia.name}}
+                            </td>
+                            <td class="customText">{{asistencia.cantidad}}</td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+        </div>
+        <div class="col-12 mb-2" *ngIf="asistenciaGrafico">
+            <div class="text-center" style="background-color:#cfcfcf;">
+                <span class="customTitle">Impactos Uniguajira</span>
+            </div>
+            <div *ngIf="asistenciaGrafico && asistenciaGrafico?.impactos?.length">
+                <p-table [value]="asistenciaGrafico.impactos" responsiveLayout="scroll">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th class="customLabel" style="width: 40px;">Indice</th>
+                            <th class="customLabel">Impacto</th>
+                            <th class="customLabel">Si</th>
+                            <th class="customLabel">No</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-asistencia let-rowIndex="rowIndex">
+                        <tr>
+                            <td class="customText">{{rowIndex + 1 }}</td>
+                            <td class="customText">{{asistencia.name}}</td>
+                            <td class="customText">{{asistencia.si}}</td>
+                            <td class="customText">{{asistencia.no}}</td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+        </div>
+        <div class="col-12 flex justify-content-center align-items-center gap-3">
+            <button pButton pRipple type="button" label="Volver" class="p-button-outlined p-button-danger"
+                (click)="closeDisplay.emit()"></button>
+        </div>
+    </div>
+</p-dialog>

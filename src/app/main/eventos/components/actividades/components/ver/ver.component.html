@@ -8,7 +8,7 @@
                     styleClass="p-datatable-customers" [rowHover]="true" [rows]="50" [showCurrentPageReport]="true"
                     [loading]="loading" responsiveLayout="scroll" [paginator]="true" [rowsPerPageOptions]="[10,25,50]"
                     currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros" [filterDelay]="0"
-                    [globalFilterFields]="['nombre_actividad']" responsiveLayout="scroll">
+                    [globalFilterFields]="['nombre_actividad','id']" responsiveLayout="scroll">
                     <ng-template pTemplate="caption">
                         <div class="table-header">
                             <div class="grid" [style]="{'display': 'flex', 'justify-content': 'space-between'}">
@@ -20,7 +20,7 @@
                                         <i class="pi pi-search"></i>
                                         <input [style]="{'width':'100%'}" pInputText type="text"
                                             (input)="dt.filterGlobal(getEventValue($event), 'contains')"
-                                            placeholder="Filtrar por nombre" />
+                                            placeholder="Filtrar por nombre o No." />
                                     </span>
                                 </div>
                             </div>
@@ -32,12 +32,15 @@
                             <th style="width: 5rem">
                                 <p>Indice</p>
                             </th>
+                            <th pSortableColumn="id">
+                                No.
+                            </th>
                             <th pSortableColumn="nombre_actividad">
                                 Nombre
                             </th>
-                            <th style="width: 3rem;text-align: center" title="Seguimiento"> SEG </th>
                             <th style="width: 3rem;text-align: center" title="Reporte"> REP </th>
-                            <th style="width: 3rem;text-align: center" title="Asistencia"> ASI </th>
+                            <th style="width: 3rem;text-align: center" title="Grafico Asistencia"> GRA </th>
+                            <th style="width: 3rem;text-align: center" title="Listado Asistencia"> ASI </th>
                             <th style="width: 3rem;text-align: center" title="Evidencia"> EVI </th>
                         </tr>
                     </ng-template>
@@ -47,11 +50,10 @@
                                 {{rowIndex + 1 }}
                             </td>
                             <td>
-                                {{actividad.nombre_actividad}}
+                                {{actividad.id}}
                             </td>
-                            <td style="text-align: center;">
-                                <button pButton type="button" icon="pi pi-eye" class="p-button-secondary"
-                                    (click)="changeDisplayDetail(actividad.id)" title="Seguimiento"></button>
+                            <td>
+                                {{actividad.nombre_actividad}}
                             </td>
                             <td style="text-align: center;">
                                 <button type="button" pButton pRipple icon="pi pi-file-pdf" class="mr-2"
@@ -59,12 +61,19 @@
                                     (click)="changeDisplayReporte(actividad.id)"></button>
                             </td>
                             <td style="text-align: center;">
-                                <button type="button" pButton pRipple icon="pi pi-list" class="p-button-success mr-2"
-                                    tooltipPosition="bottom" title="Asistencia"></button>
+                                <button type="button" pButton pRipple icon="pi pi-chart-bar" class="p-button-help mr-2"
+                                    tooltipPosition="bottom" title="Grafico Asistencia"
+                                    (click)="changeDisplayGrafico(actividad.id)"></button>
                             </td>
                             <td style="text-align: center;">
-                                <button type="button" pButton pRipple icon="pi pi-folder-open" class="p-button-warning mr-2"
-                                    tooltipPosition="bottom" title="Evidencia"></button>
+                                <button type="button" pButton pRipple icon="pi pi-list" class="p-button-success mr-2"
+                                    tooltipPosition="bottom" title="Listado Asistencia"
+                                    (click)="changeDisplayAsistencia(actividad.id)"></button>
+                            </td>
+                            <td style="text-align: center;">
+                                <button type="button" pButton pRipple icon="pi pi-folder-open"
+                                    class="p-button-warning mr-2" tooltipPosition="bottom" title="Evidencia"
+                                    (click)="changeDisplayEvidencias(actividad.id)"></button>
                             </td>
                         </tr>
                     </ng-template>
@@ -79,8 +88,17 @@
     </div>
 </app-card>
 
-<app-dialog-seguimiento [displayDetail]="displayDetail" [width]="width" [actividad]="actividad" [servicios]="servicios"
-    [responsables]="responsables" (closeDisplayDetail)="closeDisplayDetail()"></app-dialog-seguimiento>
 
 <app-dialog-reporte [display]="displayReporte" [width]="width" [actividad]="actividad" [servicios]="servicios"
-    [responsables]="responsables" (closeDisplay)="closeDisplayReporte()"></app-dialog-reporte>
+    [responsables]="responsables" [asistencias]="asistencias"
+    (closeDisplay)="closeDisplayReporte()"></app-dialog-reporte>
+
+<app-dialog-asistencias [display]="displayAsistencia" [width]="width" [asistenciaDetalle]="asistenciaDetalle"
+    (closeDisplay)="closeDisplayAsistencia()"></app-dialog-asistencias>
+
+<app-dialog-grafico [display]="displayGrafico" [width]="width" [asistenciaGrafico]="asistenciaGrafico"
+    (closeDisplay)="closeDisplayGrafico()"></app-dialog-grafico>
+
+<app-dialog-evidencias [display]="displayEvidencias"
+    [actividad]="actividad" [width]="width"
+    (closeDisplay)="closeDisplayEvidencias()"></app-dialog-evidencias>

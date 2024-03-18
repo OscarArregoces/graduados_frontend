@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Actividad, Responsable, Servicio } from 'src/app/models/main/eventos.interface';
+import { Actividad, Asistencia, Responsable, Servicio } from 'src/app/models/main/eventos.interface';
 
 @Component({
   selector: 'app-dialog-reporte',
@@ -15,10 +15,15 @@ export class DialogReporteComponent implements OnInit {
   @Input() actividad: Actividad | null = null;
   @Input() servicios: Servicio[] = [];
   @Input() responsables: Responsable[] = [];
+  @Input() asistencias: Asistencia [] = [];
 
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  redirigirAEnlace(enlace: string | undefined) {
+    window.open(enlace, '_blank');
   }
 
 }

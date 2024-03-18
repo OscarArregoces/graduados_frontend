@@ -3,7 +3,7 @@ import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { catchError } from 'rxjs';
 import { EventosService } from 'src/app/core/services/dashboard/eventos.service';
 import { ValidForm } from 'src/app/helpers/validForms';
-import { Actividad, UserEvento } from 'src/app/models/main/eventos.interface';
+import { Actividad, UserEvento, Vinculacion } from 'src/app/models/main/eventos.interface';
 import { environment } from 'src/environments/environment';
 import Swal from 'sweetalert2';
 
@@ -24,11 +24,11 @@ export class BusquedaManualComponent implements OnInit {
   public actividad: Actividad | null = null;
   public persona: UserEvento | null = null;
   public user_id: number | null = null;
-  public tipoVinculacion: string[] = [
-    'Docente catedrático',
-    'Docente ocasional y/o planta',
-    'Estudiante',
-    'Invitado externo',
+  public tipoVinculacion: Vinculacion[] = [
+    Vinculacion.DocenteCatedratico,
+    Vinculacion.DocenteOcasional,
+    Vinculacion.Estudiante,
+    Vinculacion.InvitadoExterno,
   ]
 
   public formActividad = this.fb.group({
@@ -60,15 +60,13 @@ export class BusquedaManualComponent implements OnInit {
       this.eventosService.get(`${this.API_URI}/eventos/detalle/${id_actividad}/`, this.token)
         .pipe(
           catchError(error => {
-            this.persona = null;
             this.actividad = null;
-            this.formExterno.reset();
-            this.formUser.reset();
+            this.resetForms();
             if (error.error.errors.errors === "Evento no encontrado") {
               Swal.fire({
                 icon: "error",
-                title: "Oops...",
-                text: "Evento no encontrado",
+                title: "Actividad no encontrada",
+                text: "Esta Actividad no existe, verifica el No. de Actividad",
                 showConfirmButton: false,
                 timer: 2500,
                 allowOutsideClick: false,
@@ -77,8 +75,12 @@ export class BusquedaManualComponent implements OnInit {
             } else {
               Swal.fire({
                 icon: "error",
-                title: "Oops...",
-                text: "Hubo un Problema",
+                title: "¡Atención!",
+                html: `
+                <p>Hubo un problema</p>
+                <p style='font-weight:bold;'>Si este inconveniente persiste, por favor contáctanos para que podamos resolverlo lo antes posible. Lamentamos cualquier inconveniente que esto pueda causar.</p>
+                <p>¡Gracias por tu comprensión y paciencia!</p>
+                `,
                 showConfirmButton: false,
                 timer: 2500,
                 allowOutsideClick: false,
@@ -101,13 +103,12 @@ export class BusquedaManualComponent implements OnInit {
       this.eventosService.get(`${this.API_URI}/users/eventos/${document}/`, this.token)
         .pipe(
           catchError(error => {
-            this.persona = null;
-            this.user_id = null;
+            this.resetForms();
             if (error.error.errors.error === "Persona no encontrada") {
               Swal.fire({
                 icon: "warning",
-                title: "Oops...",
-                text: "Persona no encontrada",
+                title: "Persona no encontrada",
+                text: "No pudimos encontrarte, verifica el No. de Documento",
                 showConfirmButton: false,
                 timer: 2500,
                 allowOutsideClick: false,
@@ -116,10 +117,14 @@ export class BusquedaManualComponent implements OnInit {
             } else {
               Swal.fire({
                 icon: "error",
-                title: "Oops...",
-                text: "Hubo un problema",
+                title: "¡Atención!",
+                html: `
+                <p>Hubo un problema</p>
+                <p style='font-weight:bold;'>Si este inconveniente persiste, por favor contáctanos para que podamos resolverlo lo antes posible. Lamentamos cualquier inconveniente que esto pueda causar.</p>
+                <p>¡Gracias por tu comprensión y paciencia!</p>
+                `,
                 showConfirmButton: false,
-                timer: 1500,
+                timer: 2500,
                 allowOutsideClick: false,
                 timerProgressBar: true
               });
@@ -146,11 +151,12 @@ export class BusquedaManualComponent implements OnInit {
       this.eventosService.post(`${this.API_URI}/eventos/asistencias/${this.actividad?.id}/`, body, this.token)
         .pipe(
           catchError(error => {
+            this.resetForms();
             if (error.error.errors.error === "Actividad no existe") {
               Swal.fire({
                 icon: "error",
-                title: "Oops...",
-                text: "Evento no encontrado",
+                title: "Actividad no encontrada",
+                text: "Esta Actividad no existe, verifica el No. de Actividad",
                 showConfirmButton: false,
                 timer: 2500,
                 allowOutsideClick: false,
@@ -160,8 +166,8 @@ export class BusquedaManualComponent implements OnInit {
             else if (error.error.errors.error === "Esta actividad aún no ha iniciado") {
               Swal.fire({
                 icon: "warning",
-                title: "Oops...",
-                text: "Esta actividad aún no ha iniciado",
+                title: "La actividad aún no ha comenzado o ya ha finalizado",
+                text: "Por favor, asegúrate de intentarlo nuevamente durante el horario designado de la actividad. Gracias por tu comprensión.",
                 showConfirmButton: false,
                 timer: 2500,
                 allowOutsideClick: false,
@@ -171,8 +177,8 @@ export class BusquedaManualComponent implements OnInit {
             else if (error.error.errors.error === "Esta actividad ya ha finalizado") {
               Swal.fire({
                 icon: "warning",
-                title: "Oops...",
-                text: "Esta actividad ya ha finalizado",
+                title: "La actividad aún no ha comenzado o ya ha finalizado",
+                text: "Por favor, asegúrate de intentarlo nuevamente durante el horario designado de la actividad. Gracias por tu comprensión.",
                 showConfirmButton: false,
                 timer: 2500,
                 allowOutsideClick: false,
@@ -182,8 +188,8 @@ export class BusquedaManualComponent implements OnInit {
             else if (error.error.errors.error === "Usted ya esta inscrito a esta actividad") {
               Swal.fire({
                 icon: "warning",
-                title: "Oops...",
-                text: "Usted ya esta inscrito a esta actividad",
+                title: "Parece que ya has confirmado tu asistencia anteriormente para esta actividad",
+                text: "No es necesario volver a hacerlo. Si tienes alguna pregunta o necesitas ayuda adicional, por favor no dudes en ponerte en contacto con nosotros. ¡Gracias!",
                 showConfirmButton: false,
                 timer: 2500,
                 allowOutsideClick: false,
@@ -192,8 +198,12 @@ export class BusquedaManualComponent implements OnInit {
             } else {
               Swal.fire({
                 icon: "error",
-                title: "Oops...",
-                text: "Hubo un Problema",
+                title: "¡Atención!",
+                html: `
+                <p>Hubo un problema</p>
+                <p style='font-weight:bold;'>Si este inconveniente persiste, por favor contáctanos para que podamos resolverlo lo antes posible. Lamentamos cualquier inconveniente que esto pueda causar.</p>
+                <p>¡Gracias por tu comprensión y paciencia!</p>
+                `,
                 showConfirmButton: false,
                 timer: 2500,
                 allowOutsideClick: false,
@@ -217,10 +227,7 @@ export class BusquedaManualComponent implements OnInit {
             allowOutsideClick: false,
             timerProgressBar: true,
           });
-          this.persona = null;
-          this.user_id = null;
-          this.formUser.reset();
-          this.formExterno.reset()
+          this.resetForms();
         })
     }
   }
@@ -239,6 +246,7 @@ export class BusquedaManualComponent implements OnInit {
       this.eventosService.post(`${this.API_URI}/eventos/asistencias/externos/`, body, this.token)
         .pipe(
           catchError(error => {
+            this.resetForms();
             if (error.error.errors.error === "Usted ya esta inscrito a esta actividad") {
               Swal.fire({
                 icon: "warning",
@@ -252,8 +260,8 @@ export class BusquedaManualComponent implements OnInit {
             } else if (error.error.errors.error === "Esta actividad aún no ha iniciado") {
               Swal.fire({
                 icon: "warning",
-                title: "Oops...",
-                text: "Esta actividad aún no ha iniciado",
+                title: "La actividad aún no ha comenzado o ya ha finalizado",
+                text: "Por favor, asegúrate de intentarlo nuevamente durante el horario designado de la actividad. Gracias por tu comprensión.",
                 showConfirmButton: false,
                 timer: 2500,
                 allowOutsideClick: false,
@@ -263,8 +271,8 @@ export class BusquedaManualComponent implements OnInit {
             else if (error.error.errors.error === "Esta actividad ya ha finalizado") {
               Swal.fire({
                 icon: "warning",
-                title: "Oops...",
-                text: "Esta actividad ya ha finalizado",
+                title: "La actividad aún no ha comenzado o ya ha finalizado",
+                text: "Por favor, asegúrate de intentarlo nuevamente durante el horario designado de la actividad. Gracias por tu comprensión.",
                 showConfirmButton: false,
                 timer: 2500,
                 allowOutsideClick: false,
@@ -289,12 +297,7 @@ export class BusquedaManualComponent implements OnInit {
           })
         )
         .subscribe(res => {
-
-          this.persona = null;
-          this.user_id = null;
-          this.formExterno.reset();
-          this.formUser.reset();
-
+          this.resetForms();
           Swal.fire({
             icon: "success",
             title: "¡Asistencia Exitosa!",
@@ -313,12 +316,16 @@ export class BusquedaManualComponent implements OnInit {
   }
 
   handleClickVolver() {
+    this.actividad = null;
+    this.resetForms();
+    this.resetOptionSelected.emit()
+  }
+
+  resetForms() {
     this.persona = null;
     this.user_id = null;
-    this.actividad = null;
     this.formExterno.reset();
     this.formUser.reset();
-    this.resetOptionSelected.emit()
   }
 
 }

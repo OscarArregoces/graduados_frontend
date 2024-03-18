@@ -54,7 +54,7 @@
                                 <span class="p-inputgroup-addon"><i class="pi pi-sitemap"></i></span>
                                 <p-dropdown [style]="{'width':'100%'}" [options]="roles"
                                     placeholder="Selecciona una opcion" formControlName="rol"
-                                    optionLabel="name"></p-dropdown>
+                                    ></p-dropdown>
                             </div>
                             <div *ngIf="formVinculacion.get('rol')?.hasError('required') && formVinculacion.get('rol')?.touched"
                                 class="text-red-500 my-1 text-left">

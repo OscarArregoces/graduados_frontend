@@ -1,9 +1,6 @@
 import { Sede } from "./Inicio.interface";
 
-export interface Modalidad {
-    id: number;
-    name: string;
-}
+
 export interface Dependencia {
     id: number;
     name: string;
@@ -100,4 +97,61 @@ export interface MiActividad {
 export enum OptionAsistencia {
     MethodQr = 1,
     MethodSearch = 2
+}
+
+export enum Modalidad {
+    Presencial = "Presencial",
+    Virtual = "Virtual",
+    Híbrida = "Híbrida",
+}
+export enum Vinculacion {
+    DocenteCatedratico = "Docente catedrático",
+    DocenteOcasional = "Docente ocasional y/o planta",
+    Estudiante = "Estudiante",
+    InvitadoExterno = "Invitado externo",
+}
+export enum RolPonente {
+    Organizador = 'Organizador',
+    Ponente = 'Ponente',
+    PonenteMagistral = 'Ponente Magistral',
+    Moderador = 'Moderador',
+    Asistente = 'Asistente',
+}
+export enum Certificacion {
+    Certificable = 'Certificable',
+    NoCertificable = 'No Certificable',
+}
+
+export interface Asistencia {
+    name: string;
+    cantidad: number;
+}
+export interface AsistenciaGrafico {
+    conteo: Asistencia[],
+    impactos: { name: string, si: number, no: number; }[],
+}
+export interface AsistenciaDetalle {
+    conteo: Asistencia[],
+    impactos: { name: string, si: number, no: number; }[],
+    asistencia: {
+        confirmacion: boolean;
+        asistencia: boolean;
+        fullname: string;
+        email: string;
+        phone: string;
+        graduado: boolean;
+        funcionario: boolean;
+    }[];
+    asistencia_externos: {
+        fullname: string;
+        email: string;
+        phone: string;
+    }[];
+}
+
+export interface Evidencia {
+    id?: number;
+    actividad?: number;
+    titulo: string;
+    archivo: File | string;
 }

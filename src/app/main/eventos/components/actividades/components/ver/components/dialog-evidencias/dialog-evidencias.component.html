@@ -1,0 +1,73 @@
+<p-dialog header="Evidencias Actividad" [(visible)]="display"
+    [style]="{'width': width,'text-aling': 'center', 'min-height':'80vh','background-color':'#f4f4f4'}"
+    [showHeader]="true" [modal]="true" [dismissableMask]="false" [maximizable]="true" (onHide)="handleCloseDialog()">
+    <div class=" grid border-1 border-gray-100">
+        <div class="col-12">
+            <app-custom-info-card [description]="infoCardDescription" [variant]="variantColor"></app-custom-info-card>
+        </div>
+        <div class="col-12 flex flex-column justify-content-center align-items-start">
+            <span class="customLabel">Nombre Actividad</span>
+            <span class="customText">{{ actividad?.nombre_actividad}}</span>
+        </div>
+        <div class="col-12" *ngIf="evidencias.length">
+            <p-table [value]="evidencias" responsiveLayout="scroll">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th class="customLabel" style="width: 40px;">Indice</th>
+                        <th class="customLabel">Legenda</th>
+                        <th class="customLabel" style="width: 40px;">Ver</th>
+                        <th class="customLabel" style="width: 40px;">Eliminar</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-evidencia let-rowIndex="rowIndex">
+                    <tr>
+                        <td class="customText">{{rowIndex + 1 }}</td>
+                        <td class="customText">{{evidencia.titulo}}</td>
+                        <td class="customText">
+                            <a href="{{API_URI}}{{evidencia.archivo}}" target="_blank">
+                                <button pButton pRipple type="button" icon="pi pi-paperclip"
+                                    class="p-button-raised p-button-secondary m-1"></button>
+                            </a>
+                        </td>
+                        <td class="customText">
+                            <p-confirmPopup></p-confirmPopup>
+                            <button pButton pRipple type="button" icon="pi pi-trash"
+                                class="p-button-raised p-button-danger m-1"
+                                (click)="confirm($event, rowIndex)"></button>
+                        </td>
+
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+        <div class="col-12 flex flex-column justify-content-center align-items-start gap-3"
+            *ngIf="evidencias.length <= 4">
+            <form [formGroup]="form" class="w-full flex flex-column justify-content-center align-items-start p-3"
+                style="background-color: #f4f4f4">
+                <div class="w-full flex flex-column gap-2 mb-3">
+                    <label class="customLabel">Descripción</label>
+                    <div class="p-inputgroup">
+                        <span class="p-inputgroup-addon"><i class="pi pi-cloud-upload"></i></span>
+                        <input type="text" class="w-full" maxlength="256" placeholder="Ejemplo: Evidencia"
+                            formControlName="titulo" pInputText />
+                    </div>
+                    <div *ngIf="form.get('titulo')?.hasError('required') && form.get('titulo')?.touched"
+                        class="text-red-500 my-1 text-left">
+                        Ingresa un titulo
+                    </div>
+                </div>
+                <p-fileUpload #fileUpload [maxFileSize]="5242880" name="anexo" (onSelect)="adjuntarArchivo($event)"
+                    [showUploadButton]="false" [showCancelButton]="false" chooseLabel="Cargar Archivo"
+                    chooseIcon="pi pi-cloud-upload"></p-fileUpload>
+                <button pButton pRipple type="submit" label="Agregar" icon="pi pi-plus" class="p-button-secondary"
+                    (click)="handleAddFile()"></button>
+            </form>
+        </div>
+        <div class="col-12 flex justify-content-center align-items-center gap-3">
+            <button pButton pRipple type="button" label="Guardar Cambios" icon="pi pi-save" class="p-button-success"
+                (click)="onSubmit()"></button>
+            <button pButton pRipple type="button" label="Volver" class="p-button-outlined p-button-danger"
+                (click)="handleCloseDialog()"></button>
+        </div>
+    </div>
+</p-dialog>

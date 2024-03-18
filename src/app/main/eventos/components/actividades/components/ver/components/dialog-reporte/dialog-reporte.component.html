@@ -1,69 +1,133 @@
 <!-- <img src="assets/images/Uniguaijra_lateral.png" alt="Uniguajira" style="height: auto; width: auto;"> -->
 
 <p-dialog header="Reporte Actividad" [(visible)]="display"
-    [style]="{'width': '80%','text-aling': 'center', 'min-height':'80vh'}" [showHeader]="true" [modal]="true"
-    [dismissableMask]="false" (onHide)="closeDisplay.emit()">
+    [style]="{'width': '80%','text-aling': 'center', 'min-height':'80vh','background-color':'#f4f4f4'}"
+    [showHeader]="true" [modal]="true" [dismissableMask]="false" [maximizable]="true" (onHide)="closeDisplay.emit()">
 
-    <div class="grid my-2 shadow-3">
+    <div class="grid border-1 border-gray-100">
         <div class="col-12 text-center" style="background-color:#cfcfcf;">
-            <span class="font-bold">DATOS GENERALES</span>
+            <span class="customTitle">DATOS GENERALES</span>
         </div>
         <div class="col-12">
             <div class="grid">
-                <div class="col-12 flex flex-column justify-content-center align-items-start">
-                    <label class="" [style]="{'font-weight': 'bold'}">Nombre de Actividad </label>
-                    <span>{{actividad?.nombre_actividad}}</span>
-                </div>
-                <div class="col-7">
-                    <label class="mb-2" [style]="{'font-weight': 'bold'}">Fecha </label>
-                    {{ actividad?.fecha_inicio | date:"dd MMMM, yyyy hh:mm a" |
-                    titlecase }}
-                </div>
-                <div class="col-5">
-                    <label [style]="{'font-weight': 'bold'}">No. 10725</label>
-                </div>
-                <div class="col-7 flex flex-column justify-content-center align-items-start">
+                <div class="col-12 mb-3
+                flex flex-column justify-content-center align-items-start
+                md:flex md:flex-row md:justify-content-between md:align-items-center
+                lg:flex lg:flex-row lg:justify-content-between lg:align-items-center
+                ">
                     <div class="flex flex-column justify-content-center align-items-start">
-                        <label [style]="{'font-weight': 'bold'}">Tipo de Actividad </label>
-                        <span>{{actividad?.tipo_actividad?.name}}</span>
+                        <label class="customLabel">Nombre de Actividad </label>
+                        <span class="customText">{{actividad?.nombre_actividad}}</span>
+                    </div>
+                    <label class="customLabel mr-5">No. {{ actividad?.id}}</label>
+                </div>
+                <div class="col-12 mb-3 
+                flex flex-column justify-content-center align-items-start
+                md:flex md:flex-row md:justify-content-between md:align-items-center
+                lg:flex lg:flex-row lg:justify-content-between lg:align-items-center
+                ">
+                    <div class="flex flex-column justify-content-center align-items-start">
+
+                        <div class="flex flex-column justify-content-center align-items-start">
+                            <label class="customLabel">Fecha </label>
+                            <div class=" customText flex-row justify-content-center align-items-center gap-1">
+                                <span class="">{{ actividad?.fecha_inicio | date:"dd MMMM, yyyy hh:mm a" |
+                                    titlecase }}</span>
+                                al
+                                <span class="">{{ actividad?.fecha_final | date:"dd MMMM, yyyy hh:mm a" |
+                                    titlecase }}</span>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-column justify-content-center align-items-start">
+                            <label class="customLabel">Sede </label>
+                            <span class="customText">{{actividad?.sede?.name}}</span>
+                        </div>
+                        <div class="flex flex-column justify-content-center align-items-start">
+                            <label class="customLabel">Dependencia </label>
+                            <span class="customText">{{actividad?.dependencia?.name}}</span>
+                        </div>
                     </div>
                     <div class="flex flex-column justify-content-center align-items-start">
-                        <label [style]="{'font-weight': 'bold'}">Area </label>
-                        <span>{{actividad?.area?.name}}</span>
+                        <div class="flex flex-column justify-content-center align-items-start">
+                            <label class="customLabel">Modalidad</label>
+                            <span class="customText">
+                                {{actividad?.modalidad}}
+                            </span>
+                        </div>
+                        <div class="flex flex-column justify-content-center align-items-start"
+                            *ngIf="actividad?.modalidad ==='Presencial' || actividad?.modalidad === 'Híbrida'">
+                            <label class="customLabel">Dirección</label>
+                            <span class="customText">
+                                {{actividad?.direccion}}
+                            </span>
+                        </div>
+                        <div class="flex flex-row justify-content-start align-items-center"
+                            *ngIf="actividad?.modalidad ==='Virtual' || actividad?.modalidad === 'Híbrida'">
+                            <label class="customLabel">Enlace de reunión</label>
+                            <button pButton pRipple type="button" icon="pi pi-link"
+                                class="p-button-rounded p-button-secondary p-button-text"
+                                (click)="redirigirAEnlace(actividad?.enlace_reunion)">
+                            </button>
+                        </div>
                     </div>
                     <div class="flex flex-column justify-content-center align-items-start">
-                        <label [style]="{'font-weight': 'bold'}">Subarea </label>
-                        <span>{{actividad?.subarea?.name}}</span>
+                        <div class="flex flex-column justify-content-center align-items-start">
+                            <label class="customLabel">Tipo de Actividad </label>
+                            <span class="customText">{{actividad?.tipo_actividad?.name}}</span>
+                        </div>
+                        <div class="flex flex-column justify-content-center align-items-start">
+                            <label class="customLabel">Area </label>
+                            <span class="customText">{{actividad?.area?.name}}</span>
+                        </div>
+                        <div class="flex flex-column justify-content-center align-items-start">
+                            <label class="customLabel">Subarea </label>
+                            <span class="customText">{{actividad?.subarea?.name}}</span>
+                        </div>
                     </div>
                 </div>
-                <div class="col-5 flex flex-column justify-content-center align-items-start">
-                    <label class="" [style]="{'font-weight': 'bold'}">Estado de Actividad </label>
-                    <span>{{actividad?.estado_actividad?.name}}</span>
+
+                <div class="col-12 flex flex-column justify-content-center align-items-start">
+                    <label class="customLabel">Objetivo </label>
+                    <span class="customText">{{actividad?.objetivo}}</span>
                 </div>
                 <div class="col-12 flex flex-column justify-content-center align-items-start">
-                    <label class="" [style]="{'font-weight': 'bold'}">Objetivo </label>
-                    <span>{{actividad?.objetivo}}</span>
+                    <label class="customLabel">Descripción </label>
+                    <span class="customText">{{actividad?.descripcion}}</span>
                 </div>
-                <div class="col-12 flex flex-column justify-content-center align-items-start">
-                    <label class="" [style]="{'font-weight': 'bold'}">Descripción </label>
-                    <span>{{actividad?.descripcion}}</span>
+
+                <div class="col-12 mb-3 
+                flex flex-column justify-content-center align-items-start
+                md:flex md:flex-row md:justify-content-between md:align-items-center
+                lg:flex lg:flex-row lg:justify-content-between lg:align-items-center
+                ">
+                    <div class="flex flex-column justify-content-center align-items-start">
+                        <label class="customLabel">Solicitante </label>
+                        <span class="customText">{{actividad?.userCreate?.person?.fullname}}</span>
+                    </div>
+                    <div class="flex flex-column justify-content-center align-items-start">
+                        <label class="customLabel">Estado de Actividad </label>
+                        <span class="customText">{{actividad?.estado_actividad?.name}}</span>
+                    </div>
                 </div>
+
+
             </div>
         </div>
         <div class="col-12 text-center" style="background-color:#cfcfcf;">
-            <span class="font-bold">RESPONSABLES</span>
+            <span class="customTitle">RESPONSABLES</span>
         </div>
         <div class="col-12">
             <p-table [value]="responsables" responsiveLayout="scroll" *ngIf="responsables.length">
                 <ng-template pTemplate="header">
                     <tr>
-                        <th class="customText">Indice</th>
-                        <th class="customText">Nombres y Apellidos</th>
-                        <th class="customText">Correo</th>
-                        <th class="customText">Telefono</th>
-                        <th class="customText">Vinculación</th>
-                        <th class="customText">Rol</th>
-                        <th class="customText">Dedicación (Horas)</th>
+                        <th class="customLabel" style="width: 40px;">Indice</th>
+                        <th class="customLabel">Nombres y Apellidos</th>
+                        <th class="customLabel">Correo</th>
+                        <th class="customLabel">Telefono</th>
+                        <th class="customLabel">Vinculación</th>
+                        <th class="customLabel">Rol</th>
+                        <th class="customLabel">Dedicación (Horas)</th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-responsable let-rowIndex="rowIndex">
@@ -81,14 +145,14 @@
             </p-table>
         </div>
         <div class="col-12 text-center" style="background-color:#cfcfcf;">
-            <span class="font-bold">SOLICITUDES DE APOYO LOGÍSTICO</span>
+            <span class="customTitle">SOLICITUDES DE APOYO LOGÍSTICO</span>
         </div>
         <div class="col-12">
             <p-table [value]="servicios" responsiveLayout="scroll" *ngIf="servicios.length">
                 <ng-template pTemplate="header">
                     <tr>
-                        <th class="customText">Indice</th>
-                        <th class="customText">Servicio</th>
+                        <th class="customLabel" style="width: 40px;">Indice</th>
+                        <th class="customLabel">Servicio</th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-servicio let-rowIndex="rowIndex">
@@ -100,9 +164,29 @@
             </p-table>
         </div>
         <div class="col-12 text-center" style="background-color:#cfcfcf;">
-            <span class="font-bold">POBLACIÓN BENEFICIADA</span>
+            <span class="customTitle">POBLACIÓN BENEFICIADA</span>
+        </div>
+        <div class="col-12">
+            <p-table [value]="asistencias" responsiveLayout="scroll" *ngIf="asistencias.length">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th class="customLabel" style="width: 40px;">Indice</th>
+                        <th class="customLabel">Tipo</th>
+                        <th class="customLabel">Cantidad</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-asistencia let-rowIndex="rowIndex">
+                    <tr>
+                        <td class="customText">{{rowIndex + 1 }}</td>
+                        <td class="customText">{{asistencia.name}}</td>
+                        <td class="customText">{{asistencia.cantidad}}</td>
+                    </tr>
+                </ng-template>
+            </p-table>
         </div>
         <div class="col-12 flex justify-content-center align-items-center gap-3">
+            <button pButton pRipple type="button" label="Descargar" class="p-button p-button-success"
+                icon="pi pi-download"></button>
             <button pButton pRipple type="button" label="Volver" class="p-button-outlined p-button-danger"
                 (click)="closeDisplay.emit()"></button>
         </div>

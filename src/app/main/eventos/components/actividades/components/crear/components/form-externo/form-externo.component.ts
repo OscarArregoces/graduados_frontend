@@ -1,7 +1,7 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { ValidForm } from 'src/app/helpers/validForms';
-import { Responsable } from 'src/app/models/main/eventos.interface';
+import { Responsable, RolPonente, Vinculacion } from 'src/app/models/main/eventos.interface';
 
 @Component({
   selector: 'app-form-externo',
@@ -14,21 +14,18 @@ export class FormExternoComponent implements OnInit {
 
   public responsables: any[] = [];
 
-  public roles: any[] = [
-    { id: 1, name: 'Organizador' },
-    { id: 2, name: 'Ponente' },
-    { id: 3, name: 'Ponente Magistral' },
-    { id: 4, name: 'Moderador' },
-    { id: 5, name: 'Asistente' },
+  public roles: RolPonente[] = [
+    RolPonente.Organizador,
+    RolPonente.Ponente,
+    RolPonente.PonenteMagistral,
+    RolPonente.Moderador,
+    RolPonente.Asistente,
   ];
-  public tipoVinculacion: any[] = [
-    { id: 1, name: 'Docente catedrático' },
-    { id: 2, name: 'Docente ocasional y/o planta' },
-    { id: 3, name: 'Estudiante' },
-    // { id: 4, name: 'Administrativo' },
-    // { id: 5, name: 'Graduado' },
-    // { id: 6, name: 'Directivo' },
-    { id: 7, name: 'Invitado externo' },
+  public tipoVinculacion: Vinculacion[] = [
+    Vinculacion.DocenteCatedratico,
+    Vinculacion.DocenteOcasional,
+    Vinculacion.Estudiante,
+    Vinculacion.InvitadoExterno,
   ];
 
 
@@ -57,8 +54,8 @@ export class FormExternoComponent implements OnInit {
         document: this.formPonentes.value.document,
         email: this.formPonentes.value.email,
         phone: this.formPonentes.value.phone,
-        vinculacion: this.formPonentes.value.vinculacion.name,
-        rol: this.formPonentes.value.rol.name,
+        vinculacion: this.formPonentes.value.vinculacion,
+        rol: this.formPonentes.value.rol,
         dedicacion: this.formPonentes.value.dedicacion,
       })
     }

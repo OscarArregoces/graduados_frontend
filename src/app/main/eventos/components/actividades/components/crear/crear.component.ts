@@ -21,11 +21,11 @@ export class CrearComponent implements OnInit, OnDestroy {
   API_URI = environment.API_URI;
 
   public modalidades: Modalidad[] = [
-    { id: 1, name: 'Presencial' },
-    { id: 2, name: 'Virtual' },
-    { id: 3, name: 'Híbrida ' },
+    Modalidad.Presencial,
+    Modalidad.Virtual,
+    Modalidad.Híbrida
   ];
-  
+
   public token: any;
   public width: string = '';
   public displayFormPonentes: boolean = false;
@@ -92,6 +92,7 @@ export class CrearComponent implements OnInit, OnDestroy {
 
   onSubmit() {
     ValidForm(this.form);
+    
     if (this.responsables.length === 0) {
       return this.messageService.add({ severity: 'warn', summary: 'Aviso', detail: 'Agregue un responsable' })
     }
@@ -125,7 +126,7 @@ export class CrearComponent implements OnInit, OnDestroy {
           descripcion,
           objetivo,
           servicios: servicios.map((servicio: Servicio) => servicio.id),
-          modalidad: modalidad.name,
+          modalidad,
           sede: sede.id,
           dependencia: dependencia.id,
           enlace_reunion: enlace_reunion ? enlace_reunion : "",

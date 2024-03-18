@@ -2,9 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder } from '@angular/forms';
 import { Subscription, catchError } from 'rxjs';
 import { EventosService } from 'src/app/core/services/dashboard/eventos.service';
-import { DataFetchingService } from 'src/app/core/services/main/data-fetching.service';
 import { PantallaService } from 'src/app/core/services/pantalla.service';
-import { Actividad, ActividadTable, Responsable, ResponsableVinculacion, Servicio } from 'src/app/models/main/eventos.interface';
+import { Actividad, ActividadTable, Asistencia, AsistenciaDetalle, AsistenciaGrafico, Responsable, ResponsableVinculacion, Servicio } from 'src/app/models/main/eventos.interface';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -23,8 +22,10 @@ export class VerComponent implements OnInit {
   public token: any;
   public width: string = "";
   public subscription$!: Subscription;
-  public displayDetail: boolean = false;
+  public displayAsistencia: boolean = false;
   public displayReporte: boolean = false;
+  public displayGrafico: boolean = false;
+  public displayEvidencias: boolean = false;
   public loading: boolean = false;
   public itemsBulkDelete: any[] = [];
   public bulkDelete: Actividad[] = [];
@@ -32,12 +33,14 @@ export class VerComponent implements OnInit {
   public actividades: ActividadTable[] = [];
   public responsables: Responsable[] = [];
   public servicios: Servicio[] = [];
+  public asistencias: Asistencia[] = [];
+  public asistenciaDetalle: AsistenciaDetalle | null = null;
+  public asistenciaGrafico: AsistenciaGrafico | null = null;
 
 
   constructor(
     private eventosService: EventosService,
     public fb: UntypedFormBuilder,
-    private dataFetchingService: DataFetchingService,
     private pantallaService: PantallaService
   ) { }
 
@@ -55,7 +58,7 @@ export class VerComponent implements OnInit {
   changeDisplayReporte(actividad_id: number) {
     if (actividad_id) {
       this.displayReporte = !this.displayReporte;
-      this.eventosService.get(`${this.API_URI}/eventos/detalle/${actividad_id}`, this.token)
+      this.eventosService.get(`${this.API_URI}/eventos/detalle/${actividad_id}/`, this.token)
         .pipe(
           catchError(error => {
             this.actividad = null;
@@ -69,6 +72,7 @@ export class VerComponent implements OnInit {
             this.actividad = res.data.actividad[0];
             this.servicios = res.data.actividad[0].servicios;
             this.responsables = res.data.ponentes.externos;
+            this.asistencias = res.data.asistencias;
             res.data.ponentes.vinculacion.forEach((responsable: ResponsableVinculacion) => {
               this.responsables.push({
                 fullname: responsable.user.fullname,
@@ -85,10 +89,52 @@ export class VerComponent implements OnInit {
         )
     }
   }
-  changeDisplayDetail(actividad_id: number) {
+  changeDisplayAsistencia(actividad_id: number) {
     if (actividad_id) {
-      this.displayDetail = !this.displayDetail;
-      this.eventosService.get(`${this.API_URI}/eventos/detalle/${actividad_id}`, this.token)
+      this.displayAsistencia = !this.displayAsistencia;
+      this.eventosService.get(`${this.API_URI}/eventos/asistencias/detalle/${actividad_id}/`, this.token)
+        .pipe(
+          catchError(error => {
+            this.actividad = null;
+            this.responsables = [];
+            this.servicios = [];
+            this.asistencias = [];
+            this.asistenciaDetalle = null;
+            this.asistenciaGrafico = null;
+            throw error;
+          })
+        )
+        .subscribe(res => {
+          this.asistenciaDetalle = res.data;
+        }
+        )
+    }
+  }
+  changeDisplayGrafico(actividad_id: number) {
+    if (actividad_id) {
+      this.displayGrafico = !this.displayGrafico;
+      this.eventosService.get(`${this.API_URI}/eventos/asistencias/${actividad_id}/`, this.token)
+        .pipe(
+          catchError(error => {
+            this.actividad = null;
+            this.responsables = [];
+            this.servicios = [];
+            this.asistencias = [];
+            this.asistenciaDetalle = null;
+            this.asistenciaGrafico = null;
+            throw error;
+          })
+        )
+        .subscribe(res => {
+          this.asistenciaGrafico = res.data;
+        }
+        )
+    }
+  }
+  changeDisplayEvidencias(actividad_id: number) {
+    if (actividad_id) {
+      this.displayEvidencias = !this.displayEvidencias;
+      this.eventosService.get(`${this.API_URI}/eventos/detalle/${actividad_id}/`, this.token)
         .pipe(
           catchError(error => {
             this.actividad = null;
@@ -100,32 +146,29 @@ export class VerComponent implements OnInit {
         .subscribe(res => {
           if (res.data.actividad.length) {
             this.actividad = res.data.actividad[0];
-            this.servicios = res.data.actividad[0].servicios;
-            this.responsables = res.data.ponentes.externos;
-            res.data.ponentes.vinculacion.forEach((responsable: ResponsableVinculacion) => {
-              this.responsables.push({
-                fullname: responsable.user.fullname,
-                phone: responsable.user.phone,
-                email: responsable.user.email,
-                document: "",
-                rol: responsable.rol,
-                dedicacion: responsable.dedicacion,
-                vinculacion: responsable.vinculacion,
-              })
-            });
           }
         }
         )
     }
   }
-  closeDisplayDetail() {
-    this.displayDetail = false;
+  closeDisplayAsistencia() {
+    this.displayAsistencia = false;
     this.actividad = null;
     this.responsables = [];
     this.servicios = [];
   }
   closeDisplayReporte() {
     this.displayReporte = false;
+    this.responsables = [];
+    this.servicios = [];
+  }
+  closeDisplayGrafico() {
+    this.displayGrafico = false;
+    this.responsables = [];
+    this.servicios = [];
+  }
+  closeDisplayEvidencias() {
+    this.displayEvidencias = false;
     this.responsables = [];
     this.servicios = [];
   }

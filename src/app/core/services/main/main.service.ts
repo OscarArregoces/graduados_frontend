@@ -61,4 +61,17 @@ export class MainService {
     return this.http.delete(api, httpOptions);
   }
 
+  postFiles(api: any, body: any, token: any): Observable<any> {
+
+    let httpOptions = {
+      headers: new HttpHeaders({
+        // 'Content-Type': 'multipart/form-data',
+        'Authorization': `Bearer ${token}`
+      })
+    }
+
+    return this.http.post(api, body, httpOptions);
+  }
+
+
 }

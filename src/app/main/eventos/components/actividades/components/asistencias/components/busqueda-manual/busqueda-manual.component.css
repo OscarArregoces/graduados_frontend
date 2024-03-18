@@ -6,7 +6,7 @@
 
 #card-custom #card-header {
     width: 100%;
-    height: 2.1rem;
+    min-height: 2.1rem;
     border: 1px solid rgba(93, 90, 90, 0.2);
     border-radius: 5px 5px 0 0;
     background-color: #357b89;

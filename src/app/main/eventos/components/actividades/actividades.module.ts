@@ -12,12 +12,12 @@ import { MisActividadesComponent } from './components/mis-actividades/mis-activi
 import { AprobacionComponent } from './components/aprobacion/aprobacion.component';
 import { FormVinculacionComponent } from './components/crear/components/form-vinculacion/form-vinculacion.component';
 import { FormExternoComponent } from './components/crear/components/form-externo/form-externo.component';
-import { DialogSeguimientoComponent } from './components/ver/components/dialog-seguimiento/dialog-seguimiento.component';
 import { DialogReporteComponent } from './components/ver/components/dialog-reporte/dialog-reporte.component';
 import { DialogGraficoComponent } from './components/ver/components/dialog-grafico/dialog-grafico.component';
 import { AsistenciasComponent } from './components/asistencias/asistencias.component';
 import { BusquedaQrComponent } from './components/asistencias/components/busqueda-qr/busqueda-qr.component';
 import { BusquedaManualComponent } from './components/asistencias/components/busqueda-manual/busqueda-manual.component';
+import { DialogAsistenciasComponent } from './components/ver/components/dialog-asistencias/dialog-asistencias.component';
 
 import { SharedModule } from 'src/app/shared/shared.module';
 
@@ -40,8 +40,11 @@ import { MessageModule } from 'primeng/message';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TagModule } from 'primeng/tag';
 import { PanelModule } from 'primeng/panel';
+import { ChartModule } from 'primeng/chart';
+import { FileUploadModule } from 'primeng/fileupload';
 
 import { NgxScannerQrcodeModule } from 'ngx-scanner-qrcode';
+import { DialogEvidenciasComponent } from './components/ver/components/dialog-evidencias/dialog-evidencias.component';
 
 @NgModule({
   declarations: [
@@ -54,12 +57,13 @@ import { NgxScannerQrcodeModule } from 'ngx-scanner-qrcode';
     AprobacionComponent,
     FormVinculacionComponent,
     FormExternoComponent,
-    DialogSeguimientoComponent,
     DialogReporteComponent,
     DialogGraficoComponent,
     AsistenciasComponent,
     BusquedaQrComponent,
     BusquedaManualComponent,
+    DialogAsistenciasComponent,
+    DialogEvidenciasComponent,
 
   ],
   imports: [
@@ -89,7 +93,9 @@ import { NgxScannerQrcodeModule } from 'ngx-scanner-qrcode';
     ProgressSpinnerModule,
     TagModule,
     PanelModule,
-    NgxScannerQrcodeModule
+    NgxScannerQrcodeModule,
+    ChartModule,
+    FileUploadModule
   ],
   providers: [
     DatePipe

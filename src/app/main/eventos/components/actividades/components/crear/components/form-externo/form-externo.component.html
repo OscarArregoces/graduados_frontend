@@ -4,8 +4,7 @@
             <div class="flex flex-column gap-2">
                 <label class="customLabel">Nombres y Apellidos</label>
                 <div class="p-inputgroup">
-                    <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                            style="color:#f16357;"></i></span>
+                    <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill" style="color:#f16357;"></i></span>
                     <input type="text" [maxlength]="200" pInputText formControlName="fullname"
                         placeholder="Nombre compleo" />
                 </div>
@@ -19,8 +18,7 @@
             <div class="flex flex-column gap-2">
                 <label class="customLabel">No Documento</label>
                 <div class="p-inputgroup">
-                    <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                            style="color:#f16357;"></i></span>
+                    <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill" style="color:#f16357;"></i></span>
                     <input type="number" [maxlength]="100" pInputText formControlName="document"
                         placeholder="Documento de identififación" />
                 </div>
@@ -34,10 +32,8 @@
             <div class="flex flex-column gap-2">
                 <label class="customLabel">Correo</label>
                 <div class="p-inputgroup">
-                    <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                            style="color:#f16357;"></i></span>
-                    <input type="email" [maxlength]="100" pInputText formControlName="email"
-                        placeholder="@gmail.com" />
+                    <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill" style="color:#f16357;"></i></span>
+                    <input type="email" [maxlength]="100" pInputText formControlName="email" placeholder="@gmail.com" />
                 </div>
                 <div *ngIf="formPonentes.get('email')?.hasError('required') && formPonentes.get('email')?.touched"
                     class="text-red-500 my-1 text-left">
@@ -49,11 +45,9 @@
             <div class="flex flex-column gap-2">
                 <label class="customLabel">Vinculación</label>
                 <div class="p-inputgroup">
-                    <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                            style="color:#f16357;"></i></span>
+                    <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill" style="color:#f16357;"></i></span>
                     <p-dropdown [style]="{'width':'100%'}" [options]="tipoVinculacion"
-                        placeholder="Selecciona una opcion" formControlName="vinculacion"
-                        optionLabel="name"></p-dropdown>
+                        placeholder="Selecciona una opcion" formControlName="vinculacion"></p-dropdown>
                 </div>
                 <div *ngIf="formPonentes.get('vinculacion')?.hasError('required') && formPonentes.get('vinculacion')?.touched"
                     class="text-red-500 my-1 text-left">
@@ -65,10 +59,9 @@
             <div class="flex flex-column gap-2">
                 <label class="customLabel">Rol</label>
                 <div class="p-inputgroup">
-                    <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                            style="color:#f16357;"></i></span>
+                    <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill" style="color:#f16357;"></i></span>
                     <p-dropdown [style]="{'width':'100%'}" [options]="roles" placeholder="Selecciona una opcion"
-                        formControlName="rol" optionLabel="name"></p-dropdown>
+                        formControlName="rol"></p-dropdown>
                 </div>
                 <div *ngIf="formPonentes.get('roles')?.hasError('required') && formPonentes.get('roles')?.touched"
                     class="text-red-500 my-1 text-left">
@@ -80,8 +73,7 @@
             <div class="flex flex-column gap-2">
                 <label class="customLabel">Telefono</label>
                 <div class="p-inputgroup">
-                    <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                            style="color:#f16357;"></i></span>
+                    <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill" style="color:#f16357;"></i></span>
                     <input type="number" [maxlength]="30" pInputText formControlName="phone"
                         placeholder="(000) 000-0000" />
                 </div>
@@ -95,8 +87,7 @@
             <div class="flex flex-column gap-2">
                 <label class="customLabel">Dedicación (Horas)</label>
                 <div class="p-inputgroup">
-                    <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"
-                            style="color:#f16357;"></i></span>
+                    <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill" style="color:#f16357;"></i></span>
                     <input type="number" [maxlength]="5" pInputText formControlName="dedicacion"
                         placeholder="Número de horas" />
                 </div>
@@ -106,13 +97,13 @@
                 </div>
             </div>
         </div>
-    
+
         <div class="col-12">
             <div class="flex justify-content-center aling-items-center my-3">
                 <button pButton pRipple type="submit" label="Guardar" class="p-button-success"
                     (click)="onSubmitFormPonentes()"></button>
             </div>
         </div>
-    
+
     </div>
 </form>

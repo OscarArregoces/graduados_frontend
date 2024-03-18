@@ -4,8 +4,8 @@ import { MessageService } from 'primeng/api';
 import { catchError } from 'rxjs';
 import { EventosService } from 'src/app/core/services/dashboard/eventos.service';
 import { ValidForm } from 'src/app/helpers/validForms';
-import { Funcionario, Persona, Rol } from 'src/app/models/main/Inicio.interface';
-import { Responsable } from 'src/app/models/main/eventos.interface';
+import { Persona } from 'src/app/models/main/Inicio.interface';
+import { Responsable, RolPonente } from 'src/app/models/main/eventos.interface';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -29,12 +29,12 @@ export class FormVinculacionComponent implements OnInit {
     dedicacion: ['', [Validators.required]],
     rol: ['', [Validators.required]],
   });
-  public roles: Rol[] = [
-    { id: 1, name: 'Organizador' },
-    { id: 2, name: 'Ponente' },
-    { id: 3, name: 'Ponente Magistral' },
-    { id: 4, name: 'Moderador' },
-    { id: 5, name: 'Asistente' },
+  public roles: RolPonente[] = [
+    RolPonente.Asistente,
+    RolPonente.Moderador,
+    RolPonente.Organizador,
+    RolPonente.Ponente,
+    RolPonente.PonenteMagistral,
   ]
   constructor(
     private fb: UntypedFormBuilder,
@@ -64,7 +64,7 @@ export class FormVinculacionComponent implements OnInit {
               } else {
                 this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Hubo un problema' });
               }
-            },1200)
+            }, 1200)
             throw error;
           })
         )
@@ -79,7 +79,7 @@ export class FormVinculacionComponent implements OnInit {
 
   onSubmitVinculacion() {
     ValidForm(this.formVinculacion);
-    
+
     const { dedicacion, rol } = this.formVinculacion.value;
     let vinculacion = this.vinculacionSelected === "Graduado" ? "Graduado" : "Administrativo";
     if (this.formVinculacion.valid && this.persona) {
@@ -90,7 +90,7 @@ export class FormVinculacionComponent implements OnInit {
         email: this.persona[0].email,
         document: this.persona[0].identification,
         vinculacion: vinculacion,
-        rol: rol.name,
+        rol: rol,
         dedicacion,
       });
     };

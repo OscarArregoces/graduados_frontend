@@ -7,7 +7,7 @@
                     styleClass="p-datatable-customers" [rowHover]="true" [rows]="50" [showCurrentPageReport]="true"
                     [loading]="loading" responsiveLayout="scroll" [paginator]="true" [rowsPerPageOptions]="[10,25,50]"
                     currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros" [filterDelay]="0"
-                    [globalFilterFields]="['nombre_actividad']" responsiveLayout="scroll">
+                    [globalFilterFields]="['nombre_actividad','id']" responsiveLayout="scroll">
                     <ng-template pTemplate="caption">
                         <div class="table-header">
                             <div class="grid" [style]="{'display': 'flex', 'justify-content': 'space-between'}">
@@ -31,6 +31,9 @@
                             <th style="width: 5rem">
                                 <p>Indice</p>
                             </th>
+                            <th pSortableColumn="id">
+                                ID
+                            </th>
                             <th pSortableColumn="nombre_actividad">
                                 Nombre
                             </th>
@@ -43,6 +46,9 @@
                         <tr>
                             <td>
                                 {{rowIndex + 1 }}
+                            </td>
+                            <td>
+                                {{actividad.id}}
                             </td>
                             <td>
                                 {{actividad.nombre_actividad}}
