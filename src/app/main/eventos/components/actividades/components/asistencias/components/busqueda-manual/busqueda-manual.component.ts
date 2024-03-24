@@ -1,11 +1,13 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { catchError } from 'rxjs';
-import { EventosService } from 'src/app/core/services/dashboard/eventos.service';
-import { ValidForm } from 'src/app/helpers/validForms';
-import { Actividad, UserEvento, Vinculacion } from 'src/app/models/main/eventos.interface';
-import { environment } from 'src/environments/environment';
+
 import Swal from 'sweetalert2';
+
+import { EventosService } from '@core/services/dashboard/eventos.service';
+import { ValidForm } from '@helpers/validForms';
+import { Actividad, UserEvento, Vinculacion } from '@models/main/eventos.interface';
+import { environment } from '@environments/environment';
 
 @Component({
   selector: 'app-busqueda-manual',

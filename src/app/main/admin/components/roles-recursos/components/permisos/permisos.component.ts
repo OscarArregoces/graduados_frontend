@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
-import { ConfirmationService, MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
-import { AdminService } from 'src/app/core/services/dashboard/admin.service';
-import { PantallaService } from 'src/app/core/services/pantalla.service';
-import { FormatePermissionsToCreate, FormatePermissionsToSend, FormatePermissionsToShow, RemoveFirstPermission } from 'src/app/helpers/formatePermissions';
-import { environment } from 'src/environments/environment';
-import { Variant } from 'src/app/models/ui/CustomInfoCard';
+
+import { ConfirmationService, MessageService } from 'primeng/api';
+
+import { AdminService } from '@core/services/dashboard/admin.service';
+import { PantallaService } from '@core/services/pantalla.service';
+import { FormatePermissionsToCreate, FormatePermissionsToSend, FormatePermissionsToShow, RemoveFirstPermission } from '@helpers/formatePermissions';
+import { Variant } from '@models/ui/CustomInfoCard';
+import { environment } from '@environments/environment';
 
 @Component({
   selector: 'app-permisos',

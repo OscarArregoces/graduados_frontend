@@ -1,15 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
-import { MessageService } from 'primeng/api';
 import { Subscription, catchError } from 'rxjs';
-import { AdminService } from 'src/app/core/services/dashboard/admin.service';
-import { DataFetchingService } from 'src/app/core/services/main/data-fetching.service';
-import { PantallaService } from 'src/app/core/services/pantalla.service';
-import { formateDateInput, formateDateOutPut } from 'src/app/helpers/formateDate';
-import { ValidForm, ValidarDominioEmail, ValidarFechaPosterior } from 'src/app/helpers/validForms';
-import { Ciudad, CondicionVulnerable, Departamento, Funcionario, Genero, Graduado, InfoCarrera, Pais, Rol, TipoDocumento } from 'src/app/models/main/Inicio.interface';
-import { Variant } from 'src/app/models/ui/CustomInfoCard';
-import { environment } from 'src/environments/environment';
+
+import { MessageService } from 'primeng/api';
+
+import { AdminService } from '@core/services/dashboard/admin.service';
+import { DataFetchingService } from '@core/services/main/data-fetching.service';
+import { PantallaService } from '@core/services/pantalla.service';
+import { formateDateInput, formateDateOutPut } from '@helpers/formateDate';
+import { ValidForm, ValidarDominioEmail, ValidarFechaPosterior } from '@helpers/validForms';
+import { Ciudad, CondicionVulnerable, Departamento, Funcionario, Genero, Graduado, InfoCarrera, Pais, Rol, TipoDocumento } from '@models/main/Inicio.interface';
+import { Variant } from '@models/ui/CustomInfoCard';
+import { environment } from '@environments/environment';
 
 
 @Component({

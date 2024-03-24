@@ -1,5 +1,6 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
-import { Asistencia, AsistenciaGrafico } from 'src/app/models/main/eventos.interface';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+
+import { Asistencia, AsistenciaGrafico } from '@models/main/eventos.interface';
 
 @Component({
   selector: 'app-dialog-grafico',

@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder } from '@angular/forms';
 import { Subscription, catchError } from 'rxjs';
-import { EventosService } from 'src/app/core/services/dashboard/eventos.service';
-import { DataFetchingService } from 'src/app/core/services/main/data-fetching.service';
-import { PantallaService } from 'src/app/core/services/pantalla.service';
-import { Actividad, ActividadTable, Responsable, ResponsableVinculacion, Servicio } from 'src/app/models/main/eventos.interface';
-import { environment } from 'src/environments/environment';
+
 import Swal from 'sweetalert2';
+
+import { EventosService } from '@core/services/dashboard/eventos.service';
+import { DataFetchingService } from '@core/services/main/data-fetching.service';
+import { PantallaService } from '@core/services/pantalla.service';
+import { Actividad, ActividadTable, Responsable, ResponsableVinculacion, Servicio } from '@models/main/eventos.interface';
+import { environment } from '@environments/environment';
 
 @Component({
   selector: 'app-aprobacion',

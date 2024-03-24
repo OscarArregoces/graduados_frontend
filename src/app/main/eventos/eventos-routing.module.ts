@@ -30,10 +30,6 @@ const routes: Routes = [
     path: 'programa',
     loadChildren: () => import('./components/programa/programa.module').then( m => m.ProgramaModule)
   },
-  {
-    path: 'asistencias',
-    loadChildren: () => import('./components/asistencia/asistencia.module').then( m => m.AsistenciaModule)
-  },
 ];
 
 @NgModule({

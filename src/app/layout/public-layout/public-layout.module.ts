@@ -46,6 +46,7 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { PasswordModule } from 'primeng/password';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormGraduadoComponent } from './components/form-graduado/form-graduado.component';
+import { AutoLoginGraduadoComponent } from './components/auto-login-graduado/auto-login-graduado.component';
 
 @NgModule({
   declarations: [
@@ -53,7 +54,8 @@ import { FormGraduadoComponent } from './components/form-graduado/form-graduado.
     
     FormLoginComponent,
     FormRegisterComponent,
-    FormGraduadoComponent
+    FormGraduadoComponent,
+    AutoLoginGraduadoComponent
 
   ],
   imports: [

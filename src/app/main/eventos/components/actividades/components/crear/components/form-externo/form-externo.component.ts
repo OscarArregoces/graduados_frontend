@@ -1,7 +1,8 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
-import { ValidForm } from 'src/app/helpers/validForms';
-import { Responsable, RolPonente, Vinculacion } from 'src/app/models/main/eventos.interface';
+
+import { ValidForm } from '@helpers/validForms';
+import { Responsable, RolPonente, Vinculacion } from '@models/main/eventos.interface';
 
 @Component({
   selector: 'app-form-externo',

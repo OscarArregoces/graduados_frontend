@@ -1,0 +1,381 @@
+<p-dialog header="Presupuesto Actividad" [(visible)]="display"
+    [style]="{'width': width,'text-aling': 'center', 'min-height':'80vh','background-color':'#f4f4f4'}"
+    [showHeader]="true" [modal]="true" [dismissableMask]="false" [maximizable]="true" (onHide)="closeDisplay.emit()">
+    <app-custom-info-card [description]="inforCardDescription"></app-custom-info-card>
+    <!-- <div class="col-12 flex flex-column justify-content-center align-items-start">
+        <span class="customLabel">Nombre Actividad</span>
+        <span class="customText">{{ actividad?.nombre_actividad}}</span>
+    </div> -->
+    <div class="grid border-1 border-gray-100">
+        <div class="col-12" *ngIf="bienesEquipos.length">
+            <p class="customTitle">Bienes y Equipos</p>
+            <p-table [value]="bienesEquipos" dataKey="id" responsiveLayout="scroll">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th class="customLabel" rowspan="2" colspan="1">ÍTEM</th>
+                        <th class="customLabel" rowspan="2" colspan="1">CANT.</th>
+                        <th class="customLabel" rowspan="2" colspan="1">V. UNIT</th>
+                        <th class="customLabel" colspan="4">UNIGUAJIRA</th>
+                        <th class="customLabel" colspan="3">COFINANCIADOR</th>
+                        <th class="customLabel" rowspan="2" colspan="1">VALOR</th>
+                        <th class="customLabel" rowspan="2" colspan="1">Acciones</th>
+                    </tr>
+                    <tr>
+                        <th class="customLabel" colspan="2">INVER.</th>
+                        <th class="customLabel" colspan="2">ESPE.</th>
+                        <th class="customLabel" colspan="1">INVER.</th>
+                        <th class="customLabel" colspan="1">ESPE.</th>
+                        <th class="customLabel" colspan="1">NOMBRE</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-presupuesto let-index="rowIndex">
+                    <tr>
+                        <td pEditableColumn class="customText" colspan="1">
+                            <p-cellEditor>
+                                <ng-template pTemplate="input">
+                                    <input pInputText type="text" [(ngModel)]="bienesEquipos[index].item">
+                                </ng-template>
+                                <ng-template pTemplate="output">
+                                    {{presupuesto.item}}
+                                </ng-template>
+                            </p-cellEditor>
+                        </td>
+                        <td pEditableColumn class="customText" colspan="1">
+                            <p-cellEditor>
+                                <ng-template pTemplate="input">
+                                    <input pInputText type="number" [(ngModel)]="bienesEquipos[index].cantidad"
+                                        (input)="onChangeBienesEquipos(index)">
+                                </ng-template>
+                                <ng-template pTemplate="output">
+                                    {{presupuesto.cantidad}}
+                                </ng-template>
+                            </p-cellEditor>
+                        </td>
+                        <td pEditableColumn class="customText" colspan="1">
+                            <p-cellEditor>
+                                <ng-template pTemplate="input">
+                                    <input pInputText type="number" [(ngModel)]="bienesEquipos[index].valor_unitario"
+                                    (input)="onChangeBienesEquipos(index)">
+                                </ng-template>
+                                <ng-template pTemplate="output">
+                                    {{presupuesto.valor_unitario}}
+                                </ng-template>
+                            </p-cellEditor>
+                        </td>
+                        <td class="customText" colspan="2">{{presupuesto.inversion_uniguajira | currencyCop}}</td>
+                        <td class="customText" colspan="2">{{presupuesto.especie_uniguajira | currencyCop}}</td>
+                        <td class="customText" colspan="1">{{presupuesto.inversion_cofinanciador | currencyCop}}</td>
+                        <td class="customText" colspan="1">{{presupuesto.especie_cofinanciador | currencyCop}}</td>
+                        <td pEditableColumn class="customText" colspan="1">
+                            <p-cellEditor>
+                                <ng-template pTemplate="input">
+                                    <input pInputText type="text" [(ngModel)]="bienesEquipos[index].nombre" required>
+                                </ng-template>
+                                <ng-template pTemplate="output">
+                                    {{presupuesto.nombre}}
+                                </ng-template>
+                            </p-cellEditor>
+                        </td>
+                        <td class="customText" colspan="1">{{presupuesto.valor | currencyCop}}</td>
+                        <td class="customText" colspan="1">
+                            <button pButton pRipple type="button" icon="pi pi-trash"
+                                class="p-button-rounded p-button-danger p-button-text"
+                                (click)="handleDelete(index,'bienesEquipos')"></button>
+                        </td>
+
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="footer">
+                    <tr>
+                        <td class="customText" colspan="3">Total</td>
+                        <td class="customText" colspan="2">{{ totalesPresupuesto[0].inversion_uniguajira | currencyCop}}
+                        </td>
+                        <td class="customText" colspan="2">{{ totalesPresupuesto[0].especie_uniguajira | currencyCop}}
+                        </td>
+                        <td class="customText" colspan="1">{{ totalesPresupuesto[0].inversion_cofinanciador |
+                            currencyCop}}</td>
+                        <td class="customText" colspan="1">{{ totalesPresupuesto[0].especie_cofinanciador |
+                            currencyCop}}</td>
+                        <td class="customText" colspan="1"></td>
+                        <td class="customText" colspan="2">{{ totalesPresupuesto[0].valor | currencyCop}}</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+        <div class="col-12" *ngIf="materialesSuministros.length">
+            <p class="customTitle">Materiales Y Suministros</p>
+            <p-table [value]="materialesSuministros" dataKey="id" responsiveLayout="scroll">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th class="customLabel" rowspan="2" colspan="1">ÍTEM</th>
+                        <th class="customLabel" rowspan="2" colspan="1">CANT.</th>
+                        <th class="customLabel" rowspan="2" colspan="1">V. UNIT</th>
+                        <th class="customLabel" colspan="4">UNIGUAJIRA</th>
+                        <th class="customLabel" colspan="3">COFINANCIADOR</th>
+                        <th class="customLabel" rowspan="2" colspan="1">VALOR</th>
+                        <th class="customLabel" rowspan="2" colspan="1">Acciones</th>
+                    </tr>
+                    <tr>
+                        <th class="customLabel" colspan="2">INVER.</th>
+                        <th class="customLabel" colspan="2">ESPE.</th>
+                        <th class="customLabel" colspan="1">INVER.</th>
+                        <th class="customLabel" colspan="1">ESPE.</th>
+                        <th class="customLabel" colspan="1">NOMBRE</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-presupuesto let-index="rowIndex">
+                    <tr>
+                        <td pEditableColumn class="customText" colspan="1">
+                            <p-cellEditor>
+                                <ng-template pTemplate="input">
+                                    <input pInputText type="text" [(ngModel)]="materialesSuministros[index].item">
+                                </ng-template>
+                                <ng-template pTemplate="output">
+                                    {{presupuesto.item}}
+                                </ng-template>
+                            </p-cellEditor>
+                        </td>
+                        <td pEditableColumn class="customText" colspan="1">
+                            <p-cellEditor>
+                                <ng-template pTemplate="input">
+                                    <input pInputText type="number" [(ngModel)]="materialesSuministros[index].cantidad"
+                                        (input)="onChangeMaterialesSuministros(index)">
+                                </ng-template>
+                                <ng-template pTemplate="output">
+                                    {{presupuesto.cantidad}}
+                                </ng-template>
+                            </p-cellEditor>
+                        </td>
+                        <td pEditableColumn class="customText" colspan="1">
+                            <p-cellEditor>
+                                <ng-template pTemplate="input">
+                                    <input pInputText type="number" [(ngModel)]="materialesSuministros[index].valor_unitario"
+                                    (input)="onChangeMaterialesSuministros(index)">
+                                </ng-template>
+                                <ng-template pTemplate="output">
+                                    {{presupuesto.valor_unitario}}
+                                </ng-template>
+                            </p-cellEditor>
+                        </td>
+                        <td class="customText" colspan="2">{{presupuesto.inversion_uniguajira | currencyCop}}</td>
+                        <td class="customText" colspan="2">{{presupuesto.especie_uniguajira | currencyCop}}</td>
+                        <td class="customText" colspan="1">{{presupuesto.inversion_cofinanciador | currencyCop}}</td>
+                        <td class="customText" colspan="1">{{presupuesto.especie_cofinanciador | currencyCop}}</td>
+                        <td pEditableColumn class="customText" colspan="1">
+                            <p-cellEditor>
+                                <ng-template pTemplate="input">
+                                    <input pInputText type="text" [(ngModel)]="materialesSuministros[index].nombre" required>
+                                </ng-template>
+                                <ng-template pTemplate="output">
+                                    {{presupuesto.nombre}}
+                                </ng-template>
+                            </p-cellEditor>
+                        </td>
+                        <td class="customText" colspan="1">{{presupuesto.valor | currencyCop}}</td>
+                        <td class="customText" colspan="1">
+                            <button pButton pRipple type="button" icon="pi pi-trash"
+                                class="p-button-rounded p-button-danger p-button-text"
+                                (click)="handleDelete(index,'materialesSuministros')"></button>
+                        </td>
+
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="footer">
+                    <tr>
+                        <td class="customText" colspan="3">Total</td>
+                        <td class="customText" colspan="2">{{ totalesPresupuesto[1].inversion_uniguajira | currencyCop}}
+                        </td>
+                        <td class="customText" colspan="2">{{ totalesPresupuesto[1].especie_uniguajira | currencyCop}}
+                        </td>
+                        <td class="customText" colspan="1">{{ totalesPresupuesto[1].inversion_cofinanciador |
+                            currencyCop}}</td>
+                        <td class="customText" colspan="1">{{ totalesPresupuesto[1].especie_cofinanciador |
+                            currencyCop}}</td>
+                        <td class="customText" colspan="1"></td>
+                        <td class="customText" colspan="2">{{ totalesPresupuesto[1].valor | currencyCop}}</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+        <div class="col-12" *ngIf="personal.length">
+            <p class="customTitle">Personal</p>
+            <p-table [value]="personal" dataKey="id" responsiveLayout="scroll">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th class="customLabel" rowspan="2" colspan="1">ÍTEM</th>
+                        <th class="customLabel" rowspan="2" colspan="1">CANT.</th>
+                        <th class="customLabel" rowspan="2" colspan="1">V. UNIT</th>
+                        <th class="customLabel" colspan="4">UNIGUAJIRA</th>
+                        <th class="customLabel" colspan="3">COFINANCIADOR</th>
+                        <th class="customLabel" rowspan="2" colspan="1">VALOR</th>
+                        <th class="customLabel" rowspan="2" colspan="1">Acciones</th>
+                    </tr>
+                    <tr>
+                        <th class="customLabel" colspan="2">INVER.</th>
+                        <th class="customLabel" colspan="2">ESPE.</th>
+                        <th class="customLabel" colspan="1">INVER.</th>
+                        <th class="customLabel" colspan="1">ESPE.</th>
+                        <th class="customLabel" colspan="1">NOMBRE</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-presupuesto let-index="rowIndex">
+                    <tr>
+                        <td pEditableColumn class="customText" colspan="1">
+                            <p-cellEditor>
+                                <ng-template pTemplate="input">
+                                    <input pInputText type="text" [(ngModel)]="personal[index].item">
+                                </ng-template>
+                                <ng-template pTemplate="output">
+                                    {{presupuesto.item}}
+                                </ng-template>
+                            </p-cellEditor>
+                        </td>
+                        <td pEditableColumn class="customText" colspan="1">
+                            <p-cellEditor>
+                                <ng-template pTemplate="input">
+                                    <input pInputText type="number" [(ngModel)]="personal[index].cantidad"
+                                        (input)="onChangePersonal(index)">
+                                </ng-template>
+                                <ng-template pTemplate="output">
+                                    {{presupuesto.cantidad}}
+                                </ng-template>
+                            </p-cellEditor>
+                        </td>
+                        <td pEditableColumn class="customText" colspan="1">
+                            <p-cellEditor>
+                                <ng-template pTemplate="input">
+                                    <input pInputText type="number" [(ngModel)]="personal[index].valor_unitario"
+                                    (input)="onChangePersonal(index)">
+                                </ng-template>
+                                <ng-template pTemplate="output">
+                                    {{presupuesto.valor_unitario}}
+                                </ng-template>
+                            </p-cellEditor>
+                        </td>
+                        <td class="customText" colspan="2">{{presupuesto.inversion_uniguajira | currencyCop}}</td>
+                        <td class="customText" colspan="2">{{presupuesto.especie_uniguajira | currencyCop}}</td>
+                        <td class="customText" colspan="1">{{presupuesto.inversion_cofinanciador | currencyCop}}</td>
+                        <td class="customText" colspan="1">{{presupuesto.especie_cofinanciador | currencyCop}}</td>
+                        <td pEditableColumn class="customText" colspan="1">
+                            <p-cellEditor>
+                                <ng-template pTemplate="input">
+                                    <input pInputText type="text" [(ngModel)]="personal[index].nombre" required>
+                                </ng-template>
+                                <ng-template pTemplate="output">
+                                    {{presupuesto.nombre}}
+                                </ng-template>
+                            </p-cellEditor>
+                        </td>
+                        <td class="customText" colspan="1">{{presupuesto.valor | currencyCop}}</td>
+                        <td class="customText" colspan="1">
+                            <button pButton pRipple type="button" icon="pi pi-trash"
+                                class="p-button-rounded p-button-danger p-button-text"
+                                (click)="handleDelete(index,'personal')"></button>
+                        </td>
+
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="footer">
+                    <tr>
+                        <td class="customText" colspan="3">Total</td>
+                        <td class="customText" colspan="2">{{ totalesPresupuesto[2].inversion_uniguajira | currencyCop}}
+                        </td>
+                        <td class="customText" colspan="2">{{ totalesPresupuesto[2].especie_uniguajira | currencyCop}}
+                        </td>
+                        <td class="customText" colspan="1">{{ totalesPresupuesto[2].inversion_cofinanciador |
+                            currencyCop}}</td>
+                        <td class="customText" colspan="1">{{ totalesPresupuesto[2].especie_cofinanciador |
+                            currencyCop}}</td>
+                        <td class="customText" colspan="1"></td>
+                        <td class="customText" colspan="2">{{ totalesPresupuesto[2].valor | currencyCop}}</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+
+        <div class="col-12 p-5">
+            <form [formGroup]="form" class="grid border-round-sm" style="background-color: #f4f4f4;">
+                <div class="col-12 md:col-6 lg:col-6">
+                    <div class="w-full flex flex-column gap-2">
+                        <label class="customLabel">Tipo de Presupuesto</label>
+                        <div class="p-inputgroup">
+                            <span class="p-inputgroup-addon"><i class="pi pi-th-large"></i></span>
+                            <p-dropdown [style]="{width: '100%'}" [options]="tipoPresupuesto"
+                                placeholder="Seleciona una opción" formControlName="tipo_presupuesto"
+                                (onChange)="onChangeTipoPresupuesto($event)"></p-dropdown>
+                        </div>
+                        <div *ngIf="form.get('tipo_presupuesto')?.hasError('required') && form.get('tipo_presupuesto')?.touched"
+                            class="text-red-500 text-left">
+                            Campo requerido
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 md:col-6 lg:col-6">
+                    <div class="w-full flex flex-column gap-2">
+                        <label class="customLabel">Ítem</label>
+                        <div class="p-inputgroup">
+                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"></i></span>
+                            <input type="text" [style]="{width: '100%'}" class="w-full" maxlength="256"
+                                formControlName="item" placeholder="Ingrese el nombre del ítem" pInputText />
+                        </div>
+                        <div *ngIf="form.get('item')?.hasError('required') && form.get('item')?.touched"
+                            class="text-red-500 text-left">
+                            Campo requerido
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 md:col-6 lg:col-6">
+                    <div class="w-full flex flex-column gap-2">
+                        <label class="customLabel">Cantidad</label>
+                        <div class="p-inputgroup">
+                            <span class="p-inputgroup-addon"><i class="pi pi-sort-numeric-up-alt"></i></span>
+                            <input type="number" [style]="{width: '100%'}" formControlName="cantidad"
+                                placeholder="Ingrese la cantidad" pInputText />
+                        </div>
+                        <div *ngIf="form.get('cantidad')?.hasError('required') && form.get('cantidad')?.touched"
+                            class="text-red-500 text-left">
+                            Campo requerido
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 md:col-6 lg:col-6">
+                    <div class="w-full flex flex-column gap-2">
+                        <label class="customLabel">Valor Unitario</label>
+                        <div class="p-inputgroup">
+                            <span class="p-inputgroup-addon"><i class="pi pi-dollar"></i></span>
+                            <p-inputNumber formControlName="valor_unitario" placeholder="Ingrese el valor unitario"
+                                [style]="{width: '100%'}" inputId="currency-co" mode="currency" currency="COP"
+                                locale="en-CO">
+                            </p-inputNumber>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12"
+                    *ngIf="form.value.tipo_presupuesto === 'Materiales y Suministros' || form.value.tipo_presupuesto === 'Personal'">
+                    <div class="w-full flex flex-column gap-2">
+                        <label class="customLabel">Nombre Cofinanciador</label>
+                        <div class="p-inputgroup">
+                            <span class="p-inputgroup-addon"><i class="pi pi-bookmark-fill"></i></span>
+                            <input type="text" [style]="{width: '100%'}" class="w-full" maxlength="256"
+                                formControlName="nombre"
+                                placeholder="Ingrese el nombre del cofinanciador (si corresponde)" pInputText />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 flex justify-content-end align-items-center gap-3">
+                    <button pButton pRipple type="submit" icon="pi pi-plus" label="Agregar" class="p-button"
+                        (click)="onSubmit()"></button>
+                </div>
+            </form>
+        </div>
+
+        <div class="col-12 flex justify-content-center align-items-center gap-3">
+            <button pButton pRipple type="button" label="Imprimir" class="p-button-outlined p-button-warning"
+                (click)="handleCLickTest()"></button>
+            <button pButton pRipple type="button" label="Volver" class="p-button-outlined p-button-danger"
+                (click)="closeDisplay.emit()"></button>
+        </div>
+    </div>
+
+</p-dialog>

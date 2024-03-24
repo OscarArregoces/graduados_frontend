@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { PantallaService } from 'src/app/core/services/pantalla.service';
+
+import { PantallaService } from '@core/services/pantalla.service';
 
 
 @Component({

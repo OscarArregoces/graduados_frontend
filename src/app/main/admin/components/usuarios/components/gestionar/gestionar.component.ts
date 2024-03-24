@@ -1,14 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
-import { MessageService } from 'primeng/api';
 import { Subscription, catchError } from 'rxjs';
-import { CondicionesVulnerables } from 'src/app/consts/CondicionesVulnerables';
-import { AdminService } from 'src/app/core/services/dashboard/admin.service';
-import { DataFetchingService } from 'src/app/core/services/main/data-fetching.service';
-import { PantallaService } from 'src/app/core/services/pantalla.service';
-import { formateDateInput } from 'src/app/helpers/formateDate';
-import { Ciudad, CondicionVulnerable, Departamento, Genero, Graduado, InfoCarrera, Pais, Sede, TipoDocumento } from 'src/app/models/main/Inicio.interface';
-import { environment } from 'src/environments/environment';
+
+import { MessageService } from 'primeng/api';
+
+import { CondicionesVulnerables } from '@consts/CondicionesVulnerables';
+import { AdminService } from '@core/services/dashboard/admin.service';
+import { DataFetchingService } from '@core/services/main/data-fetching.service';
+import { PantallaService } from '@core/services/pantalla.service';
+import { formateDateInput } from '@helpers/formateDate';
+import { Ciudad, CondicionVulnerable, Departamento, Genero, Graduado, InfoCarrera, Pais, Sede, TipoDocumento } from '@models/main/Inicio.interface';
+import { environment } from '@environments/environment';
 
 @Component({
   selector: 'app-gestionar',

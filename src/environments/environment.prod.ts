@@ -11,8 +11,8 @@ export const environment = {
 
   // API_URI : 'http://44.203.185.252',
   // API_URL_MEDIA: 'http://44.203.185.252/media/'
-  API_URI : 'http://3.134.86.127',
-  API_URL_MEDIA: 'http://3.134.86.127/media/'
+  API_URI : 'https://b195-190-131-213-194.ngrok-free.app',
+  API_URL_MEDIA: 'https://b195-190-131-213-194.ngrok-free.app/media/'
 
 
 

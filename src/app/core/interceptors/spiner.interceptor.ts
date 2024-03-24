@@ -17,9 +17,9 @@ export class SpinerInterceptor implements HttpInterceptor {
     this.spinerService.show();
     return next.handle(request).pipe(
       finalize(() => {
-        // setTimeout(() => {
-        // }, 1500);
-        this.spinerService.hide()
+        setTimeout(() => {
+          this.spinerService.hide()
+        }, 1500);
       })
     );
   }

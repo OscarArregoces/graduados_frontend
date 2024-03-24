@@ -1,9 +1,9 @@
-import { Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { UntypedFormBuilder } from '@angular/forms';
+import { Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { EventosService } from 'src/app/core/services/dashboard/eventos.service';
-import { PantallaService } from 'src/app/core/services/pantalla.service';
-import { environment } from 'src/environments/environment';
+
+import { EventosService } from '@core/services/dashboard/eventos.service';
+import { PantallaService } from '@core/services/pantalla.service';
+import { environment } from '@environments/environment';
 
 
 @Component({

@@ -1,15 +1,16 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
+import { catchError } from 'rxjs';
+
 import { ConfirmationService } from 'primeng/api';
 import { FileUpload } from 'primeng/fileupload';
-import { catchError } from 'rxjs';
-import { EventosService } from 'src/app/core/services/dashboard/eventos.service';
-import { MainService } from 'src/app/core/services/main/main.service';
-import { ValidForm } from 'src/app/helpers/validForms';
-import { Actividad, Evidencia } from 'src/app/models/main/eventos.interface';
-import { Variant } from 'src/app/models/ui/CustomInfoCard';
-import { environment } from 'src/environments/environment';
 import Swal from 'sweetalert2';
+
+import { MainService } from '@core/services/main/main.service';
+import { Actividad, Evidencia } from '@models/main/eventos.interface';
+import { Variant } from '@models/ui/CustomInfoCard';
+import { ValidForm } from '@helpers/validForms';
+import { environment } from '@environments/environment';
 
 @Component({
   selector: 'app-dialog-evidencias',
@@ -44,8 +45,9 @@ export class DialogEvidenciasComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     this.token = localStorage.getItem("token");
   }
+
   ngOnChanges(changes: SimpleChanges): void {
-    if (this.token && this.actividad?.id) {
+    if (this.token && changes['actividad'] && changes['actividad'].currentValue !== null && changes['actividad'].previousValue === null) {
       this.mainService.get(`${this.API_URI}/eventos/evidencias/${this.actividad?.id}/`, this.token)
         .pipe(
           catchError(error => {
@@ -148,17 +150,5 @@ export class DialogEvidenciasComponent implements OnInit, OnChanges {
         this.actividad = null;
         this.closeDisplay.emit();
       })
-  }
-
-
-  dataURItoBlob(dataURI: string): Blob {
-    const byteString = atob(dataURI.split(',')[1]);
-    const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
-    const ab = new ArrayBuffer(byteString.length);
-    const ia = new Uint8Array(ab);
-    for (let i = 0; i < byteString.length; i++) {
-      ia[i] = byteString.charCodeAt(i);
-    }
-    return new Blob([ab], { type: mimeString });
   }
 }

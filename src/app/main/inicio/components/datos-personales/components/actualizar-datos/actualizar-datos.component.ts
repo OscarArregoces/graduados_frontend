@@ -1,15 +1,17 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
-import { MessageService } from 'primeng/api';
 import { Subscription, catchError } from 'rxjs';
-import { InicioService } from 'src/app/core/services/main/inicio.service';
-import { PantallaService } from 'src/app/core/services/pantalla.service';
-import { formateDateInput, formateDateOutPut } from 'src/app/helpers/formateDate';
-import { environment } from 'src/environments/environment';
-import { Ciudad, CondicionVulnerable, Departamento, Genero, InfoCarrera, Pais, Sede, TipoDocumento } from 'src/app/models/main/Inicio.interface';
-import { DataFetchingService } from 'src/app/core/services/main/data-fetching.service';
+
+import { MessageService } from 'primeng/api';
 import Swal from 'sweetalert2';
-import { ValidForm, ValidarDominioEmail, ValidarFechaPosterior } from 'src/app/helpers/validForms';
+
+import { InicioService } from '@core/services/main/inicio.service';
+import { PantallaService } from '@core/services/pantalla.service';
+import { DataFetchingService } from '@core/services/main/data-fetching.service';
+import { Ciudad, CondicionVulnerable, Departamento, Genero, InfoCarrera, Pais, Sede, TipoDocumento } from '@models/main/Inicio.interface';
+import { formateDateInput, formateDateOutPut } from '@helpers/formateDate';
+import { ValidForm, ValidarDominioEmail, ValidarFechaPosterior } from '@helpers/validForms';
+import { environment } from '@environments/environment';
 
 @Component({
   selector: 'app-actualizar-datos',
@@ -41,8 +43,8 @@ export class ActualizarDatosComponent implements OnInit, OnDestroy {
     fullname: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(100)]],
     identification: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(50)]],
     address: ['', [Validators.minLength(5), Validators.maxLength(100)]],
-    nationality: [''],
-    municipio: [{ value: '', disabled: true }],
+    nationality: ['', Validators.required],
+    municipio: [{ value: '', disabled: true }, Validators.required],
     departamento: [{ value: '', disabled: true }],
     fecha_expedicion: ['', ValidarFechaPosterior],
     date_of_birth: ['', ValidarFechaPosterior],
@@ -110,9 +112,9 @@ export class ActualizarDatosComponent implements OnInit, OnDestroy {
         phone2,
         email,
         email2,
-        nationality: nationality.id,
-        departamento: departamento.id,
-        municipio: municipio.id,
+        nationality: nationality?.id ? nationality.id : null,
+        departamento: departamento?.id ? departamento.id : null,
+        municipio: municipio?.id ? municipio.id : null,
         condicion_vulnerable: condicion_vulnerable?.id ? condicion_vulnerable.id : null,
       }
 
@@ -206,11 +208,27 @@ export class ActualizarDatosComponent implements OnInit, OnDestroy {
     this.formPersona.controls['municipio'].disable();
     this.formPersona.get('departamento')!.setValue('');
     this.formPersona.get('municipio')!.setValue('');
-    if (event?.value) {
+    if (event?.value && event?.value?.name !== "Colombia") {
+      this.inicioService.get(`${this.API_URI}/nationality/ciudad/byPais/${event?.value?.id}`, this.token)
+        .pipe(
+          catchError(error => {
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Hubo un Problema.' });
+            throw error;
+          })
+        )
+        .subscribe(res => {
+          this.formPersona.controls['departamento'].disable();
+          this.formPersona.controls['municipio'].enable();
+          this.ciudades = res.data;
+          this.formPersona.get('municipio')!.setValue('');
+        })
+
+    }
+    if (event?.value && event?.value?.name === "Colombia") {
       this.inicioService.get(`${this.API_URI}/nationality/departamento/byPais/${event?.value?.id}`, this.token)
         .pipe(
           catchError(error => {
-            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Hhubo un Problema.' });
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Hubo un Problema.' });
             throw error;
           })
         )
@@ -227,7 +245,7 @@ export class ActualizarDatosComponent implements OnInit, OnDestroy {
       this.inicioService.get(`${this.API_URI}/nationality/ciudad/byDepartamento/${event?.value?.id}`, this.token)
         .pipe(
           catchError(error => {
-            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Hhubo un Problema.' });
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Hubo un Problema.' });
             throw error;
           })
         )

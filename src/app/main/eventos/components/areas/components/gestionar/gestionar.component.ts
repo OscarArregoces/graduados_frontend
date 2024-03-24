@@ -1,11 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
-import { ConfirmationService, MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
-import { EventosService } from 'src/app/core/services/dashboard/eventos.service';
-import { DataFetchingService } from 'src/app/core/services/main/data-fetching.service';
-import { PantallaService } from 'src/app/core/services/pantalla.service';
-import { environment } from 'src/environments/environment';
+
+import { ConfirmationService, MessageService } from 'primeng/api';
+
+import { EventosService } from '@core/services/dashboard/eventos.service';
+import { DataFetchingService } from '@core/services/main/data-fetching.service';
+import { PantallaService } from '@core/services/pantalla.service';
+import { environment } from '@environments/environment';
 
 @Component({
   selector: 'app-gestionar',

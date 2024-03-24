@@ -1,11 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { Subscription, catchError } from 'rxjs';
-import { AdminService } from 'src/app/core/services/dashboard/admin.service';
-import { PantallaService } from 'src/app/core/services/pantalla.service';
-import { Variant } from 'src/app/models/ui/CustomInfoCard';
-import { environment } from 'src/environments/environment';
+
+import { ConfirmationService, MessageService } from 'primeng/api';
+
+import { AdminService } from '@core/services/dashboard/admin.service';
+import { PantallaService } from '@core/services/pantalla.service';
+import { Variant } from '@models/ui/CustomInfoCard';
+import { environment } from '@environments/environment';
 
 @Component({
   selector: 'app-gestionar',

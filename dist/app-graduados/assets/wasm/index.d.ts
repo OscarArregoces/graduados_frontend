@@ -128,6 +128,8 @@ declare class ZBarScanner extends CppObject {
     getResults(): Array<ZBarSymbol>;
     scan(image: ZBarImage): number;
 }
+// Returns a new ZBarScanner instance that delegates QR code text decoding
+// to the native TextDecoder (fixes #7: Issue with utf-8)
 declare const getDefaultScanner: () => Promise<ZBarScanner>;
 declare const scanGrayBuffer: (buffer: ArrayBuffer, width: number, height: number, scanner?: ZBarScanner | undefined) => Promise<Array<ZBarSymbol>>;
 declare const scanRGBABuffer: (buffer: ArrayBuffer, width: number, height: number, scanner?: ZBarScanner | undefined) => Promise<Array<ZBarSymbol>>;

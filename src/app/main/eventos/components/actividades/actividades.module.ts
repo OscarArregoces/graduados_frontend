@@ -45,6 +45,7 @@ import { FileUploadModule } from 'primeng/fileupload';
 
 import { NgxScannerQrcodeModule } from 'ngx-scanner-qrcode';
 import { DialogEvidenciasComponent } from './components/ver/components/dialog-evidencias/dialog-evidencias.component';
+import { DialogPresupuestoComponent } from './components/ver/components/dialog-presupuesto/dialog-presupuesto.component';
 
 @NgModule({
   declarations: [
@@ -64,6 +65,7 @@ import { DialogEvidenciasComponent } from './components/ver/components/dialog-ev
     BusquedaManualComponent,
     DialogAsistenciasComponent,
     DialogEvidenciasComponent,
+    DialogPresupuestoComponent,
 
   ],
   imports: [

@@ -1,6 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { PantallaService } from 'src/app/core/services/pantalla.service';
 import { Subscription } from 'rxjs';
+
+import { PantallaService } from '@core/services/pantalla.service';
 
 @Component({
   selector: 'app-card',

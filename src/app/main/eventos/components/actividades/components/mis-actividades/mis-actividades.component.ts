@@ -1,7 +1,8 @@
-import { Component, DoCheck, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { EventosService } from 'src/app/core/services/dashboard/eventos.service';
-import { Actividad, MiActividad } from 'src/app/models/main/eventos.interface';
-import { environment } from 'src/environments/environment';
+import { Component, OnInit } from '@angular/core';
+
+import { EventosService } from '@core/services/dashboard/eventos.service';
+import { MiActividad } from '@models/main/eventos.interface';
+import { environment } from '@environments/environment';
 
 @Component({
   selector: 'app-mis-actividades',

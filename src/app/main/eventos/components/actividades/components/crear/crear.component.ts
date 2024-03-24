@@ -1,15 +1,17 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
-import { MessageService } from 'primeng/api';
 import { Subscription, catchError } from 'rxjs';
-import { EventosService } from 'src/app/core/services/dashboard/eventos.service';
-import { DataFetchingService } from 'src/app/core/services/main/data-fetching.service';
-import { PantallaService } from 'src/app/core/services/pantalla.service';
-import { ValidForm, ValidarFechaAnterior } from 'src/app/helpers/validForms';
-import { Sede } from 'src/app/models/main/Inicio.interface';
-import { Area, Dependencia, Modalidad, Responsable, Servicio, Subarea, TipoActividad } from 'src/app/models/main/eventos.interface';
-import { environment } from 'src/environments/environment';
+
+import { MessageService } from 'primeng/api';
 import Swal from 'sweetalert2';
+
+import { EventosService } from '@core/services/dashboard/eventos.service';
+import { DataFetchingService } from '@core/services/main/data-fetching.service';
+import { PantallaService } from '@core/services/pantalla.service';
+import { Sede } from '@models/main/Inicio.interface';
+import { Area, Dependencia, Modalidad, Responsable, Servicio, Subarea, TipoActividad } from '@models/main/eventos.interface';
+import { ValidForm, ValidarFechaAnterior } from '@helpers/validForms';
+import { environment } from '@environments/environment';
 
 @Component({
   selector: 'app-crear',
@@ -92,7 +94,7 @@ export class CrearComponent implements OnInit, OnDestroy {
 
   onSubmit() {
     ValidForm(this.form);
-    
+
     if (this.responsables.length === 0) {
       return this.messageService.add({ severity: 'warn', summary: 'Aviso', detail: 'Agregue un responsable' })
     }

@@ -3,12 +3,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { CardComponent } from './components/card/card.component';
-import { TableViewComponent } from './components/table-view/table-view.component';
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import { CardDialogComponent } from './components/card-dialog/card-dialog.component';
 import { DetailActivityComponent } from './components/detail-activity/detail-activity.component';
-import { ActivityComponent } from './components/activity/activity.component';
-import { QuestionComponent } from './components/question/question.component';
 import { UpsComponent } from './components/ups/ups.component';
 import { CardReportComponent } from './components/card-report/card-report.component';
 import { PieGraphicComponent } from './components/graphics/pie-graphic/pie-graphic.component';
@@ -16,7 +13,6 @@ import { BarGraphicComponent } from './components/graphics/bar-graphic/bar-graph
 import { ReportEncuestaComponent } from './components/reports/report-encuesta/report-encuesta.component';
 import { ReportGraduadosComponent } from './components/reports/report-graduados/report-graduados.component';
 import { CustomInfoCardComponent } from './components/custom-info-card/custom-info-card.component';
-import { CustomDialogComponent } from './components/custom-dialog/custom-dialog.component';
 import { CustomPaginatorComponent } from './components/custom-paginator/custom-paginator.component';
 
 import { ImgErrorDirective } from './directives/img-error.directive';
@@ -41,6 +37,7 @@ import { RoleDirective } from './directives/role.directive';
 
 import { ScannerPipe } from './pipes/scanner.pipe';
 import { FormatPermissionNamePipe } from './pipes/format-permission-name.pipe';
+import { CurrencyCopPipe } from './pipes/currency-cop.pipe';
 
 
 
@@ -49,15 +46,12 @@ import { FormatPermissionNamePipe } from './pipes/format-permission-name.pipe';
   declarations: [
     CardComponent,
     CardDialogComponent,
-    TableViewComponent,
     SpinnerComponent,
     ImgErrorDirective,
     RoleDirective,
     ScannerPipe,
-    ActivityComponent,
     DetailActivityComponent,
     UpsComponent,
-    QuestionComponent,
     PieGraphicComponent,
     CardReportComponent,
     BarGraphicComponent,
@@ -65,31 +59,28 @@ import { FormatPermissionNamePipe } from './pipes/format-permission-name.pipe';
     ReportGraduadosComponent,
     FormatPermissionNamePipe,
     CustomInfoCardComponent,
-    CustomDialogComponent,
     CustomPaginatorComponent,
+    CurrencyCopPipe,
 
   ],
   exports: [
     CardComponent,
     CardDialogComponent,
-    TableViewComponent,
-    ActivityComponent,
     SpinnerComponent,
     DetailActivityComponent,
     UpsComponent,
-    QuestionComponent,
     CardReportComponent,
     ReportEncuestaComponent,
     ReportGraduadosComponent,
     CustomInfoCardComponent,
-    CustomDialogComponent,
     CustomPaginatorComponent,
 
     ImgErrorDirective,
     RoleDirective,
     FormatPermissionNamePipe,
 
-    ScannerPipe
+    ScannerPipe,
+    CurrencyCopPipe
   ],
   imports: [
     CommonModule,

@@ -3,10 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { AreasRoutingModule } from './areas-routing.module';
 import { AreasComponent } from './areas.component';
-import { VerComponent } from './components/ver/ver.component';
-import { CrearComponent } from './components/crear/crear.component';
-import { EditarComponent } from './components/editar/editar.component';
-import { EliminarComponent } from './components/eliminar/eliminar.component';
+
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
@@ -24,10 +21,6 @@ import { SharedModule } from 'src/app/shared/shared.module';
 @NgModule({
   declarations: [
     AreasComponent,
-    VerComponent,
-    CrearComponent,
-    EditarComponent,
-    EliminarComponent,
     GestionarComponent
   ],
   imports: [

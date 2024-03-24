@@ -1,10 +1,12 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { MessageService } from 'primeng/api';
 import { catchError } from 'rxjs';
-import { EventosService } from 'src/app/core/services/dashboard/eventos.service';
-import { Actividad, MiActividad, Responsable, ResponsableVinculacion, Servicio } from 'src/app/models/main/eventos.interface';
-import { environment } from 'src/environments/environment';
+
+import { MessageService } from 'primeng/api';
 import Swal from 'sweetalert2';
+
+import { EventosService } from '@core/services/dashboard/eventos.service';
+import { Actividad, MiActividad, Responsable, ResponsableVinculacion, Servicio } from '@models/main/eventos.interface';
+import { environment } from '@environments/environment';
 
 
 @Component({

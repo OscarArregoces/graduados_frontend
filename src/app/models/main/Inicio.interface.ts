@@ -13,6 +13,7 @@ export interface Ciudad {
     sap: string;
     name: string;
     departamento: number;
+    pais?: number;
 }
 
 export interface Sede {
@@ -46,16 +47,16 @@ export interface InfoCarrera {
     sede: string;
     direccion_intitucional: string;
 }
+export interface CarreraTable {
+    id?: number;
+    programa: string;
+}
 export interface Graduado {
     id: number;
     fullname: string;
-    email: string;
     nationality: string;
     identification: string;
-    gender_type: {
-        id: number,
-        name: string;
-    };
+    carreras: CarreraTable
 }
 
 export interface Persona {

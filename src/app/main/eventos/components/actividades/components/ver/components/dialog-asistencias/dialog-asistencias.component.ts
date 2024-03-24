@@ -1,5 +1,6 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { AsistenciaDetalle } from 'src/app/models/main/eventos.interface';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+
+import { AsistenciaDetalle } from '@models/main/eventos.interface';
 
 @Component({
   selector: 'app-dialog-asistencias',

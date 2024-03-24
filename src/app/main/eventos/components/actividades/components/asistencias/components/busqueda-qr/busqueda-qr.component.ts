@@ -1,7 +1,9 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { NgxScannerQrcodeService, ScannerQRCodeSelectedFiles } from 'ngx-scanner-qrcode';
-import { EventosService } from 'src/app/core/services/dashboard/eventos.service';
+
 import Swal from 'sweetalert2';
+import { NgxScannerQrcodeService, ScannerQRCodeSelectedFiles } from 'ngx-scanner-qrcode';
+
+import { EventosService } from '@core/services/dashboard/eventos.service';
 
 @Component({
   selector: 'app-busqueda-qr',

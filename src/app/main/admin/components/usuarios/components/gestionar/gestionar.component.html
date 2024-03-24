@@ -29,7 +29,7 @@
                         [rowsPerPageOptions]="[10,25,50]"
                         currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
                         [filterDelay]="0"
-                        [globalFilterFields]="['fullname','email','country','identification','gender_type.name']"
+                        [globalFilterFields]="['fullname','country','identification','programa','graduado.carreras[0].programa']"
                         responsiveLayout="scroll">
                         <ng-template pTemplate="caption">
                             <div class="table-header">
@@ -62,14 +62,6 @@
                                             class="ml-auto"></p-columnFilter>
                                     </div>
                                 </th>
-                                <th pSortableColumn="email">
-                                    <div class="flex justify-content-between align-items-center">
-                                        Correo
-                                        <p-sortIcon field="email"></p-sortIcon>
-                                        <p-columnFilter type="text" field="email" display="menu"
-                                            class="ml-auto"></p-columnFilter>
-                                    </div>
-                                </th>
                                 <th pSortableColumn="nationality.name">
                                     <div class="flex justify-content-between align-items-center">
                                         Pais
@@ -80,17 +72,17 @@
                                 </th>
                                 <th pSortableColumn="identification">
                                     <div class="flex justify-content-between align-items-center">
-                                        Identificación
+                                        No. Documento
                                         <p-sortIcon field="identification"></p-sortIcon>
                                         <p-columnFilter type="text" field="identification" display="menu"
                                             class="ml-auto"></p-columnFilter>
                                     </div>
                                 </th>
-                                <th pSortableColumn="gender_type.name">
+                                <th pSortableColumn="graduado.carreras[0].programa">
                                     <div class="flex justify-content-between align-items-center">
-                                        Genero
-                                        <p-sortIcon field="gender_type.name"></p-sortIcon>
-                                        <p-columnFilter type="text" field="gender_type.name" display="menu"
+                                        Programa
+                                        <p-sortIcon field="graduado.carreras[0].programa"></p-sortIcon>
+                                        <p-columnFilter type="text" field="graduado.carreras[0].programa" display="menu"
                                             class="ml-auto"></p-columnFilter>
                                     </div>
                                 </th>
@@ -110,10 +102,6 @@
                                 </td>
                                 <td>
                                     <span class="p-column-title">Tipo</span>
-                                    {{graduado.email ? graduado.email : "NP"}}
-                                </td>
-                                <td>
-                                    <span class="p-column-title">Tipo</span>
                                     {{graduado.nationality.name}}
                                 </td>
                                 <td>
@@ -122,7 +110,9 @@
                                 </td>
                                 <td>
                                     <span class="p-column-title">Tipo</span>
-                                    {{graduado.gender_type?.name}}
+                                    {{
+                                        graduado.carreras.lenght === 0 ? "NP" : graduado.carreras[0].programa
+                                    }}
                                 </td>
                                 <td style="text-align: center">
                                     <button pButton type="button" icon="pi pi-eye" class="p-button-secondary"

@@ -1,0 +1,43 @@
+::ng-deep .p-datatable{
+    .p-datatable-thead tr th{
+        border: none;
+        border-bottom: 1px solid #dee2e6;
+        color: #535050;
+    }
+    .p-datatable-tbody tr td{
+        border: none;
+        border-bottom: 1px solid #dee2e6;
+    }
+    .p-datatable-tfoot tr td{
+        border: none;
+        border-bottom: 1px solid #dee2e6;
+    }
+}
+
+:host ::ng-deep .p-cell-editing {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+.customTitle {
+    line-height: 1.625;
+    font-weight: bold;
+    font-size: 1.1rem;
+    font-family: Roboto, sans-serif;
+    color: #212121;
+}
+.customLabel {
+    line-height: 1.625;
+    font-weight: bold;
+    font-size: 1rem;
+    font-family: Roboto, sans-serif;
+    color: #212121;
+}
+
+.customText {
+    line-height: 1.625;
+    font-weight: 400;
+    font-size: 1rem;
+    font-family: Roboto, sans-serif;
+    color: #616161;
+}

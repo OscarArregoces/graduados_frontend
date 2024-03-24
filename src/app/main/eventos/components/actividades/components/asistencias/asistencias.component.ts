@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { OptionAsistencia } from 'src/app/models/main/eventos.interface';
+
+import { OptionAsistencia } from '@models/main/eventos.interface';
 
 @Component({
   selector: 'app-asistencias',

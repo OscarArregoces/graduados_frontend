@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Actividad, Asistencia, Responsable, Servicio } from 'src/app/models/main/eventos.interface';
+
+import { Actividad, Asistencia, Responsable, Servicio } from '@models/main/eventos.interface';
 
 @Component({
   selector: 'app-dialog-reporte',

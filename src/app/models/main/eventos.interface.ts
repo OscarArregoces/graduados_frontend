@@ -155,3 +155,34 @@ export interface Evidencia {
     titulo: string;
     archivo: File | string;
 }
+
+export interface Presupuesto {
+    item: string;
+    cantidad: number;
+    valor_unitario: number;
+    inversion_uniguajira: number;
+    especie_uniguajira: number;
+    inversion_cofinanciador: number;
+    especie_cofinanciador: number;
+    nombre: string;
+    valor: number;
+}
+
+export enum TipoPresupuesto {
+    bienesEquipos = "Bienes y Equipos",
+    materialesSuministros = "Materiales y Suministros",
+    personal = "Personal",
+}
+export interface PayloadCalculo {
+    item: string;
+    cantidad: number;
+    valor_unitario: number;
+    nombre?: string;
+}
+export interface TotalesPresupuesto {
+    inversion_uniguajira: number;
+    especie_uniguajira: number;
+    inversion_cofinanciador: number;
+    especie_cofinanciador: number;
+    valor: number;
+}

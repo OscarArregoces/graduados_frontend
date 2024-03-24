@@ -1,12 +1,14 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
-import { MessageService } from 'primeng/api';
 import { catchError } from 'rxjs';
-import { EventosService } from 'src/app/core/services/dashboard/eventos.service';
-import { ValidForm } from 'src/app/helpers/validForms';
-import { Persona } from 'src/app/models/main/Inicio.interface';
-import { Responsable, RolPonente } from 'src/app/models/main/eventos.interface';
-import { environment } from 'src/environments/environment';
+
+import { MessageService } from 'primeng/api';
+
+import { EventosService } from '@core/services/dashboard/eventos.service';
+import { Persona } from '@models/main/Inicio.interface';
+import { Responsable, RolPonente } from '@models/main/eventos.interface';
+import { ValidForm } from '@helpers/validForms';
+import { environment } from '@environments/environment';
 
 @Component({
   selector: 'app-form-vinculacion',

@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder } from '@angular/forms';
+
 import { Subscription, catchError } from 'rxjs';
-import { EventosService } from 'src/app/core/services/dashboard/eventos.service';
-import { PantallaService } from 'src/app/core/services/pantalla.service';
-import { Actividad, ActividadTable, Asistencia, AsistenciaDetalle, AsistenciaGrafico, Responsable, ResponsableVinculacion, Servicio } from 'src/app/models/main/eventos.interface';
 import { environment } from 'src/environments/environment';
+
+import { EventosService } from '@core/services/dashboard/eventos.service';
+import { PantallaService } from '@core/services/pantalla.service';
+import { Actividad, ActividadTable, Asistencia, AsistenciaDetalle, AsistenciaGrafico, Responsable, ResponsableVinculacion, Servicio } from '@models/main/eventos.interface';
 
 @Component({
   selector: 'app-ver',
@@ -16,7 +18,7 @@ export class VerComponent implements OnInit {
   API_URI = environment.API_URI;
 
   public inforCardDescription: string = `
-  "La sección 'Ver Actividades' proporciona una visión detallada de todas las actividades disponibles. Desde esta interfaz, los usuarios pueden explorar eventos pasados y futuros, accediendo a información clave como fecha, temática y tipo de actividad. Facilita una visión general de la oferta de eventos en la plataforma.
+  La sección Reportes proporciona una visión detallada de todas las actividades finalizadas. Desde esta interfaz, los usuarios pueden realizar seguimiento a actividades concluidas, listado de asistencias, consulta de evidencias y mas. Facilita una visión general de la oferta de eventos en la plataforma.
   `;
 
   public token: any;
@@ -26,6 +28,7 @@ export class VerComponent implements OnInit {
   public displayReporte: boolean = false;
   public displayGrafico: boolean = false;
   public displayEvidencias: boolean = false;
+  public displayPresupuesto: boolean = false;
   public loading: boolean = false;
   public itemsBulkDelete: any[] = [];
   public bulkDelete: Actividad[] = [];
@@ -151,6 +154,9 @@ export class VerComponent implements OnInit {
         )
     }
   }
+  changeDisplayPresupuesto() {
+    this.displayPresupuesto = !this.displayPresupuesto;
+  }
   closeDisplayAsistencia() {
     this.displayAsistencia = false;
     this.actividad = null;
@@ -171,6 +177,9 @@ export class VerComponent implements OnInit {
     this.displayEvidencias = false;
     this.responsables = [];
     this.servicios = [];
+  }
+  closeDisplayPresupuesto() {
+    this.displayPresupuesto = false;
   }
 
   getActividades() {

@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
-import { AdminService } from 'src/app/core/services/dashboard/admin.service';
-import { environment } from 'src/environments/environment';
 
 import { MessageService } from 'primeng/api';
+
+import { AdminService } from '@core/services/dashboard/admin.service';
+import { environment } from '@environments/environment';
+
 
 @Component({
   selector: 'app-crear',

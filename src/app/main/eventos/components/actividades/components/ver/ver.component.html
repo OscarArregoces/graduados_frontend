@@ -41,6 +41,7 @@
                             <th style="width: 3rem;text-align: center" title="Reporte"> REP </th>
                             <th style="width: 3rem;text-align: center" title="Grafico Asistencia"> GRA </th>
                             <th style="width: 3rem;text-align: center" title="Listado Asistencia"> ASI </th>
+                            <th style="width: 3rem;text-align: center" title="Listado Asistencia"> PRE </th>
                             <th style="width: 3rem;text-align: center" title="Evidencia"> EVI </th>
                         </tr>
                     </ng-template>
@@ -71,6 +72,11 @@
                                     (click)="changeDisplayAsistencia(actividad.id)"></button>
                             </td>
                             <td style="text-align: center;">
+                                <button type="button" pButton pRipple icon="pi pi-wallet"
+                                    class="p-button-secondary mr-2" tooltipPosition="bottom" title="Presupuesto"
+                                    (click)="changeDisplayPresupuesto()"></button>
+                            </td>
+                            <td style="text-align: center;">
                                 <button type="button" pButton pRipple icon="pi pi-folder-open"
                                     class="p-button-warning mr-2" tooltipPosition="bottom" title="Evidencia"
                                     (click)="changeDisplayEvidencias(actividad.id)"></button>
@@ -99,6 +105,8 @@
 <app-dialog-grafico [display]="displayGrafico" [width]="width" [asistenciaGrafico]="asistenciaGrafico"
     (closeDisplay)="closeDisplayGrafico()"></app-dialog-grafico>
 
-<app-dialog-evidencias [display]="displayEvidencias"
-    [actividad]="actividad" [width]="width"
+<app-dialog-evidencias [display]="displayEvidencias" [actividad]="actividad" [width]="width"
     (closeDisplay)="closeDisplayEvidencias()"></app-dialog-evidencias>
+
+<app-dialog-presupuesto [display]="displayPresupuesto" [width]="width"
+    (closeDisplay)="closeDisplayPresupuesto()"></app-dialog-presupuesto>

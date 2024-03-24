@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { AfterViewInit, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { PantallaService } from 'src/app/core/services/pantalla.service';
-import { environment } from 'src/environments/environment.prod';
+
+import { PantallaService } from '@core/services/pantalla.service';
+import { environment } from '@environments/environment.prod';
 
 @Component({
   selector: 'app-card-report',
